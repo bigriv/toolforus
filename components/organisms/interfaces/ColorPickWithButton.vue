@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import ColorPickButton from "@/components/atoms/interfaces/ColorPickButton.vue";
-import ColorPicker from "@/components/molecules/interfces/ColorPicker.vue";
-import { TOUColor } from "@/types/common/color";
+import ColorPicker from "@/components/molecules/interfaces/ColorPicker.vue";
+import { TOUColor } from "@/types/common/css/color";
 
 const props = defineProps({
   color: {

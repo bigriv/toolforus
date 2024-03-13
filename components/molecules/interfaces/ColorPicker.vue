@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref, watch } from "vue";
-import InputNumber from "@/components/molecules/interfces/InputNumber.vue";
-import { TOUColor } from "@/types/common/color";
+import InputNumber from "@/components/molecules/interfaces/InputNumber.vue";
+import { TOUColor } from "@/types/common/css/color";
 
 const props = defineProps({
   isShowModal: {
@@ -165,7 +165,7 @@ const onSubmit = () => {
           </div>
         </div>
 
-        <div class="c-color_picker__modal__buttons u-margin_top--20">
+        <div class="c-color_picker__modal__buttons">
           <button @click="onClose">Cancel</button>
           <button @click="onSubmit">OK</button>
         </div>
@@ -281,11 +281,18 @@ const onSubmit = () => {
       display: flex;
       justify-content: flex-end;
       button {
-        width: 8rem;
-        height: 100%;
+        display: block;
+        width: 6rem;
+        height: 2rem;
+        background-color: white;
+        border: 0.1rem solid black;
+        padding: 0.5rem;
         cursor: pointer;
         + button {
           margin-left: 0.8rem;
+        }
+        &:hover {
+          background-color: #eeeeee;
         }
       }
     }

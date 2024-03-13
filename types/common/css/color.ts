@@ -7,23 +7,14 @@ export class TOUColor {
   opacity: number;
 
   constructor(code?: string, opacity?: number) {
-    if (!code || !TOUColor.CODE_FORMAT.test(code)) {
-      // 色コードとしてふさわしくない値の場合は強制的に白にする
-      this.code = "#ffffff";
-    } else {
-      this.code = code;
+    this.code = TOUColor.CODE_WHITE;
+    if (code) {
+      this.setCode(code);
     }
 
-    if (!opacity && opacity !== 0) {
-      this.opacity = !code ? 0 : 1;
-    } else {
-      if (opacity < 0) {
-        this.opacity = 0;
-      } else if (opacity > 1) {
-        this.opacity = 1;
-      } else {
-        this.opacity = opacity;
-      }
+    this.opacity = !code ? 0 : 1;
+    if (opacity || opacity === 0) {
+      this.setOpacity(opacity);
     }
   }
 
@@ -53,7 +44,7 @@ export class TOUColor {
     return red;
   }
 
-    /**
+  /**
    * 緑成分の値を取得する
    * @returns 緑成分の値
    */
@@ -81,6 +72,25 @@ export class TOUColor {
       return 0;
     }
     return blue;
+  }
+
+  setCode(code: string) {
+    if (!TOUColor.CODE_FORMAT.test(code)) {
+      // 色コードとしてふさわしくない値の場合は色を更新しない
+      return;
+    } else {
+      this.code = code;
+    }
+  }
+
+  setOpacity(opacity: number) {
+    if (opacity < 0) {
+      this.opacity = 0;
+    } else if (opacity > 1) {
+      this.opacity = 1;
+    } else {
+      this.opacity = opacity;
+    }
   }
 
   /**

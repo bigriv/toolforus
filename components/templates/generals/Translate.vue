@@ -56,7 +56,7 @@ const onTranslate = async () => {
 .c-translate {
   margin: auto;
   padding: 1.4rem;
-  max-width: 1400px;
+  max-width: 1000px;
   &__language {
     display: flex;
     justify-content: space-between;
@@ -76,7 +76,7 @@ const onTranslate = async () => {
       resize: none;
       height: 100%;
       padding: 0.4rem;
-      font-size: 20px;
+      font-size: 1rem;
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       line-height: 1.1;
       overflow: auto;
@@ -104,7 +104,7 @@ const onTranslate = async () => {
   .c-translate__text {
     flex-direction: column;
     min-width: 300px;
-    gap: 10px 0;
+    gap: 0.4rem 0;
     textarea {
       width: 100%;
       height: 12rem;

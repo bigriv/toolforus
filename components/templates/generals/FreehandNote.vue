@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from "vue";
+import ToolButton from "@/components/atoms/interfaces/ToolButton.vue";
 import InputNumber from "@/components/molecules/interfaces/InputNumber.vue";
 import ColorPicker from "@/components/molecules/interfaces/ColorPicker.vue";
 import { TOUColor } from "@/types/common/css/color";
+import BasicButton from "~/components/atoms/interfaces/BasicButton.vue";
 
 const isShowPenColorPicker = ref(false);
 const pen = reactive({
@@ -104,15 +106,17 @@ const onDrawEnd = () => {
     <div class="c-container__toolbar">
       <div class="c-container__toolbar__menu">
         <div class="c-container__toolbar__menu__colorpicker">
-          <button
-            @click="isShowPenColorPicker = true"
-            :style="{
-              '--color': pen.color.code,
-              '--opacity': pen.color.opacity,
-            }"
-          >
-            <img src="/commons/icons/pen.svg" alt="ペン色" />
-          </button>
+          <ToolButton @click="isShowPenColorPicker = true">
+            <div
+              class="c-container__toolbar__menu__colorpicker__button"
+              :style="{
+                '--color': pen.color.code,
+                '--opacity': pen.color.opacity,
+              }"
+            >
+              <img src="/commons/icons/pen.svg" alt="ペン色" />
+            </div>
+          </ToolButton>
           <ColorPicker
             v-model:isShowModal="isShowPenColorPicker"
             :color="pen.color"
@@ -133,18 +137,14 @@ const onDrawEnd = () => {
         </div>
         <div class="c-container__toolbar__menu__size">
           <img src="/commons/icons/line_weight.svg" alt="ペンサイズ" />
-          <InputNumber
-            v-model="pen.size"
-            :min="1"
-            :max="72"
-            mode="uint"
-            class="c-container__toolbar__menu__size--input"
-          />
+          <div class="c-container__toolbar__menu__size--input">
+            <InputNumber v-model="pen.size" :min="1" :max="72" mode="uint" />
+          </div>
         </div>
       </div>
       <div class="c-container__toolbar__menu">
         <div class="c-container__toolbar__menu__button">
-          <button @click="onClear">クリア</button>
+          <BasicButton label="クリア" @click="onClear" />
         </div>
       </div>
     </div>
@@ -184,22 +184,12 @@ const onDrawEnd = () => {
     background-color: white;
     &__menu {
       display: flex;
-      &__content {
-        position: relative;
-      }
       &__colorpicker {
-        // カラーピッカーボタン用のstyle
-        button {
-          position: relative;
-          display: block;
-          width: 2.4rem;
-          height: 100%;
-          background: white;
-          border: 0.1rem solid black;
+        &__button {
           &::before {
             content: "";
             position: absolute;
-            top: 1.6rem;
+            top: 1.5rem;
             left: 50%;
             transform: translateX(-50%);
             background-color: var(--color);
@@ -246,25 +236,19 @@ const onDrawEnd = () => {
       // フォントサイズ用のstyle
       &__size {
         display: flex;
+        align-items: center;
         height: 100%;
+        width: 6rem;
         border: 0.1rem solid black;
-        padding: 0.4rem 0.4rem;
+        padding: 0rem 0.4rem;
         gap: 0 0.4rem;
         &--input {
+          height: 80%;
           width: 3em;
         }
       }
       &__button {
-        button {
-          height: 100%;
-          width: 4rem;
-          background: white;
-          border: solid 0.1rem black;
-          cursor: pointer;
-          &:hover {
-            background-color: #eee;
-          }
-        }
+        width: 4rem;
       }
     }
   }

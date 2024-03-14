@@ -135,7 +135,8 @@ const onKeydown = (event: Event) => {
 
 <template>
   <InputText
-    :modelValue="modelValue"
+    mode="number"
+    :num="modelValue"
     @change="onChange"
     @blur="onBlur"
     @keydown="onKeydown"

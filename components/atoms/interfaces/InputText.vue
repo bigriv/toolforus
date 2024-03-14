@@ -2,14 +2,23 @@
 import { computed } from "vue";
 
 const props = defineProps({
-  modelValue: {
+  mode: {
+    type: String as PropType<"string" | "number">,
+    default: "string",
+  },
+  text: {
+    type: String,
+    default: "",
+  },
+  num: {
     type: Number,
-    default: String,
+    default: 0,
   },
 });
 
 const emits = defineEmits([
-  "update:modelValue",
+  "update:text",
+  "update:num",
   "focus",
   "blur",
   "input",
@@ -17,9 +26,13 @@ const emits = defineEmits([
   "keydown",
 ]);
 
-const modelValue = computed({
-  get: () => props.modelValue,
-  set: (newValue: String | Number) => emits("update:modelValue", newValue),
+const text = computed({
+  get: () => props.text,
+  set: (newValue) => emits("update:text", newValue),
+});
+const num = computed({
+  get: () => props.num,
+  set: (newValue) => emits("update:num", newValue),
 });
 
 const onFocus = (event: Event) => {
@@ -41,7 +54,18 @@ const onKeydown = (event: Event) => {
 
 <template>
   <input
-    v-model="modelValue"
+    v-if="props.mode === 'string'"
+    v-model="text"
+    type="text"
+    @focus="onFocus"
+    @blur="onBlur"
+    @input="onInput"
+    @change="onChange"
+    @keydown="onKeydown"
+  />
+  <input
+    v-else-if="props.mode === 'number'"
+    v-model="num"
     type="text"
     @focus="onFocus"
     @blur="onBlur"
@@ -54,5 +78,12 @@ const onKeydown = (event: Event) => {
 <style scoped lang="scss">
 input[type="text"] {
   cursor: text;
+  height: 100%;
+  width: 100%;
+  padding: 0.2rem;
+  font-size: 100%;
+  &:focus {
+    outline: 0;
+  }
 }
 </style>

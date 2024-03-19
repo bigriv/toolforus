@@ -42,6 +42,7 @@ const onAdd = () => {
   if (!textarea.value) {
     return;
   }
+  save();
   const keyList = Object.keys(noteList.value)
     .filter((key) => /^Untitled_\d+$/.test(key))
     .map((key) => key.replace(/^Untitled_/, ""));
@@ -195,6 +196,7 @@ onUnmounted(() => {
     background-color: white;
     &__menu {
       display: flex;
+      height: 2rem;
       &__edit_input {
         width: 10rem;
         height: 100%;
@@ -209,13 +211,6 @@ onUnmounted(() => {
           }
         }
       }
-      &__size {
-        display: flex;
-        height: 100%;
-        border: 0.1rem solid black;
-        padding: 0.4rem 0.4rem;
-        gap: 0 0.4rem;
-      }
       &__button {
         width: 4rem;
       }
@@ -224,7 +219,7 @@ onUnmounted(() => {
   &__note {
     position: relative;
     width: 500px;
-    height: 800px;
+    height: 600px;
     background-color: white;
     font-family: sans-serif;
     white-space: pre;

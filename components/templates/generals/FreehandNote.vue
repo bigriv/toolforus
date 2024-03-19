@@ -182,6 +182,7 @@ const onDrawEnd = () => {
     display: flex;
     justify-content: space-between;
     background-color: white;
+    height: 2rem;
     &__menu {
       display: flex;
       &__colorpicker {
@@ -255,7 +256,7 @@ const onDrawEnd = () => {
   &__memo {
     position: relative;
     width: 500px;
-    height: 800px;
+    height: 600px;
     background-color: white;
     font-family: sans-serif;
     white-space: pre;

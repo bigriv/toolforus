@@ -14,6 +14,10 @@ const props = defineProps({
     type: Number,
     default: 0,
   },
+  maxlength: {
+    type: Number,
+    default: undefined
+  }
 });
 
 const emits = defineEmits([
@@ -57,6 +61,7 @@ const onKeydown = (event: Event) => {
     v-if="props.mode === 'string'"
     v-model="text"
     type="text"
+    :maxlength="props.maxlength"
     @focus="onFocus"
     @blur="onBlur"
     @input="onInput"

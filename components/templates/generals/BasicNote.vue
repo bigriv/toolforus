@@ -188,11 +188,12 @@ onUnmounted(() => {
 
 <style scoped lang="scss">
 .c-container {
-  margin: auto;
-  width: 500px;
+  width: 100%;
+  height: 100%;
   &__toolbar {
     display: flex;
     justify-content: space-between;
+    width: 100%;
     background-color: white;
     &__menu {
       display: flex;
@@ -218,7 +219,7 @@ onUnmounted(() => {
   }
   &__note {
     position: relative;
-    width: 500px;
+    width: 100%;
     height: 600px;
     background-color: white;
     font-family: sans-serif;

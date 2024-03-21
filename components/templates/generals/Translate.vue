@@ -54,9 +54,9 @@ const onTranslate = async () => {
 
 <style scoped lang="scss">
 .c-translate {
-  margin: auto;
-  padding: 1.4rem;
-  max-width: 1000px;
+  width: 100%;
+  height: 100%;
+  min-width: 300px;
   &__language {
     display: flex;
     justify-content: space-between;
@@ -67,6 +67,7 @@ const onTranslate = async () => {
     }
     &__allow {
       text-align: center;
+      margin: auto;
     }
   }
   &__text {
@@ -74,7 +75,6 @@ const onTranslate = async () => {
     justify-content: space-between;
     textarea {
       resize: none;
-      height: 100%;
       padding: 0.4rem;
       font-size: 1rem;
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -83,7 +83,7 @@ const onTranslate = async () => {
     }
     button {
       width: 15%;
-      min-width: 100px;
+      min-width: 6rem;
       height: 2.4rem;
       align-self: center;
       cursor: pointer;
@@ -94,16 +94,15 @@ const onTranslate = async () => {
   .c-translate__language {
     select {
       width: 40%;
-      min-width: 100px;
+      min-width: 10em;
     }
     &__allow {
       width: 15%;
-      min-width: 100px;
+      min-width: 1em;
     }
   }
   .c-translate__text {
     flex-direction: column;
-    min-width: 300px;
     gap: 0.4rem 0;
     textarea {
       width: 100%;
@@ -115,17 +114,17 @@ const onTranslate = async () => {
   .c-translate__language {
     select {
       width: 40%;
-      min-width: 300px;
+      min-width: 10em;
     }
     &__allow {
       width: 10%;
-      min-width: 20px;
+      min-width: 1em;
     }
   }
   .c-translate__text {
     flex-direction: row;
     textarea {
-      min-width: 300px;
+      min-width: 10em;
       width: 40%;
       height: 12rem;
     }

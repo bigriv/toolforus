@@ -318,8 +318,8 @@ onUnmounted(() => {
 
 <style scoped lang="scss">
 .c-container {
-  margin: auto;
-  width: 500px;
+  width: 100%;
+  height: 100%;
   &__toolbar {
     display: flex;
     justify-content: space-between;
@@ -378,7 +378,7 @@ onUnmounted(() => {
   &__canvas {
     position: relative;
     border: 0.1rem solid black;
-    width: 500px;
+    width: 100%;
     height: 600px;
     margin: auto;
     overflow: hidden;

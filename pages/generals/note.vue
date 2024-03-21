@@ -3,5 +3,14 @@ import BasicNote from "@/components/templates/generals/BasicNote.vue";
 </script>
 
 <template>
-  <BasicNote />
+  <div class="c-note">
+    <BasicNote />
+  </div>
 </template>
+
+<style scoped lang="scss">
+.c-note {
+  max-width: 500px;
+  margin: auto;
+}
+</style>

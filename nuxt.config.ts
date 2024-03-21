@@ -8,13 +8,16 @@ export default defineNuxtConfig({
   app: {
     head: {
       style: [
-        { children: "* { margin: 0;padding: 0;box-sizing: border-box;}" },
+        {
+          children:
+            "html,body,#__nuxt { width: 100%;height: 100%; } * { margin: 0;padding: 0;box-sizing: border-box;}",
+        },
       ],
     },
   },
   runtimeConfig: {
     public: {
-      host: '',
+      host: "",
     },
   },
 });

@@ -22,6 +22,10 @@ const contents = [
     title: "アイデアマップ",
     path: "/generals/ideamap",
   },
+  {
+    title: "統合",
+    path: "/generals/integrater/custom",
+  },
 ];
 </script>
 

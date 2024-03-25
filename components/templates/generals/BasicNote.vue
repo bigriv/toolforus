@@ -1,87 +1,42 @@
 <script setup lang="ts">
-import ToolButton from "@/components/atoms/interfaces/ToolButton.vue";
 import BasicButton from "@/components/atoms/interfaces/BasicButton.vue";
-import InputText from "@/components/atoms/interfaces/InputText.vue";
+import ToolDataList from "@/components/molecules/interfaces/ToolDataList.vue";
+import { TOUNote } from "@/types/note/note";
 
 const DEFAULT_NOTE_NAME = "Untitled_1";
 const textarea: Ref<HTMLElement | null> = ref(null);
-const edit = reactive({
-  isEditing: false,
-  before: "",
-  after: "",
-});
-const isSubmitable = computed(() => !noteList.value[edit.after]);
-const isDeletable = computed(() => Object.keys(noteList.value).length > 1);
 const noteName = ref(DEFAULT_NOTE_NAME);
-const noteList: Ref<{ [key: string]: string }> = ref({});
+const noteList: Ref<{ [key: string]: TOUNote }> = ref({});
+const note = ref(new TOUNote());
 
 const save = () => {
-  if (!textarea.value) {
-    return;
-  }
-  if (!textarea.value.innerText) {
-    return;
-  }
-  noteList.value[noteName.value] = textarea.value.innerText;
+  noteList.value[noteName.value] = note.value;
   localStorage.setItem("tou.note", JSON.stringify(noteList.value));
 };
-const onChangeNote = (e: Event) => {
-  save();
-  noteName.value = (e.target as HTMLSelectElement).value;
+const updateTextarea = () => {
   if (!textarea.value) {
     return;
   }
-  textarea.value.innerText = noteList.value[noteName.value];
+  textarea.value.innerText = note.value.text;
 };
-const onEdit = () => {
-  edit.isEditing = true;
-  edit.before = noteName.value;
-  edit.after = noteName.value;
+const onAddNote = (noteName: string) => {
+  note.value = new TOUNote();
+  noteList.value[noteName] = note.value;
+  updateTextarea();
 };
-const onAdd = () => {
-  if (!textarea.value) {
-    return;
-  }
-  save();
-  const keyList = Object.keys(noteList.value)
-    .filter((key) => /^Untitled_\d+$/.test(key))
-    .map((key) => key.replace(/^Untitled_/, ""));
-  let max = 1;
-  for (const key of keyList) {
-    const num = Number(key);
-    if (Number.isNaN(num)) {
-      continue;
-    }
-    if (num > max) {
-      max = num;
-    }
-  }
-  noteName.value = "Untitled_" + (max + 1);
-  noteList.value[noteName.value] = "";
-  textarea.value.innerText = "";
+const onChangeNote = (noteName: string) => {
+  note.value = noteList.value[noteName];
+  updateTextarea();
 };
-const onEditSave = () => {
-  edit.isEditing = false;
-  if (edit.before === edit.after) {
-    return;
-  }
-  noteList.value[edit.after] = noteList.value[edit.before];
-  delete noteList.value[edit.before];
-  noteName.value = edit.after;
+const onEditNote = (noteName: string) => {
+  note.value = noteList.value[noteName];
+  updateTextarea();
+  save()
 };
-const onEditCancel = () => {
-  edit.isEditing = false;
-  edit.before = "";
-  edit.after = "";
-};
-const onDelete = () => {
-  if (!textarea.value) {
-    return;
-  }
-  edit.isEditing = false;
-  delete noteList.value[edit.before];
-  noteName.value = Object.keys(noteList.value)[0];
-  textarea.value.innerText = noteList.value[noteName.value];
+const onDeleteNote = (noteName: string) => {
+  note.value = noteList.value[noteName];
+  updateTextarea();
+  save()
 };
 const onClear = () => {
   if (!textarea.value) {
@@ -90,26 +45,34 @@ const onClear = () => {
   if (!textarea.value.innerText) {
     return;
   }
-  noteList.value[noteName.value] = "";
-  textarea.value.innerText = "";
+  noteList.value[noteName.value] = note.value;
+  note.value = new TOUNote();
+  textarea.value.innerText = note.value.text;
 };
-
+const onInput = () => {
+  if (!textarea.value) {
+    return;
+  }
+  note.value.text = textarea.value.innerText;
+};
 onMounted(() => {
   const object = JSON.parse(
     JSON.parse(JSON.stringify(localStorage.getItem("tou.note")))
   );
   if (!object || Object.keys(object).length <= 0) {
-    noteList.value[noteName.value] = "";
+    noteList.value[noteName.value] = note.value;
     return;
   }
   for (const key of Object.keys(object)) {
-    noteList.value[key] = object[key];
+    noteList.value[key] = new TOUNote(object[key].text);
   }
   if (!Object.keys(object).includes(DEFAULT_NOTE_NAME)) {
-    noteList.value[DEFAULT_NOTE_NAME] = "";
+    noteList.value[DEFAULT_NOTE_NAME] = note.value;
   }
+  note.value = noteList.value[noteName.value];
+  updateTextarea();
 });
-onUnmounted(() => {
+onBeforeUnmount(() => {
   save();
 });
 </script>
@@ -118,56 +81,15 @@ onUnmounted(() => {
   <div class="c-container">
     <div class="c-container__toolbar">
       <div class="c-container__toolbar__menu">
-        <div
-          v-if="edit.isEditing"
-          class="c-container__toolbar__menu__edit_input"
-        >
-          <InputText v-model:text="edit.after" />
-        </div>
-        <div v-else class="c-container__toolbar__menu__note_list">
-          <select :value="noteName" @change.prevent.stop="onChangeNote">
-            <option v-for="(__note, name) in noteList" :key="name">
-              {{ name }}
-            </option>
-          </select>
-        </div>
-        <template v-if="edit.isEditing">
-          <div>
-            <ToolButton :disabled="!isSubmitable" @click="onEditSave">
-              <img src="/commons/icons/flag.svg" alt="保存" />
-            </ToolButton>
-          </div>
-          <div>
-            <ToolButton @click="onEditCancel">
-              <img
-                class="u-icon--red"
-                src="/commons/icons/close.svg"
-                alt="キャンセル"
-              />
-            </ToolButton>
-          </div>
-          <div>
-            <ToolButton :disabled="!isDeletable" @click="onDelete">
-              <img
-                class="u-icon--red"
-                src="/commons/icons/delete.svg"
-                alt="削除"
-              />
-            </ToolButton>
-          </div>
-        </template>
-        <template v-else>
-          <div>
-            <ToolButton @click="onEdit">
-              <img src="/commons/icons/pen.svg" alt="編集" />
-            </ToolButton>
-          </div>
-          <div>
-            <ToolButton @click="onAdd">
-              <img src="/commons/icons/add.svg" alt="新規" />
-            </ToolButton>
-          </div>
-        </template>
+        <ToolDataList
+          v-model:selected="noteName"
+          v-model:list="noteList"
+          :data="note"
+          @add="onAddNote"
+          @edit="onEditNote"
+          @change="onChangeNote"
+          @delete="onDeleteNote"
+        />
       </div>
       <div class="c-container__toolbar__menu">
         <div class="c-container__toolbar__menu__button">
@@ -181,6 +103,8 @@ onUnmounted(() => {
         spellcheck="false"
         contenteditable="true"
         class="c-container__note__layer"
+        @input="onInput"
+        @blur="save"
       ></div>
     </div>
   </div>
@@ -198,20 +122,6 @@ onUnmounted(() => {
     &__menu {
       display: flex;
       height: 2rem;
-      &__edit_input {
-        width: 10rem;
-        height: 100%;
-      }
-      &__note_list {
-        select {
-          width: 10rem;
-          height: 100%;
-          cursor: pointer;
-          &:focus {
-            outline: 0;
-          }
-        }
-      }
       &__button {
         width: 4rem;
       }

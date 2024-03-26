@@ -114,7 +114,11 @@ const onDrawEnd = () => {
                 '--opacity': pen.color.opacity,
               }"
             >
-              <img src="/commons/icons/pen.svg" alt="ペン色" />
+              <img
+                src="/commons/icons/pen.svg"
+                alt="ペン色"
+                class="u-absolute--center"
+              />
             </div>
           </ToolButton>
           <ColorPicker
@@ -289,15 +293,5 @@ const onDrawEnd = () => {
       }
     }
   }
-}
-.u-mouse_icon--pen {
-  cursor:
-    url("/commons/icons/pen.svg") 0 16,
-    auto;
-}
-.u-mouse_icon--eraser {
-  cursor:
-    url("/commons/icons/eraser.svg") 0 16,
-    auto;
 }
 </style>

@@ -493,19 +493,4 @@ const onRelease = () => {
     }
   }
 }
-.u-mouse_icon--grabbing {
-  cursor: grabbing;
-}
-.u-mouse_icon--resize_ew {
-  cursor: ew-resize;
-}
-.u-mouse_icon--resize_ns {
-  cursor: ns-resize;
-}
-.u-mouse_icon--resize_nesw {
-  cursor: nesw-resize;
-}
-.u-mouse_icon--resize_nwse {
-  cursor: nwse-resize;
-}
 </style>

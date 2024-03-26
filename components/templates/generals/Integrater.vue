@@ -123,7 +123,11 @@ onBeforeUnmount(() => {
         </div>
         <div>
           <ToolButton @click="onAddComponent">
-            <img src="/commons/icons/add.svg" alt="追加" />
+            <img
+              src="/commons/icons/add.svg"
+              alt="追加"
+              class="u-absolute--center"
+            />
           </ToolButton>
         </div>
       </div>

@@ -183,7 +183,7 @@ onBeforeUnmount(() => {
         </template>
         <div>
           <ToolButton @click="onResetFocus">
-            <img src="/commons/icons/recenter.svg" />
+            <img src="/commons/icons/recenter.svg" class="u-absolute--center" />
           </ToolButton>
         </div>
       </div>
@@ -363,21 +363,5 @@ onBeforeUnmount(() => {
       background-color: #fff;
     }
   }
-}
-.u-mouse_icon--zoom_in {
-  cursor:
-    url("/commons/icons/zoom_in.svg") 0 16,
-    auto;
-}
-.u-mouse_icon--zoom_out {
-  cursor:
-    url("/commons/icons/zoom_out.svg") 0 16,
-    auto;
-}
-.u-mouse_icon--default {
-  cursor: default;
-}
-.u-mouse_icon--grab {
-  cursor: grab;
 }
 </style>

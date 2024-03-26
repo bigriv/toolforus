@@ -20,4 +20,5 @@ export default defineNuxtConfig({
       host: "",
     },
   },
+  css: ["@/assets/styles/util.scss"],
 });

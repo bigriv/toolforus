@@ -123,33 +123,49 @@ const onDelete = () => {
     <template v-if="edit.isEditing">
       <div>
         <ToolButton :disabled="!isSubmitable" @click="onEditSave">
-          <img src="/commons/icons/flag.svg" alt="保存" />
+          <img
+            src="/commons/icons/flag.svg"
+            alt="保存"
+            class="u-absolute--center"
+          />
         </ToolButton>
       </div>
       <div>
         <ToolButton @click="onEditCancel">
           <img
-            class="u-icon--red"
             src="/commons/icons/close.svg"
             alt="キャンセル"
+            class="u-icon--red u-absolute--center"
           />
         </ToolButton>
       </div>
       <div>
         <ToolButton :disabled="!isDeletable" @click="onDelete">
-          <img class="u-icon--red" src="/commons/icons/delete.svg" alt="削除" />
+          <img
+            src="/commons/icons/delete.svg"
+            alt="削除"
+            class="u-icon--red u-absolute--center"
+          />
         </ToolButton>
       </div>
     </template>
     <template v-else>
       <div>
         <ToolButton @click="onEdit">
-          <img src="/commons/icons/pen.svg" alt="編集" />
+          <img
+            src="/commons/icons/pen.svg"
+            alt="編集"
+            class="u-absolute--center"
+          />
         </ToolButton>
       </div>
       <div>
         <ToolButton @click="onAdd">
-          <img src="/commons/icons/add.svg" alt="新規" />
+          <img
+            src="/commons/icons/add.svg"
+            alt="新規"
+            class="u-absolute--center"
+          />
         </ToolButton>
       </div>
     </template>
@@ -174,9 +190,5 @@ const onDelete = () => {
       }
     }
   }
-}
-.u-icon--red {
-  filter: invert(15%) sepia(95%) saturate(6932%) hue-rotate(358deg)
-    brightness(95%) contrast(112%);
 }
 </style>

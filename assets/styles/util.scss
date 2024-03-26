@@ -1,0 +1,58 @@
+.u-absolute--center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+// mouse icon
+.u-mouse_icon--pen {
+  cursor:
+    url("/commons/icons/pen.svg") 0 16,
+    auto;
+}
+.u-mouse_icon--eraser {
+  cursor:
+    url("/commons/icons/eraser.svg") 0 16,
+    auto;
+}
+.u-mouse_icon--zoom_in {
+  cursor:
+    url("/commons/icons/zoom_in.svg") 0 16,
+    auto;
+}
+.u-mouse_icon--zoom_out {
+  cursor:
+    url("/commons/icons/zoom_out.svg") 0 16,
+    auto;
+}
+.u-mouse_icon--default {
+  cursor: default;
+}
+.u-mouse_icon--move {
+  cursor: move;
+}
+.u-mouse_icon--grab {
+  cursor: grab;
+}
+.u-mouse_icon--grabbing {
+  cursor: grabbing;
+}
+.u-mouse_icon--resize_ew {
+  cursor: ew-resize;
+}
+.u-mouse_icon--resize_ns {
+  cursor: ns-resize;
+}
+.u-mouse_icon--resize_nesw {
+  cursor: nesw-resize;
+}
+.u-mouse_icon--resize_nwse {
+  cursor: nwse-resize;
+}
+
+// icon color
+.u-icon--red {
+  filter: invert(15%) sepia(95%) saturate(6932%) hue-rotate(358deg)
+    brightness(95%) contrast(112%);
+}

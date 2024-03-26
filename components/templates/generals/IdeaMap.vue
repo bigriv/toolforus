@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Idea from "@/components/atoms/ideamap/Idea.vue";
-import InputText from "@/components/atoms/interfaces/InputText.vue";
+import ToolDataList from "@/components/molecules/interfaces/ToolDataList.vue";
 import ToolButton from "@/components/atoms/interfaces/ToolButton.vue";
 import { TOUPosition } from "@/types/common/position";
 import { TOUIdea } from "@/types/ideamap/idea";
@@ -8,13 +8,6 @@ import { TOUIdea } from "@/types/ideamap/idea";
 const DEFAULT_IDEA_NAME = "Untitled_1";
 const ideaName = ref(DEFAULT_IDEA_NAME);
 const ideaList: Ref<{ [key: string]: TOUIdea }> = ref({});
-const isSubmitable = computed(() => !ideaList.value[edit.after]);
-const isDeletable = computed(() => Object.keys(ideaList.value).length > 1);
-const edit = reactive({
-  isEditing: false,
-  before: "",
-  after: "",
-});
 const ideaMap = ref(new TOUIdea({ position: new TOUPosition() }));
 const grabing: Ref<TOUIdea | undefined> = ref(undefined);
 const lens = ref(100);
@@ -39,54 +32,20 @@ const save = () => {
   ideaList.value[ideaName.value] = ideaMap.value;
   localStorage.setItem("tou.ideamap", JSON.stringify(ideaList.value));
 };
-const onChangeNote = (e: Event) => {
-  save();
-  ideaName.value = (e.target as HTMLSelectElement).value;
-  ideaMap.value = ideaList.value[ideaName.value];
-};
-const onEdit = () => {
-  edit.isEditing = true;
-  edit.before = ideaName.value;
-  edit.after = ideaName.value;
-};
-const onAddMap = () => {
-  save();
-  const keyList = Object.keys(ideaList.value)
-    .filter((key) => /^Untitled_\d+$/.test(key))
-    .map((key) => key.replace(/^Untitled_/, ""));
-  let max = 1;
-  for (const key of keyList) {
-    const num = Number(key);
-    if (Number.isNaN(num)) {
-      continue;
-    }
-    if (num > max) {
-      max = num;
-    }
-  }
-  ideaName.value = "Untitled_" + (max + 1);
+const onAddIdeaMap = (ideaName: string) => {
   ideaMap.value = new TOUIdea({ position: new TOUPosition() });
-  ideaList.value[ideaName.value] = ideaMap.value;
+  ideaList.value[ideaName] = ideaMap.value;
 };
-const onEditSave = () => {
-  edit.isEditing = false;
-  if (edit.before === edit.after) {
-    return;
-  }
-  ideaList.value[edit.after] = ideaList.value[edit.before];
-  delete ideaList.value[edit.before];
-  ideaName.value = edit.after;
+const onEditIdeaMap = (ideaName: string) => {
+  ideaMap.value = ideaList.value[ideaName];
+  save();
 };
-const onEditCancel = () => {
-  edit.isEditing = false;
-  edit.before = "";
-  edit.after = "";
+const onChangeIdeaMap = (ideaName: string) => {
+  ideaMap.value = ideaList.value[ideaName];
 };
-const onDelete = () => {
-  edit.isEditing = false;
-  delete ideaList.value[edit.before];
-  ideaName.value = Object.keys(ideaList.value)[0];
-  ideaMap.value = ideaList.value[ideaName.value];
+const onDeleteIdeaMap = (ideaName: string) => {
+  ideaMap.value = ideaList.value[ideaName];
+  save();
 };
 const onResetFocus = () => {
   canvasCenter.value.x = 50;
@@ -181,12 +140,13 @@ onMounted(() => {
   for (const key of Object.keys(object)) {
     ideaList.value[key] = TOUIdea.build(object[key]);
   }
-  if (!Object.keys(object).includes(DEFAULT_IDEA_NAME)) {
-    ideaList.value[DEFAULT_IDEA_NAME] = ideaMap.value;
-  }
+  ideaName.value = Object.keys(ideaList.value)[0]
+  ideaMap.value = ideaList.value[ideaName.value]
+  window.addEventListener("beforeunload", save)
 });
-onUnmounted(() => {
-  save();
+onBeforeUnmount(() => {
+  window.removeEventListener("beforeunload", save)
+  save()
 });
 </script>
 
@@ -194,56 +154,15 @@ onUnmounted(() => {
   <div class="c-container">
     <div class="c-container__toolbar">
       <div class="c-container__toolbar__menu">
-        <div
-          v-if="edit.isEditing"
-          class="c-container__toolbar__menu__edit_input"
-        >
-          <InputText v-model:text="edit.after" />
-        </div>
-        <div v-else class="c-container__toolbar__menu__idea_list">
-          <select :value="ideaName" @change.prevent.stop="onChangeNote">
-            <option v-for="(__idea, name) in ideaList" :key="name">
-              {{ name }}
-            </option>
-          </select>
-        </div>
-        <template v-if="edit.isEditing">
-          <div>
-            <ToolButton :disabled="!isSubmitable" @click="onEditSave">
-              <img src="/commons/icons/flag.svg" alt="保存" />
-            </ToolButton>
-          </div>
-          <div>
-            <ToolButton @click="onEditCancel">
-              <img
-                class="u-icon--red"
-                src="/commons/icons/close.svg"
-                alt="キャンセル"
-              />
-            </ToolButton>
-          </div>
-          <div>
-            <ToolButton :disabled="!isDeletable" @click="onDelete">
-              <img
-                class="u-icon--red"
-                src="/commons/icons/delete.svg"
-                alt="削除"
-              />
-            </ToolButton>
-          </div>
-        </template>
-        <template v-else>
-          <div>
-            <ToolButton @click="onEdit">
-              <img src="/commons/icons/pen.svg" alt="編集" />
-            </ToolButton>
-          </div>
-          <div>
-            <ToolButton @click="onAddMap">
-              <img src="/commons/icons/add.svg" alt="新規" />
-            </ToolButton>
-          </div>
-        </template>
+        <ToolDataList
+          v-model:list="ideaList"
+          v-model:selected="ideaName"
+          :data="ideaMap"
+          @add="onAddIdeaMap"
+          @edit="onEditIdeaMap"
+          @change="onChangeIdeaMap"
+          @delete="onDeleteIdeaMap"
+        />
       </div>
     </div>
     <div class="c-container__toolbar">
@@ -327,20 +246,6 @@ onUnmounted(() => {
     &__menu {
       display: flex;
       height: 2rem;
-      &__edit_input {
-        width: 10rem;
-        height: 100%;
-      }
-      &__idea_list {
-        select {
-          width: 10rem;
-          height: 100%;
-          cursor: pointer;
-          &:focus {
-            outline: 0;
-          }
-        }
-      }
       &__button {
         width: 4rem;
       }
@@ -458,10 +363,6 @@ onUnmounted(() => {
       background-color: #fff;
     }
   }
-}
-.u-icon--red {
-  filter: invert(15%) sepia(95%) saturate(6932%) hue-rotate(358deg)
-    brightness(95%) contrast(112%);
 }
 .u-mouse_icon--zoom_in {
   cursor:

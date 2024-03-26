@@ -2,8 +2,9 @@ import { TOUColor } from "@/types/common/css/color";
 import { TOUFont } from "@/types/common/css/font";
 import { TOUShadow } from "@/types/common/css/shadow";
 import { TOUPosition } from "@/types/common/position";
+import type { TOUSavable } from "@/types/common/savable";
 
-export class TOUIdea {
+export class TOUIdea implements TOUSavable {
   children: TOUIdea[];
   text: string;
   width: number;
@@ -60,9 +61,6 @@ export class TOUIdea {
     return true;
   }
 
-  toJson(): string {
-    return "";
-  }
   static build(object: any): TOUIdea {
     const idea = new TOUIdea({ position: new TOUPosition() });
     if (object.children && Array.isArray(object.children)) {

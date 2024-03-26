@@ -31,12 +31,12 @@ const onChangeNote = (noteName: string) => {
 const onEditNote = (noteName: string) => {
   note.value = noteList.value[noteName];
   updateTextarea();
-  save()
+  save();
 };
 const onDeleteNote = (noteName: string) => {
   note.value = noteList.value[noteName];
   updateTextarea();
-  save()
+  save();
 };
 const onClear = () => {
   if (!textarea.value) {
@@ -66,13 +66,13 @@ onMounted(() => {
   for (const key of Object.keys(object)) {
     noteList.value[key] = new TOUNote(object[key].text);
   }
-  if (!Object.keys(object).includes(DEFAULT_NOTE_NAME)) {
-    noteList.value[DEFAULT_NOTE_NAME] = note.value;
-  }
+  noteName.value = Object.keys(noteList.value)[0];
   note.value = noteList.value[noteName.value];
   updateTextarea();
+  window.addEventListener("beforeunload", save);
 });
 onBeforeUnmount(() => {
+  window.removeEventListener("beforeunload", save);
   save();
 });
 </script>
@@ -148,9 +148,5 @@ onBeforeUnmount(() => {
       }
     }
   }
-}
-.u-icon--red {
-  filter: invert(15%) sepia(95%) saturate(6932%) hue-rotate(358deg)
-    brightness(95%) contrast(112%);
 }
 </style>

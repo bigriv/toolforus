@@ -1,522 +1,188 @@
 <script setup lang="ts">
 import { TOUPosition } from "@/types/common/position";
-import BasicNote from "./BasicNote.vue";
-import FreehandNote from "./FreehandNote.vue";
-import IdeaMap from "./IdeaMap.vue";
-import Translate from "./Translate.vue";
-import StopWatch from "./StopWatch.vue";
+import { TOU_COMPONENT_TYPE, TOUComponent } from "@/types/integrater/component";
+import { TOUIntegrater } from "@/types/integrater/integrater";
+import ToolDataList from "~/components/molecules/interfaces/ToolDataList.vue";
+import ToolButton from "~/components/atoms/interfaces/ToolButton.vue";
+import ToggleButton from "~/components/atoms/interfaces/ToggleButton.vue";
+import IntegraterCustom from "./integrater/IntegraterCustom.vue";
+import IntegraterView from "./integrater/IntegraterView.vue";
 
+const DEFAULT_INTEGRATER_NAME = "Untitled_1";
 const COL_NUM = 16;
 const ROW_NUM = 9;
+const COMPONENT_DEFINES = [
+  {
+    type: TOU_COMPONENT_TYPE.BASIC_NOTE,
+    label: "メモ帳",
+  },
+  {
+    type: TOU_COMPONENT_TYPE.FREEHAND_NOTE,
+    label: "手書きメモ",
+  },
+  {
+    type: TOU_COMPONENT_TYPE.IDEA_MAP,
+    label: "連想図",
+  },
+  {
+    type: TOU_COMPONENT_TYPE.STOP_WATCH,
+    label: "ストップウォッチ",
+  },
+  {
+    type: TOU_COMPONENT_TYPE.TRANSLATE,
+    label: "翻訳機",
+  },
+];
 
-enum TOU_COMPONENT_TYPE {
-  BASIC_NOTE,
-  FREEHAND_NOTE,
-  IDEA_MAP,
-  STOP_WATCH,
-  TRANSLATE,
-}
-class TOUComopnent {
-  type: TOU_COMPONENT_TYPE;
-  start: TOUPosition;
-  end: TOUPosition;
-  constructor(type: TOU_COMPONENT_TYPE, start: TOUPosition, end: TOUPosition) {
-    this.type = type;
-    this.start = start;
-    this.end = end;
+const integraterList: Ref<{ [key: string]: TOUIntegrater }> = ref({});
+const integrater: Ref<TOUIntegrater> = ref(new TOUIntegrater());
+const integraterName: Ref<string> = ref(DEFAULT_INTEGRATER_NAME);
+const selectingComponent = ref(COMPONENT_DEFINES[0].type);
+const customising = ref(true);
+
+const save = () => {
+  integraterList.value[integraterName.value] = integrater.value;
+  localStorage.setItem("tou.integrater", JSON.stringify(integraterList.value));
+};
+const onAddIntegrater = (integraterName: string) => {
+  integrater.value = new TOUIntegrater();
+  integraterList.value[integraterName] = integrater.value;
+};
+const onEditIntegrater = (integraterName: string) => {
+  integrater.value = integraterList.value[integraterName];
+  save();
+};
+const onChangeIntegrater = (integraterName: string) => {
+  integrater.value = integraterList.value[integraterName];
+};
+const onDeleteIntegrater = (integraterName: string) => {
+  integrater.value = integraterList.value[integraterName];
+  save();
+};
+const onAddComponent = () => {
+  integrater.value.components.push(
+    new TOUComponent(
+      selectingComponent.value,
+      new TOUPosition(1, 1),
+      new TOUPosition(4, 4)
+    )
+  );
+};
+
+onMounted(() => {
+  const object = JSON.parse(
+    JSON.parse(JSON.stringify(localStorage.getItem("tou.integrater")))
+  );
+  if (!object || Object.keys(object).length <= 0) {
+    integraterList.value[integraterName.value] = integrater.value;
+    return;
   }
-}
-const custom_main: Ref<HTMLElement | null> = ref(null);
-const contents: Ref<Array<TOUComopnent>> = ref([
-  new TOUComopnent(
-    TOU_COMPONENT_TYPE.BASIC_NOTE,
-    new TOUPosition(1, 4),
-    new TOUPosition(9, ROW_NUM + 1)
-  ),
-  new TOUComopnent(
-    TOU_COMPONENT_TYPE.FREEHAND_NOTE,
-    new TOUPosition(9, 4),
-    new TOUPosition(COL_NUM + 1, ROW_NUM + 1)
-  ),
-  new TOUComopnent(
-    TOU_COMPONENT_TYPE.TRANSLATE,
-    new TOUPosition(1, 1),
-    new TOUPosition(COL_NUM + 1, 4)
-  ),
-]);
-const grabbing: Ref<TOUComopnent | undefined> = ref();
-const resizing: Ref<TOUComopnent | undefined> = ref();
-const resizeDirection: Ref<{
-  horizontal: number;
-  vertaical: number;
-}> = ref({
-  horizontal: 0,
-  vertaical: 0,
+  for (const key of Object.keys(object)) {
+    integraterList.value[key] = TOUIntegrater.build(object[key].components);
+  }
+  integraterName.value = Object.keys(integraterList.value)[0];
+  integrater.value = integraterList.value[integraterName.value];
+  window.addEventListener("beforeunload", save);
 });
-const newStart: Ref<TOUPosition | undefined> = ref();
-const newEnd: Ref<TOUPosition | undefined> = ref();
-
-const moveComponent = (event: MouseEvent) => {
-  if (!custom_main.value) {
-    return;
-  }
-  if (!grabbing.value) {
-    return;
-  }
-  const cellWidth = custom_main.value.offsetWidth / COL_NUM;
-  const cellHeight = custom_main.value.offsetHeight / ROW_NUM;
-  const width = grabbing.value.end.x - grabbing.value.start.x;
-  const height = grabbing.value.end.y - grabbing.value.start.y;
-  newStart.value = new TOUPosition(
-    Math.floor(event.offsetX / cellWidth) + 1,
-    Math.floor(event.offsetY / cellHeight) + 1
-  );
-  newEnd.value = new TOUPosition(
-    newStart.value.x + width,
-    newStart.value.y + height
-  );
-
-  // 最小値、最大値チェック
-  if (newStart.value.x < 1) {
-    newStart.value.x = 1;
-    newEnd.value.x = width + 1;
-  }
-  if (newEnd.value.x > COL_NUM + 1) {
-    newStart.value.x = COL_NUM + 1 - width;
-    newEnd.value.x = COL_NUM + 1;
-  }
-  if (newStart.value.y < 1) {
-    newStart.value.y = 1;
-    newEnd.value.y = height + 1;
-  }
-  if (newEnd.value.y > ROW_NUM + 1) {
-    newStart.value.y = ROW_NUM + 1 - height;
-    newEnd.value.y = ROW_NUM + 1;
-  }
-};
-const resizeComponent = (event: MouseEvent) => {
-  if (!custom_main.value) {
-    return;
-  }
-  if (!resizing.value) {
-    return;
-  }
-  const cellWidth = custom_main.value.offsetWidth / COL_NUM;
-  const cellHeight = custom_main.value.offsetHeight / ROW_NUM;
-  let newX = Math.round(event.offsetX / cellWidth) + 1;
-  let newY = Math.round(event.offsetY / cellHeight) + 1;
-
-  // 最小値、最大値チェック
-  if (newX < 1) {
-    newX = 1;
-  } else if (newX > COL_NUM + 1) {
-    newX = COL_NUM + 1;
-  }
-  if (newY < 1) {
-    newY = 1;
-  } else if (newY > ROW_NUM + 1) {
-    newY = ROW_NUM + 1;
-  }
-
-  // リサイズ処理
-  newStart.value = new TOUPosition(
-    newStart.value?.x ?? resizing.value.start.x,
-    newStart.value?.y ?? resizing.value.start.y
-  );
-  newEnd.value = new TOUPosition(
-    newEnd.value?.x ?? resizing.value.end.x,
-    newEnd.value?.y ?? resizing.value.end.y
-  );
-  if (resizeDirection.value.horizontal > 0) {
-    if (event.movementX < 0) {
-      if (newX - resizing.value.start.x >= 1) {
-        newEnd.value.x = newX;
-      }
-    } else if (event.movementX > 0) {
-      if (newX <= COL_NUM + 1) {
-        newEnd.value.x = newX;
-      }
-    }
-  } else if (resizeDirection.value.horizontal < 0) {
-    if (event.movementX < 0) {
-      if (newX >= 1) {
-        newStart.value.x = newX;
-      }
-    } else if (event.movementX > 0) {
-      if (resizing.value.end.x - newX >= 1) {
-        newStart.value.x = newX;
-      }
-    }
-  }
-  if (resizeDirection.value.vertaical > 0) {
-    if (event.movementY < 0) {
-      if (newY >= 1) {
-        newStart.value.y = newY;
-      }
-    } else if (event.movementY > 0) {
-      if (resizing.value.end.y - newY > 1) {
-        newStart.value.y = newY;
-      }
-    }
-  } else if (resizeDirection.value.vertaical < 0) {
-    if (event.movementY < 0) {
-      if (newY - resizing.value.start.y >= 1) {
-        newEnd.value.y = newY;
-      }
-    } else if (event.movementY > 0) {
-      if (newY <= ROW_NUM + 1) {
-        newEnd.value.y = newY;
-      }
-    }
-  }
-};
-const onMove = (event: MouseEvent) => {
-  moveComponent(event);
-  resizeComponent(event);
-};
-const onGrab = (content: TOUComopnent) => {
-  grabbing.value = content;
-  resizing.value = undefined;
-  newStart.value = content.start;
-  newEnd.value = content.end;
-};
-const onResize = (
-  content: TOUComopnent,
-  horizontal: number,
-  vertical: number
-) => {
-  grabbing.value = undefined;
-  resizing.value = content;
-  newStart.value = content.start;
-  newEnd.value = content.end;
-  resizeDirection.value = {
-    horizontal: horizontal,
-    vertaical: vertical,
-  };
-};
-const onMoveCancel = () => {
-  grabbing.value = undefined;
-  resizing.value = undefined;
-  resizeDirection.value.horizontal = 0;
-  resizeDirection.value.vertaical = 0;
-  newStart.value = undefined;
-  newEnd.value = undefined;
-};
-const onRelease = () => {
-  if (!newStart.value) {
-    return;
-  }
-  if (!newEnd.value) {
-    return;
-  }
-  if (grabbing.value) {
-    // 位置を更新
-    grabbing.value.start = newStart.value;
-    grabbing.value.end = newEnd.value;
-    grabbing.value = undefined;
-  }
-  if (resizing.value) {
-    // 位置を更新
-    resizing.value.start = newStart.value;
-    resizing.value.end = newEnd.value;
-    resizing.value = undefined;
-    resizeDirection.value.horizontal = 0;
-    resizeDirection.value.vertaical = 0;
-  }
-
-  newStart.value = undefined;
-  newEnd.value = undefined;
-};
+onBeforeUnmount(() => {
+  window.removeEventListener("beforeunload", save);
+  save();
+});
 </script>
 
 <template>
-  <div class="c-custom" @mouseleave="onMoveCancel" @mouseup="onRelease">
-    <div
-      class="c-custom__moving_panel"
-      :style="{
-        'z-index': grabbing || resizing ? 1 : 0,
-      }"
-      :class="{
-        'u-mouse_icon--grabbing': grabbing,
-
-        'u-mouse_icon--resize_ew':
-          resizing &&
-          resizeDirection.horizontal !== 0 &&
-          resizeDirection.vertaical === 0,
-        'u-mouse_icon--resize_ns':
-          resizing &&
-          resizeDirection.horizontal === 0 &&
-          resizeDirection.vertaical !== 0,
-        'u-mouse_icon--resize_nesw':
-          resizing &&
-          resizeDirection.horizontal * resizeDirection.vertaical > 0,
-        'u-mouse_icon--resize_nwse':
-          resizing &&
-          resizeDirection.horizontal * resizeDirection.vertaical < 0,
-      }"
-      @mousemove="onMove"
-    ></div>
-    <div
-      class="c-custom__layout"
-      :style="{
-        '--row': ROW_NUM,
-        '--col': COL_NUM,
-      }"
-    >
-      <template v-for="row in ROW_NUM">
-        <template v-for="col in COL_NUM">
-          <div
-            class="c-custom__layout__content"
-            :style="{
-              '--startX': col,
-              '--startY': row,
-              '--endX': col + 1,
-              '--endY': row + 1,
-            }"
-            @mousemove.prevent.stop
-          ></div>
-        </template>
-      </template>
-    </div>
-    <div
-      ref="custom_main"
-      class="c-custom__main"
-      :style="{
-        '--row': ROW_NUM,
-        '--col': COL_NUM,
-      }"
-    >
-      <div
-        v-for="content in contents"
-        class="c-custom__main__container"
-        :style="{
-          '--startX':
-            content === grabbing || content === resizing
-              ? newStart?.x
-              : content.start.x,
-          '--startY':
-            content === grabbing || content === resizing
-              ? newStart?.y
-              : content.start.y,
-          '--endX':
-            content === grabbing || content === resizing
-              ? newEnd?.x
-              : content.end.x,
-          '--endY':
-            content === grabbing || content === resizing
-              ? newEnd?.y
-              : content.end.y,
-        }"
-        :class="{
-          'c-custom__main__container--slecting':
-            content === grabbing || content === resizing,
-        }"
-      >
-        <div
-          class="c-custom__main__container__content"
-          @mousemove.prevent.stop
-          @mouseleave.prevent.stop
-        >
-          <BasicNote v-if="content.type === TOU_COMPONENT_TYPE.BASIC_NOTE" />
-          <FreehandNote
-            v-else-if="content.type === TOU_COMPONENT_TYPE.FREEHAND_NOTE"
-          />
-          <IdeaMap v-else-if="content.type === TOU_COMPONENT_TYPE.IDEA_MAP" />
-          <StopWatch
-            v-else-if="content.type === TOU_COMPONENT_TYPE.STOP_WATCH"
-          />
-          <Translate
-            v-else-if="content.type === TOU_COMPONENT_TYPE.TRANSLATE"
-          />
-        </div>
-        <div
-          class="c-custom__main__container__layer--resize_up"
-          @mousedown="() => onResize(content, 0, 1)"
-        ></div>
-        <div
-          class="c-custom__main__container__layer--resize_down"
-          @mousedown="() => onResize(content, 0, -1)"
-        ></div>
-        <div
-          class="c-custom__main__container__layer--resize_left"
-          @mousedown="() => onResize(content, -1, 0)"
-        ></div>
-        <div
-          class="c-custom__main__container__layer--resize_right"
-          @mousedown="() => onResize(content, 1, 0)"
-        ></div>
-        <div
-          class="c-custom__main__container__layer--resize_left_up"
-          @mousedown="() => onResize(content, -1, 1)"
-        ></div>
-        <div
-          class="c-custom__main__container__layer--resize_right_up"
-          @mousedown="() => onResize(content, 1, 1)"
-        ></div>
-        <div
-          class="c-custom__main__container__layer--resize_left_down"
-          @mousedown="() => onResize(content, -1, -1)"
-        ></div>
-        <div
-          class="c-custom__main__container__layer--resize_right_down"
-          @mousedown="() => onResize(content, 1, -1)"
-        ></div>
-        <div
-          class="c-custom__main__container__layer--grab"
-          @mousedown="() => onGrab(content)"
-        ></div>
+  <div class="c-integrater">
+    <div class="c-integrater__toolbar">
+      <div class="c-integrater__toolbar__menu">
+        <ToolDataList
+          v-model:list="integraterList"
+          v-model:selected="integraterName"
+          :data="integrater"
+          @add="onAddIntegrater"
+          @edit="onEditIntegrater"
+          @change="onChangeIntegrater"
+          @delete="onDeleteIntegrater"
+        />
       </div>
+      <div>
+        <ToggleButton v-model="customising" label="カスタマイズ" />
+      </div>
+    </div>
+    <div v-if="customising" class="c-integrater__toolbar">
+      <div class="c-integrater__toolbar__menu">
+        <div class="c-integrater__toolbar__select_components">
+          <select v-model="selectingComponent">
+            <option
+              v-for="component in COMPONENT_DEFINES"
+              :value="component.type"
+              :key="component.type"
+            >
+              {{ component.label }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <ToolButton @click="onAddComponent">
+            <img src="/commons/icons/add.svg" alt="追加" />
+          </ToolButton>
+        </div>
+      </div>
+    </div>
+    <div class="c-integrater__canvas">
+      <IntegraterCustom
+        v-if="customising"
+        v-model:integrater="integrater"
+        :col="COL_NUM"
+        :row="ROW_NUM"
+      />
+      <IntegraterView
+        v-else
+        v-model:integrater="integrater"
+        :col="COL_NUM"
+        :row="ROW_NUM"
+      />
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
-.c-custom {
+.c-integrater {
   position: relative;
-  width: 90%;
-  height: 90%;
+  width: 100%;
+  height: 100%;
   display: flex;
-  justify-content: center;
-  margin: 0 auto;
-  &__moving_panel {
-    position: absolute;
+  flex-direction: column;
+  align-items: center;
+  margin: auto;
+  &__toolbar {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
     width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-  }
-  &__layout {
-    position: absolute;
-    display: grid;
-    width: 100%;
-    height: 100%;
-    border: 0.1rem #aaa solid;
-    grid-template-columns: repeat(var(--col), calc(100% / var(--col)));
-    grid-template-rows: repeat(var(--row), calc(100% / var(--row)));
-    &__content {
-      width: 100%;
-      height: 100%;
-      border: 0.1rem dashed #aaa;
-      grid-column: var(--startX) / var(--endX);
-      grid-row: var(--startY) / var(--endY);
+    background-color: white;
+    &__menu {
+      display: flex;
+      height: 2rem;
+      &__button {
+        width: 4rem;
+      }
     }
-  }
-  &__main {
-    position: absolute;
-    display: grid;
-    width: 100%;
-    height: 100%;
-    grid-template-columns: repeat(var(--col), calc(100% / var(--col)));
-    grid-template-rows: repeat(var(--row), calc(100% / var(--row)));
-    &__container {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      border: 0.1rem solid black;
-      grid-column: var(--startX) / var(--endX);
-      grid-row: var(--startY) / var(--endY);
-      background: white;
-      user-select: none;
-      &__content {
-        position: relative;
-        width: 100%;
+    &__select_components {
+      select {
+        width: 10rem;
         height: 100%;
-        user-select: none;
-        overflow: auto;
-      }
-      &--selecting {
-        opacity: 0.8;
-      }
-      &__layer {
-        &--resize_up {
-          position: absolute;
-          top: 0;
-          left: 5%;
-          width: 90%;
-          height: 5%;
-          cursor: ns-resize;
-        }
-        &--resize_down {
-          position: absolute;
-          bottom: 0;
-          left: 5%;
-          width: 90%;
-          height: 5%;
-          cursor: ns-resize;
-        }
-        &--resize_left {
-          position: absolute;
-          top: 5%;
-          left: 0;
-          width: 5%;
-          height: 90%;
-          cursor: ew-resize;
-        }
-        &--resize_right {
-          position: absolute;
-          top: 5%;
-          right: 0;
-          width: 5%;
-          height: 90%;
-          cursor: ew-resize;
-        }
-        &--resize_left_up {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 5%;
-          height: 5%;
-          cursor: nwse-resize;
-        }
-        &--resize_right_up {
-          position: absolute;
-          top: 0;
-          right: 0;
-          width: 5%;
-          height: 5%;
-          cursor: nesw-resize;
-        }
-        &--resize_left_down {
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          width: 5%;
-          height: 5%;
-          cursor: nesw-resize;
-        }
-        &--resize_right_down {
-          position: absolute;
-          bottom: 0;
-          right: 0;
-          width: 5%;
-          height: 5%;
-          cursor: nwse-resize;
-        }
-        &--grab {
-          position: absolute;
-          top: 5%;
-          left: 5%;
-          width: 90%;
-          height: 90%;
-          cursor: grab;
+        cursor: pointer;
+        &:focus {
+          outline: 0;
         }
       }
     }
   }
-}
-.u-mouse_icon--grabbing {
-  cursor: grabbing;
-}
-.u-mouse_icon--resize_ew {
-  cursor: ew-resize;
-}
-.u-mouse_icon--resize_ns {
-  cursor: ns-resize;
-}
-.u-mouse_icon--resize_nesw {
-  cursor: nesw-resize;
-}
-.u-mouse_icon--resize_nwse {
-  cursor: nwse-resize;
+  &__canvas {
+    width: 100%;
+    height: 90%;
+    margin: 2.4rem auto 0 auto;
+    flex-grow: 1;
+  }
 }
 </style>

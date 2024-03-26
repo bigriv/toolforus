@@ -6,10 +6,12 @@ import { TOUPosition } from "@/types/common/position";
 import { TOUIdea } from "@/types/ideamap/idea";
 
 const DEFAULT_IDEA_NAME = "Untitled_1";
+const canvas: Ref<HTMLElement | null> = ref(null);
 const ideaName = ref(DEFAULT_IDEA_NAME);
 const ideaList: Ref<{ [key: string]: TOUIdea }> = ref({});
 const ideaMap = ref(new TOUIdea({ position: new TOUPosition() }));
 const grabing: Ref<TOUIdea | undefined> = ref(undefined);
+const mousedown = ref(false);
 const lens = ref(100);
 const canvasCenter = ref(new TOUPosition(50, 50));
 const currentTool = ref("cursor");
@@ -25,6 +27,10 @@ const toolList = [
   {
     icon: "/commons/icons/zoom_out.svg",
     name: "zoom_out",
+  },
+  {
+    icon: "/commons/icons/drag_pan.svg",
+    name: "move",
   },
 ];
 
@@ -51,6 +57,18 @@ const onResetFocus = () => {
   canvasCenter.value.x = 50;
   canvasCenter.value.y = 50;
   lens.value = 100;
+};
+const onRemoveIdea = (target: TOUIdea) => {
+  const remove = (idea: TOUIdea) => {
+    if (!idea.children.includes(target)) {
+      idea.children.forEach((i) => {
+        remove(i);
+      });
+      return;
+    }
+    idea.children = idea.children.filter((idea) => idea !== target);
+  };
+  remove(ideaMap.value);
 };
 const onAddIdea = (parent: TOUIdea) => {
   const newIdea = new TOUIdea({
@@ -83,24 +101,56 @@ const onMousedownIdea = (idea: TOUIdea) => {
 };
 const onMouseupIdea = () => {
   grabing.value = undefined;
+  mousedown.value = false;
 };
 const onMousemoveCanvas = (event: MouseEvent) => {
-  if (!grabing.value) {
+  if (!canvas.value) {
     return;
   }
-  grabing.value.position.x +=
-    Math.round((event.movementX / 5 / 500) * lens.value * 10000) / 10000;
-  grabing.value.position.y +=
-    Math.round((event.movementY / 6 / 500) * lens.value * 10000) / 10000;
+
+  if (grabing.value) {
+    const magni = lens.value / 500;
+    grabing.value.position.x +=
+      Math.round(
+        (event.movementX / canvas.value.offsetWidth) * 100 * magni * 10000
+      ) / 10000;
+    grabing.value.position.y +=
+      Math.round(
+        (event.movementY / canvas.value.offsetHeight) * 100 * magni * 10000
+      ) / 10000;
+    return;
+  }
+  if (currentTool.value === "move") {
+    if (!mousedown.value) {
+      return;
+    }
+    const magni = lens.value / 500;
+    canvasCenter.value.x -=
+      Math.round(
+        (event.movementX / canvas.value.offsetWidth) * 100 * magni * 10000
+      ) / 10000;
+    canvasCenter.value.y -=
+      Math.round(
+        (event.movementY / canvas.value.offsetHeight) * 100 * magni * 10000
+      ) / 10000;
+  }
 };
 const onMousedownCanvas = (event: MouseEvent) => {
   if (grabing.value) {
     return;
   }
+  mousedown.value = true;
   if (currentTool.value === "zoom_in") {
+    if (!canvas.value) {
+      return;
+    }
     canvasCenter.value = new TOUPosition(
-      Math.round((event.offsetX / (5 * 5)) * 10000) / 10000,
-      Math.round((event.offsetY / (6 * 5)) * 10000) / 10000
+      Math.round(
+        (event.offsetX / ((canvas.value.offsetWidth / 100) * 5)) * 10000
+      ) / 10000,
+      Math.round(
+        (event.offsetY / ((canvas.value.offsetHeight / 100) * 5)) * 10000
+      ) / 10000
     );
     if (lens.value >= 500) {
       return;
@@ -115,6 +165,7 @@ const onMousedownCanvas = (event: MouseEvent) => {
 };
 const onMouseleaveCanvas = () => {
   grabing.value = undefined;
+  mousedown.value = false;
 };
 const onUpCanvas = () => {
   canvasCenter.value.y -= 100 / lens.value;
@@ -140,13 +191,13 @@ onMounted(() => {
   for (const key of Object.keys(object)) {
     ideaList.value[key] = TOUIdea.build(object[key]);
   }
-  ideaName.value = Object.keys(ideaList.value)[0]
-  ideaMap.value = ideaList.value[ideaName.value]
-  window.addEventListener("beforeunload", save)
+  ideaName.value = Object.keys(ideaList.value)[0];
+  ideaMap.value = ideaList.value[ideaName.value];
+  window.addEventListener("beforeunload", save);
 });
 onBeforeUnmount(() => {
-  window.removeEventListener("beforeunload", save)
-  save()
+  window.removeEventListener("beforeunload", save);
+  save();
 });
 </script>
 
@@ -189,17 +240,20 @@ onBeforeUnmount(() => {
       </div>
     </div>
 
-    <div class="c-container__canvas">
+    <div ref="canvas" class="c-container__canvas">
       <div
         class="c-container__canvas__inner"
         :class="{
           'u-mouse_icon--zoom_in': currentTool === 'zoom_in',
           'u-mouse_icon--zoom_out': currentTool === 'zoom_out',
+          'u-mouse_icon--move': currentTool === 'move',
           'u-mouse_icon--default': currentTool === 'cursor',
           'u-mouse_icon--grab': grabing,
         }"
         :style="{
           '--lens': lens,
+          '--canvasWidth': canvas?.offsetWidth,
+          '--canvasHeight': canvas?.offsetHeight,
           '--centerX': canvasCenter.x,
           '--centerY': canvasCenter.y,
         }"
@@ -209,7 +263,9 @@ onBeforeUnmount(() => {
         @mouseup="onMouseupIdea"
       >
         <Idea
+          :depth="0"
           :idea="ideaMap"
+          @remove="onRemoveIdea"
           @add="onAddIdea"
           @mousedown="onMousedownIdea"
           @mouseup="onMouseupIdea"
@@ -239,6 +295,8 @@ onBeforeUnmount(() => {
 .c-container {
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
   &__toolbar {
     display: flex;
     justify-content: space-between;
@@ -284,10 +342,10 @@ onBeforeUnmount(() => {
     position: relative;
     border: 0.1rem solid black;
     width: 100%;
-    height: 600px;
     margin: auto;
     overflow: hidden;
     background-color: #eee;
+    flex-grow: 1;
     &__button {
       &--up,
       &--down,

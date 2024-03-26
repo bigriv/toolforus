@@ -3,13 +3,17 @@ import InputText from "@/components/atoms/interfaces/InputText.vue";
 import { TOUIdea } from "@/types/ideamap/idea";
 
 const props = defineProps({
+  depth: {
+    type: Number,
+    required: true,
+  },
   idea: {
     type: TOUIdea,
     required: true,
   },
 });
 
-const emits = defineEmits(["change", "add", "mousedown", "mouseup"]);
+const emits = defineEmits(["change", "add", "remove", "mousedown", "mouseup"]);
 
 const onMousedown = () => {
   emits("mousedown", props.idea);
@@ -20,11 +24,17 @@ const onMouseup = () => {
 const onChange = () => {
   emits("change");
 };
+const onRemove = () => {
+  emits("remove", props.idea);
+};
 const onAdd = () => {
   if (props.idea.children.length >= 8) {
     return;
   }
   emits("add", props.idea);
+};
+const emitRemove = (target: TOUIdea) => {
+  emits("remove", target);
 };
 const emitAdd = (parent: TOUIdea) => {
   emits("add", parent);
@@ -58,14 +68,23 @@ const emitMouseup = () => {
         @mousedown.stop
       />
     </div>
+    <div
+      v-if="depth > 0 && props.idea.children.length <= 0"
+      class="c-idea__remove"
+      @click="onRemove"
+    >
+      <img src="/commons/icons/remove.svg" alt="削除" />
+    </div>
     <div class="c-idea__add" @click="onAdd">
       <img src="/commons/icons/add.svg" alt="子を追加" />
     </div>
   </div>
   <template v-for="child in props.idea.children">
     <Idea
+      :depth="props.depth + 1"
       :idea="child"
       @add="emitAdd"
+      @remove="emitRemove"
       @mousedown="emitMousedown"
       @mouseup="emitMouseup"
     />
@@ -102,6 +121,7 @@ const emitMouseup = () => {
     left: 50%;
     transform: translate(-50%, -50%);
   }
+  &__remove,
   &__add {
     width: 1rem;
     height: 1rem;
@@ -109,9 +129,6 @@ const emitMouseup = () => {
     border-radius: 50%;
     background: white;
     position: absolute;
-    top: 0;
-    right: 0;
-    transform: translate(50%, -50%);
     cursor: pointer;
     opacity: 0.5;
     &:hover {
@@ -125,14 +142,26 @@ const emitMouseup = () => {
       left: 0;
     }
   }
+  &__remove {
+    top: 0;
+    right: 1.2rem;
+    transform: translate(50%, -50%);
+  }
+  &__add {
+    top: 0;
+    right: 0;
+    transform: translate(50%, -50%);
+  }
   &__line {
     position: absolute;
     top: calc(var(--fromY) * 1% + 50%);
     left: calc(var(--fromX) * 1% + 50%);
     background-color: black;
     border: 0.1rem solid black;
-    --diffX: calc(var(--fromX) - var(--toX));
-    --diffY: calc(var(--fromY) - var(--toY));
+    --diffX: calc((var(--fromX) - var(--toX)));
+    --diffY: calc(
+      (var(--fromY) - var(--toY)) * var(--canvasHeight) / var(--canvasWidth)
+    );
     --radias: sqrt(var(--diffX) * var(--diffX) + var(--diffY) * var(--diffY));
     --deg: atan2(var(--diffY), var(--diffX));
     width: calc(var(--radias) * 1%);
@@ -145,9 +174,11 @@ const emitMouseup = () => {
     border: none;
     background: transparent;
     text-align: center;
+    user-select: none;
     &:focus {
       border: 0.1rem solid black;
       text-align: left;
+      user-select: auto;
     }
   }
 }

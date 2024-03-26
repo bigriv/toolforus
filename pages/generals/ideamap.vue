@@ -10,7 +10,8 @@ import IdeaMap from "@/components/templates/generals/IdeaMap.vue";
 
 <style scoped lang="scss">
 .c-ideamap {
-  max-width: 500px;
+  width: 100%;
+  height: 700px;
   margin: auto;
 }
 </style>

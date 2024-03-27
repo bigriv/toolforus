@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import IdeaMap from "@/components/templates/generals/IdeaMap.vue";
+import IdeaMap from "@/components/templates/tools/generals/IdeaMap.vue";
 </script>
 
 <template>

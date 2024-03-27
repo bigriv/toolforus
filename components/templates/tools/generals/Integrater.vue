@@ -1,12 +1,15 @@
 <script setup lang="ts">
+import ToolDataList from "@/components/molecules/interfaces/ToolDataList.vue";
+import ToolButton from "@/components/atoms/interfaces/ToolButton.vue";
+import ToggleButton from "@/components/atoms/interfaces/ToggleButton.vue";
+import IntegraterCustom from "@/components/templates/tools/generals/integrater/IntegraterCustom.vue";
+import IntegraterView from "@/components/templates/tools/generals/integrater/IntegraterView.vue";
 import { TOUPosition } from "@/types/common/position";
-import { TOU_COMPONENT_TYPE, TOUComponent } from "@/types/integrater/component";
-import { TOUIntegrater } from "@/types/integrater/integrater";
-import ToolDataList from "~/components/molecules/interfaces/ToolDataList.vue";
-import ToolButton from "~/components/atoms/interfaces/ToolButton.vue";
-import ToggleButton from "~/components/atoms/interfaces/ToggleButton.vue";
-import IntegraterCustom from "./integrater/IntegraterCustom.vue";
-import IntegraterView from "./integrater/IntegraterView.vue";
+import {
+  TOU_COMPONENT_TYPE,
+  TOUComponent,
+} from "@/types/tools/generals/integrater/component";
+import { TOUIntegrater } from "@/types/tools/generals/integrater/integrater";
 
 const DEFAULT_INTEGRATER_NAME = "Untitled_1";
 const COL_NUM = 16;

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import FreehandNote from "@/components/templates/generals/FreehandNote.vue";
+import FreehandNote from "@/components/templates/tools/generals/FreehandNote.vue";
 </script>
 
 <template>

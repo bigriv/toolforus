@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import Idea from "@/components/atoms/ideamap/Idea.vue";
+import Idea from "@/components/atoms/tools/generals/ideamap/Idea.vue";
 import ToolDataList from "@/components/molecules/interfaces/ToolDataList.vue";
 import ToolButton from "@/components/atoms/interfaces/ToolButton.vue";
 import { TOUPosition } from "@/types/common/position";
-import { TOUIdea } from "@/types/ideamap/idea";
+import { TOUIdea } from "@/types/tools/generals/ideamap/idea";
 
 const DEFAULT_IDEA_NAME = "Untitled_1";
 const canvas: Ref<HTMLElement | null> = ref(null);

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import InputText from "@/components/atoms/interfaces/InputText.vue";
-import { TOUIdea } from "@/types/ideamap/idea";
+import { TOUIdea } from "@/types/tools/generals/ideamap/idea";
 
 const props = defineProps({
   depth: {

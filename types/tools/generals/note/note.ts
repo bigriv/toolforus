@@ -1,4 +1,4 @@
-import type { TOUSavable } from "../common/savable";
+import type { TOUSavable } from "@/types/common/savable";
 
 export class TOUNote implements TOUSavable {
   text: string = "";

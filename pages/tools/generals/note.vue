@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import BasicNote from "@/components/templates/generals/BasicNote.vue";
+import BasicNote from "@/components/templates/tools/generals/BasicNote.vue";
 </script>
 
 <template>

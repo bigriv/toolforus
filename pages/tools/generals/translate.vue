@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Translate from "@/components/templates/generals/Translate.vue";
+import Translate from "@/components/templates/tools/generals/Translate.vue";
 </script>
 
 <template>

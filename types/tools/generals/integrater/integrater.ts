@@ -1,6 +1,6 @@
-import { TOUPosition } from "../common/position";
-import type { TOUSavable } from "../common/savable";
-import { TOUComponent, TOU_COMPONENT_TYPE } from "./component";
+import { TOUPosition } from "@/types/common/position";
+import type { TOUSavable } from "@/types/common/savable";
+import { TOUComponent, TOU_COMPONENT_TYPE } from "@/types/tools/generals/integrater/component";
 
 export class TOUIntegrater implements TOUSavable {
   components: Array<TOUComponent>;

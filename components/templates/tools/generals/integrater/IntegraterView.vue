@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import BasicNote from "@/components/templates/generals/BasicNote.vue";
-import FreehandNote from "@/components/templates/generals/FreehandNote.vue";
-import IdeaMap from "@/components/templates/generals/IdeaMap.vue";
-import Translate from "@/components/templates/generals/Translate.vue";
-import StopWatch from "@/components/templates/generals/StopWatch.vue";
-import { TOU_COMPONENT_TYPE } from "~/types/integrater/component";
-import type { TOUIntegrater } from "~/types/integrater/integrater";
+import BasicNote from "@/components/templates/tools/generals/BasicNote.vue";
+import FreehandNote from "@/components/templates/tools/generals/FreehandNote.vue";
+import IdeaMap from "@/components/templates/tools/generals/IdeaMap.vue";
+import Translate from "@/components/templates/tools/generals/Translate.vue";
+import StopWatch from "@/components/templates/tools/generals/StopWatch.vue";
+import { TOU_COMPONENT_TYPE } from "@/types/tools/generals/integrater/component";
+import type { TOUIntegrater } from "@/types/tools/generals/integrater/integrater";
 
 const props = defineProps({
   integrater: {

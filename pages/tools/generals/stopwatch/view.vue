@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
-import StopWatch from "@/components/templates/generals/StopWatch.vue";
+import StopWatch from "@/components/templates/tools/generals/StopWatch.vue";
 import { TOURGBColor } from "@/types/common/css/color";
 import { TOUFont } from "@/types/common/css/font";
 

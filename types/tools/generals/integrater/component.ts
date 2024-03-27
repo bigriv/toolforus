@@ -1,4 +1,4 @@
-import { TOUPosition } from "../common/position";
+import { TOUPosition } from "@/types/common/position";
 
 export enum TOU_COMPONENT_TYPE {
   BASIC_NOTE = "BASIC_NOTE",

@@ -2,7 +2,7 @@
 import BasicBalloon from "@/components/atoms/BasicBalloon.vue";
 import InputNumber from "@/components/molecules/interfaces/InputNumber.vue";
 import ColorPickWithButton from "@/components/organisms/interfaces/ColorPickWithButton.vue";
-import StopWatch from "@/components/templates/generals/StopWatch.vue";
+import StopWatch from "@/components/templates/tools/generals/StopWatch.vue";
 import { TOURGBColor } from "@/types/common/css/color";
 import { TOUFont } from "@/types/common/css/font";
 
@@ -97,7 +97,7 @@ const onCreateURL = () => {
   }
   url.value = encodeURI(
     useRuntimeConfig().public.host +
-      "/generals/stopwatch/view?" +
+      "/tools/generals/stopwatch/view?" +
       params.join("&")
   ).replace(/#/g, "%23");
 };

@@ -4,27 +4,27 @@ import LinkCardList from '@/components/atoms/lists/LinkCardList.vue';
 const contents = [
   {
     title: "ストップウォッチ",
-    path: "/generals/stopwatch/custom",
+    path: "/tools/generals/stopwatch/custom",
   },
   {
     title: "メモ帳",
-    path: "/generals/note",
+    path: "/tools/generals/note",
   },
   {
     title: "手書きメモ",
-    path: "/generals/freehand",
+    path: "/tools/generals/freehand",
   },
   {
     title: "翻訳機",
-    path: "/generals/translate",
+    path: "/tools/generals/translate",
   },
   {
     title: "アイデアマップ",
-    path: "/generals/ideamap",
+    path: "/tools/generals/ideamap",
   },
   {
     title: "統合",
-    path: "/generals/integrater/custom",
+    path: "/tools/generals/integrater/custom",
   },
 ];
 </script>

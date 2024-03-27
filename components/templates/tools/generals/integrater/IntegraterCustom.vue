@@ -1,13 +1,16 @@
 <script setup lang="ts">
 import type { PropType } from "vue";
-import BasicNote from "@/components/templates/generals/BasicNote.vue";
-import FreehandNote from "@/components/templates/generals/FreehandNote.vue";
-import IdeaMap from "@/components/templates/generals/IdeaMap.vue";
-import Translate from "@/components/templates/generals/Translate.vue";
-import StopWatch from "@/components/templates/generals/StopWatch.vue";
+import BasicNote from "@/components/templates/tools/generals/BasicNote.vue";
+import FreehandNote from "@/components/templates/tools/generals/FreehandNote.vue";
+import IdeaMap from "@/components/templates/tools/generals/IdeaMap.vue";
+import Translate from "@/components/templates/tools/generals/Translate.vue";
+import StopWatch from "@/components/templates/tools/generals/StopWatch.vue";
 import { TOUPosition } from "@/types/common/position";
-import { TOU_COMPONENT_TYPE, TOUComponent } from "@/types/integrater/component";
-import type { TOUIntegrater } from "@/types/integrater/integrater";
+import {
+  TOU_COMPONENT_TYPE,
+  TOUComponent,
+} from "@/types/tools/generals/integrater/component";
+import type { TOUIntegrater } from "@/types/tools/generals/integrater/integrater";
 
 const props = defineProps({
   integrater: {

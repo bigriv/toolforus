@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import BasicButton from "@/components/atoms/interfaces/BasicButton.vue";
 import ToolDataList from "@/components/molecules/interfaces/ToolDataList.vue";
-import { TOUNote } from "@/types/note/note";
+import { TOUNote } from "@/types/tools/generals/note/note";
 
 const DEFAULT_NOTE_NAME = "Untitled_1";
 const textarea: Ref<HTMLElement | null> = ref(null);

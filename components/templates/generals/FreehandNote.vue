@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from "vue";
 import ToolButton from "@/components/atoms/interfaces/ToolButton.vue";
+import BasicButton from "@/components/atoms/interfaces/BasicButton.vue";
 import InputNumber from "@/components/molecules/interfaces/InputNumber.vue";
 import ColorPicker from "@/components/molecules/interfaces/ColorPicker.vue";
-import { TOUColor } from "@/types/common/css/color";
-import BasicButton from "~/components/atoms/interfaces/BasicButton.vue";
+import { TOURGBColor } from "@/types/common/css/color";
 
 const isShowPenColorPicker = ref(false);
 const pen = reactive({
-  color: new TOUColor(TOUColor.CODE_BLACK),
+  color: new TOURGBColor(TOURGBColor.CODE_BLACK),
   isUseEraser: false,
   size: 1,
 });
@@ -27,7 +27,7 @@ const draw = {
   isMoved: false,
 };
 
-const onSubmitPenColor = (newColor: TOUColor) => {
+const onSubmitPenColor = (newColor: TOURGBColor) => {
   pen.color = newColor;
 };
 

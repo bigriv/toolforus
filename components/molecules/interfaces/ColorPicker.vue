@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref, watch } from "vue";
 import InputNumber from "@/components/molecules/interfaces/InputNumber.vue";
-import { TOUColor } from "@/types/common/css/color";
+import { TOURGBColor } from "@/types/common/css/color";
 
 const props = defineProps({
   isShowModal: {
@@ -9,7 +9,7 @@ const props = defineProps({
     default: false,
   },
   color: {
-    type: TOUColor,
+    type: TOURGBColor,
     default: undefined,
   },
   // 透明度の選択可否
@@ -41,13 +41,13 @@ const input = reactive({
   opacity: 100,
 });
 const color = computed(() => {
-  return new TOUColor(
-    TOUColor.numberToCode(input.red, input.green, input.blue),
+  return new TOURGBColor(
+    TOURGBColor.numberToCode(input.red, input.green, input.blue),
     input.opacity / 100
   ).rgba();
 });
 const resetColor = () => {
-  if (!props.color || !TOUColor.CODE_FORMAT.test(props.color.code)) {
+  if (!props.color || !TOURGBColor.CODE_FORMAT.test(props.color.code)) {
     input.red = 255;
     input.green = 255;
     input.blue = 255;
@@ -102,8 +102,8 @@ const onSubmit = () => {
   isShowModal.value = false;
   emits(
     "submit",
-    new TOUColor(
-      TOUColor.numberToCode(input.red, input.green, input.blue),
+    new TOURGBColor(
+      TOURGBColor.numberToCode(input.red, input.green, input.blue),
       input.opacity / 100
     )
   );

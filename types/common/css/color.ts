@@ -1,4 +1,4 @@
-export class TOUColor {
+export class TOURGBColor {
   static readonly CODE_BLACK = "#000000";
   static readonly CODE_WHITE = "#ffffff";
   static readonly CODE_FORMAT = /^#[0-9a-fA-F]{6}$/;
@@ -7,7 +7,7 @@ export class TOUColor {
   opacity: number;
 
   constructor(code?: string, opacity?: number) {
-    this.code = TOUColor.CODE_WHITE;
+    this.code = TOURGBColor.CODE_WHITE;
     if (code) {
       this.setCode(code);
     }
@@ -34,7 +34,7 @@ export class TOUColor {
    * @returns 赤成分の値
    */
   getRed(): number {
-    if (!TOUColor.CODE_FORMAT.test(this.code)) {
+    if (!TOURGBColor.CODE_FORMAT.test(this.code)) {
       return 0;
     }
     const red = Number("0x" + this.code.slice(1, 3));
@@ -49,7 +49,7 @@ export class TOUColor {
    * @returns 緑成分の値
    */
   getGreen(): number {
-    if (!TOUColor.CODE_FORMAT.test(this.code)) {
+    if (!TOURGBColor.CODE_FORMAT.test(this.code)) {
       return 0;
     }
     const green = Number("0x" + this.code.slice(3, 5));
@@ -64,7 +64,7 @@ export class TOUColor {
    * @returns 青成分の値
    */
   getBlue(): number {
-    if (!TOUColor.CODE_FORMAT.test(this.code)) {
+    if (!TOURGBColor.CODE_FORMAT.test(this.code)) {
       return 0;
     }
     const blue = Number("0x" + this.code.slice(5, 7));
@@ -75,7 +75,7 @@ export class TOUColor {
   }
 
   setCode(code: string) {
-    if (!TOUColor.CODE_FORMAT.test(code)) {
+    if (!TOURGBColor.CODE_FORMAT.test(code)) {
       // 色コードとしてふさわしくない値の場合は色を更新しない
       return;
     } else {

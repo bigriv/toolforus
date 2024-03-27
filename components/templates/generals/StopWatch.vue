@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { computed, onUnmounted, reactive } from "vue";
-import { TOUColor } from "@/types/common/css/color";
+import { TOURGBColor } from "@/types/common/css/color";
 import { TOUFont } from "@/types/common/css/font";
 
 const props = defineProps({
   bgColor: {
-    type: TOUColor,
-    default: new TOUColor(TOUColor.CODE_WHITE),
+    type: TOURGBColor,
+    default: new TOURGBColor(TOURGBColor.CODE_WHITE),
   },
   font: {
     type: TOUFont,

@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { TOUColor } from "@/types/common/css/color";
+import { TOURGBColor } from "@/types/common/css/color";
 
 const props = defineProps({
   color: {
-    type: TOUColor,
+    type: TOURGBColor,
     required: true,
   },
   disabled: {

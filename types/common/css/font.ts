@@ -1,23 +1,23 @@
-import type { ConversionableCss } from "./inteface";
-import { TOUColor } from "./color";
-import type { TOUShadow } from "./shadow";
+import type { ConversionableCss } from "@/types/common/css/inteface";
+import { TOURGBColor } from "@/types/common/css/color";
+import type { TOUShadow } from "@/types/common/css/shadow";
 
 export class TOUFont implements ConversionableCss {
   size: number;
-  color: TOUColor;
+  color: TOURGBColor;
   weight: "lighter" | "normal" | "bold";
   family: string;
   shadow: Array<TOUShadow>;
 
   constructor(define: {
     size: number;
-    color?: TOUColor;
+    color?: TOURGBColor;
     weight?: "lighter" | "normal" | "bold";
     family?: string;
     shadow?: Array<TOUShadow>;
   }) {
     this.size = define.size;
-    this.color = define.color ?? new TOUColor(TOUColor.CODE_BLACK);
+    this.color = define.color ?? new TOURGBColor(TOURGBColor.CODE_BLACK);
     this.weight = define.weight ?? "normal";
     this.family = define.family ?? "sans-serif";
     this.shadow = define.shadow ?? [];

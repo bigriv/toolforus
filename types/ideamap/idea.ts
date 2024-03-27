@@ -1,4 +1,4 @@
-import { TOUColor } from "@/types/common/css/color";
+import { TOURGBColor } from "@/types/common/css/color";
 import { TOUFont } from "@/types/common/css/font";
 import { TOUShadow } from "@/types/common/css/shadow";
 import { TOUPosition } from "@/types/common/position";
@@ -87,13 +87,13 @@ export class TOUIdea implements TOUSavable {
               horizontal: s.horizontal,
               blur: s.blur,
               spread: s.spread,
-              color: new TOUColor(s.color?.code, s?.opacity),
+              color: new TOURGBColor(s.color?.code, s?.opacity),
             })
         );
       }
       idea.font = new TOUFont({
         size: object.font.size,
-        color: new TOUColor(
+        color: new TOURGBColor(
           object.font.color?.code,
           object.font.color?.opacity
         ),

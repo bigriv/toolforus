@@ -1,24 +1,24 @@
-import { TOUColor } from "./color";
+import { TOURGBColor } from "@/types/common/css/color";
 
 export class TOUShadow {
   vertical: number;
   horizontal: number;
   blur?: number;
   spread?: number;
-  color: TOUColor;
+  color: TOURGBColor;
 
   constructor(define: {
     vertical: number;
     horizontal: number;
     blur?: number;
     spread?: number;
-    color?: TOUColor;
+    color?: TOURGBColor;
   }) {
     this.vertical = define.vertical;
     this.horizontal = define.horizontal;
     this.blur = define.blur;
     this.spread = define.spread;
-    this.color = define.color ?? new TOUColor(TOUColor.CODE_BLACK);
+    this.color = define.color ?? new TOURGBColor(TOURGBColor.CODE_BLACK);
   }
 
   converte(): string {

@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 import StopWatch from "@/components/templates/generals/StopWatch.vue";
-import { TOUColor } from "@/types/common/css/color";
+import { TOURGBColor } from "@/types/common/css/color";
 import { TOUFont } from "@/types/common/css/font";
 
 const route = useRoute();
-const background = ref(new TOUColor(TOUColor.CODE_WHITE));
+const background = ref(new TOURGBColor(TOURGBColor.CODE_WHITE));
 const font = ref(
   new TOUFont({
     size: 1,
     weight: "normal",
     family: "Meiryo",
-    color: new TOUColor(TOUColor.CODE_BLACK),
+    color: new TOURGBColor(TOURGBColor.CODE_BLACK),
   })
 );
 const buttonPosition = ref("right");

@@ -3,15 +3,15 @@ import BasicBalloon from "@/components/atoms/BasicBalloon.vue";
 import InputNumber from "@/components/molecules/interfaces/InputNumber.vue";
 import ColorPickWithButton from "@/components/organisms/interfaces/ColorPickWithButton.vue";
 import StopWatch from "@/components/templates/generals/StopWatch.vue";
-import { TOUColor } from "@/types/common/css/color";
+import { TOURGBColor } from "@/types/common/css/color";
 import { TOUFont } from "@/types/common/css/font";
 
 const url = ref("");
 const form = reactive({
-  bgColor: new TOUColor(TOUColor.CODE_WHITE),
+  bgColor: new TOURGBColor(TOURGBColor.CODE_WHITE),
   font: new TOUFont({
     size: 1,
-    color: new TOUColor(TOUColor.CODE_BLACK),
+    color: new TOURGBColor(TOURGBColor.CODE_BLACK),
     family: "Arial",
     weight: "normal",
   }),
@@ -68,10 +68,10 @@ const buttonPositionList = [
   },
 ];
 
-const onBgColorSubmit = (newColor: TOUColor) => {
+const onBgColorSubmit = (newColor: TOURGBColor) => {
   form.bgColor = newColor;
 };
-const onFontColorSubmit = (newColor: TOUColor) => {
+const onFontColorSubmit = (newColor: TOURGBColor) => {
   form.font.color = newColor;
 };
 const onCreateURL = () => {

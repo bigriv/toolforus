@@ -2,12 +2,12 @@
 import { ref } from "vue";
 import ColorPickButton from "@/components/atoms/interfaces/ColorPickButton.vue";
 import ColorPicker from "@/components/molecules/interfaces/ColorPicker.vue";
-import { TOUColor } from "@/types/common/css/color";
+import { TOURGBColor } from "@/types/common/css/color";
 
 const props = defineProps({
   color: {
-    type: TOUColor,
-    default: new TOUColor(TOUColor.CODE_WHITE),
+    type: TOURGBColor,
+    default: new TOURGBColor(TOURGBColor.CODE_WHITE),
   },
   pickableOpacity: {
     type: Boolean,
@@ -22,7 +22,7 @@ const onClickButton = () => {
   isShowModal.value = true;
 };
 
-const onSubmit = (color: TOUColor) => {
+const onSubmit = (color: TOURGBColor) => {
   emits("submit", color);
 };
 </script>

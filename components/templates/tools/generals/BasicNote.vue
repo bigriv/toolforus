@@ -114,6 +114,8 @@ onBeforeUnmount(() => {
 .c-container {
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
   &__toolbar {
     display: flex;
     justify-content: space-between;
@@ -130,10 +132,10 @@ onBeforeUnmount(() => {
   &__note {
     position: relative;
     width: 100%;
-    height: 600px;
     background-color: white;
     font-family: sans-serif;
     white-space: pre;
+    flex-grow: 1;
     &__layer {
       position: absolute;
       top: 0;

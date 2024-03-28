@@ -11,6 +11,7 @@ import FreehandNote from "@/components/templates/tools/generals/FreehandNote.vue
 <style scoped lang="scss">
 .c-freehand {
   max-width: 500px;
+  height: 700px;
   margin: auto;
 }
 </style>

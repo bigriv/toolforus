@@ -11,6 +11,7 @@ import BasicNote from "@/components/templates/tools/generals/BasicNote.vue";
 <style scoped lang="scss">
 .c-note {
   max-width: 500px;
+  height: 700px;
   margin: auto;
 }
 </style>

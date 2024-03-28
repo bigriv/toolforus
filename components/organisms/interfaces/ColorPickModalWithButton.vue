@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import ColorPickModal from "@/components/molecules/modals/ColorPickModal.vue";
 import ColorPickButton from "@/components/atoms/interfaces/ColorPickButton.vue";
-import ColorPicker from "@/components/molecules/interfaces/ColorPicker.vue";
 import { TOURGBColor } from "@/types/common/css/color";
 
 const props = defineProps({
@@ -30,7 +30,7 @@ const onSubmit = (color: TOURGBColor) => {
 <template>
   <div class="c-color_pick_with_button">
     <ColorPickButton :color="props.color" @click="onClickButton" />
-    <ColorPicker
+    <ColorPickModal
       v-model:isShowModal="isShowModal"
       :color="props.color"
       :pickableOpacity="props.pickableOpacity"

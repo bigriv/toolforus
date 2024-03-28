@@ -3,7 +3,7 @@ import { computed, reactive, ref } from "vue";
 import ToolButton from "@/components/atoms/interfaces/ToolButton.vue";
 import BasicButton from "@/components/atoms/interfaces/BasicButton.vue";
 import InputNumber from "@/components/molecules/interfaces/InputNumber.vue";
-import ColorPicker from "@/components/molecules/interfaces/ColorPicker.vue";
+import ColorPickModal from "@/components/molecules/modals/ColorPickModal.vue";
 import { TOURGBColor } from "@/types/common/css/color";
 
 const isShowPenColorPicker = ref(false);
@@ -121,7 +121,7 @@ const onDrawEnd = () => {
               />
             </div>
           </ToolButton>
-          <ColorPicker
+          <ColorPickModal
             v-model:isShowModal="isShowPenColorPicker"
             :color="pen.color"
             class="c-container__toolbar__menu__colorpicker__picker"
@@ -190,6 +190,7 @@ const onDrawEnd = () => {
     &__menu {
       display: flex;
       &__colorpicker {
+        position: relative;
         &__button {
           &::before {
             content: "";
@@ -206,7 +207,7 @@ const onDrawEnd = () => {
         &__picker {
           position: absolute;
           top: 0;
-          left: 6rem;
+          left: 2.4rem;
         }
       }
       &__eraser {

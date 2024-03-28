@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import BasicBalloon from "@/components/atoms/BasicBalloon.vue";
 import InputNumber from "@/components/molecules/interfaces/InputNumber.vue";
-import ColorPickWithButton from "@/components/organisms/interfaces/ColorPickWithButton.vue";
+import ColorPickModalWithButton from "@/components/organisms/interfaces/ColorPickModalWithButton.vue";
 import StopWatch from "@/components/templates/tools/generals/StopWatch.vue";
 import { TOURGBColor } from "@/types/common/css/color";
 import { TOUFont } from "@/types/common/css/font";
@@ -116,7 +116,7 @@ const onMove = () => {
         <dt>背景色</dt>
         <dd>
           <div class="c-container__content__colorpicker">
-            <ColorPickWithButton
+            <ColorPickModalWithButton
               :color="form.bgColor"
               @submit="onBgColorSubmit"
             />
@@ -129,7 +129,7 @@ const onMove = () => {
         <dt>文字色</dt>
         <dd>
           <div class="c-container__content__colorpicker">
-            <ColorPickWithButton
+            <ColorPickModalWithButton
               :color="form.font.color"
               @submit="onFontColorSubmit"
             />
@@ -270,6 +270,9 @@ button {
       }
       dd {
         min-width: fit-content;
+        display: flex;
+        align-items: center;
+        gap: 0 0.4rem;
       }
     }
     + .c-container__content {

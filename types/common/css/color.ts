@@ -29,6 +29,39 @@ export class TOURGBColor {
     return `rgba(${red}, ${green}, ${blue}, ${this.opacity})`;
   }
 
+  hsba(): TOUHSBColor {
+    const r = this.getRed();
+    const g = this.getGreen();
+    const b = this.getBlue();
+
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    const delta = max - min;
+    let hue = 0;
+    if (delta === 0) {
+      hue = 0;
+    } else if (max === r) {
+      hue = (60 * (g - b)) / delta;
+    } else if (max === g) {
+      hue = (60 * (b - r)) / delta + 120;
+    } else if (max === b) {
+      hue = (60 * (r - g)) / delta + 240;
+    }
+
+    if (hue < 0) {
+      hue += 360;
+    }
+
+    const saturation = max === 0 ? 0 : delta / max;
+    const brightness = max / 255;
+
+    return new TOUHSBColor(
+      Math.round(hue * 100) / 100,
+      Math.round(saturation * 10000) / 10000,
+      Math.round(brightness * 10000) / 10000,
+      this.opacity
+    );
+  }
   /**
    * 赤成分の値を取得する
    * @returns 赤成分の値
@@ -114,5 +147,97 @@ export class TOURGBColor {
     const g = convertToHex(green);
     const b = convertToHex(blue);
     return `#${r}${g}${b}`;
+  }
+}
+
+export class TOUHSBColor {
+  hue: number;
+  saturation: number;
+  brightness: number;
+  alpha: number;
+  constructor(
+    hue?: number,
+    saturation?: number,
+    brightness?: number,
+    alpha?: number
+  ) {
+    // setterを通すことで範囲外引数が来ても範囲内に収まるようにする
+    this.hue = hue ?? 0;
+    this.setHue(this.hue);
+
+    this.saturation = saturation ?? 0;
+    this.setSaturation(this.saturation);
+
+    this.brightness = brightness ?? 0;
+    this.setBrightness(this.brightness);
+
+    this.alpha = alpha ?? 1;
+    this.setAlpha(this.alpha);
+  }
+
+  setHue(hue: number) {
+    this.hue = Math.round(((hue / 360.0) % 1.0) * 360);
+  }
+  setSaturation(saturation: number) {
+    if (saturation < 0) {
+      this.saturation = 0;
+    } else if (saturation > 1) {
+      this.saturation = 1;
+    } else {
+      this.saturation = saturation;
+    }
+  }
+  setBrightness(brightness: number) {
+    if (brightness < 0) {
+      this.brightness = 0;
+    } else if (brightness > 1) {
+      this.brightness = 1;
+    } else {
+      this.brightness = brightness;
+    }
+  }
+  setAlpha(alpha: number) {
+    if (alpha < 0) {
+      this.alpha = 0;
+    } else if (alpha > 1) {
+      this.alpha = 1;
+    } else {
+      this.alpha = alpha;
+    }
+  }
+  shiftHue(shift: number): TOUHSBColor {
+    return new TOUHSBColor(
+      Math.round((((this.hue + shift * 15) / 360.0) % 1.0) * 360),
+      this.saturation,
+      this.brightness,
+      this.alpha
+    );
+  }
+
+  rgba(): TOURGBColor {
+    const c = this.brightness * this.saturation;
+    const x = c * (1 - Math.abs(((this.hue / 60) % 2) - 1));
+    const m = this.brightness - c;
+
+    let rgbPrime;
+    if (this.hue < 60) {
+      rgbPrime = [c, x, 0];
+    } else if (this.hue < 120) {
+      rgbPrime = [x, c, 0];
+    } else if (this.hue < 180) {
+      rgbPrime = [0, c, x];
+    } else if (this.hue < 240) {
+      rgbPrime = [0, x, c];
+    } else if (this.hue < 300) {
+      rgbPrime = [x, 0, c];
+    } else {
+      rgbPrime = [c, 0, x];
+    }
+
+    const r = Math.round((rgbPrime[0] + m) * 255);
+    const g = Math.round((rgbPrime[1] + m) * 255);
+    const b = Math.round((rgbPrime[2] + m) * 255);
+
+    return new TOURGBColor(TOURGBColor.numberToCode(r, g, b), this.alpha);
   }
 }

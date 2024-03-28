@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import LinkCardList from '@/components/atoms/lists/LinkCardList.vue';
+import LinkCardList from "@/components/atoms/lists/LinkCardList.vue";
 
 const contents = [
   {
@@ -25,6 +25,10 @@ const contents = [
   {
     title: "統合",
     path: "/tools/generals/integrater/custom",
+  },
+  {
+    title: "カラーサジェスト",
+    path: "/tools/designs/colorsuggest",
   },
 ];
 </script>

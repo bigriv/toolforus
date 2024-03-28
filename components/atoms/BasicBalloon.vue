@@ -73,7 +73,8 @@ const onMouseLeave = () => {
     background-color: gray;
     color: white;
     font-size: 1rem;
-    white-space: nowrap;
+    white-space: pre;
+    z-index: 1;
     &::before {
       content: "";
       position: absolute;

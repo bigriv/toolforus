@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
 import InputNumber from "@/components/molecules/interfaces/InputNumber.vue";
+import InputText from "@/components/atoms/interfaces/InputText.vue";
 import { TOURGBColor } from "@/types/common/css/color";
 
 const props = defineProps({
@@ -50,12 +51,29 @@ watch(
   { deep: true }
 );
 const color = computed(() => props.color.rgba());
+const onChangeCode = (text: string) => {
+  if (!TOURGBColor.CODE_FORMAT.test(text)) {
+    return;
+  }
+  const newColor = new TOURGBColor(text, props.color.opacity);
+  input.value.red = newColor.getRed();
+  input.value.green = newColor.getGreen();
+  input.value.blue = newColor.getBlue();
+};
 </script>
 
 <template>
   <div class="c-color_picker">
     <i class="c-color_picker__display" :style="{ background: color }" />
     <div class="c-color_picker__forms">
+      <div class="c-color_picker__forms__inputs">
+        <div>16進数</div>
+        <InputText
+          :text="props.color.code"
+          :maxlength="7"
+          @blur="onChangeCode"
+        />
+      </div>
       <div class="c-color_picker__forms__inputs">
         <input
           v-model.number="input.red"
@@ -105,11 +123,12 @@ const color = computed(() => props.color.rgba());
 <style scoped lang="scss">
 .c-color_picker {
   display: flex;
-  gap: 0 0.8rem;
+  gap: 0.8rem;
+  flex-wrap: wrap;
   &__display {
     display: block;
-    width: 8rem;
-    height: 8rem;
+    min-width: 8rem;
+    min-height: 8rem;
     border: 0.1rem lightgray solid;
   }
   &__forms {
@@ -119,7 +138,10 @@ const color = computed(() => props.color.rgba());
     &__inputs {
       display: flex;
       flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
       gap: 0 0.4rem;
+      height: 1.2rem;
       &__slider {
         &--red {
           &::-webkit-slider-runnable-track {
@@ -149,6 +171,7 @@ const color = computed(() => props.color.rgba());
     }
     input[type="text"] {
       width: 5rem;
+      text-align: right;
     }
     input[type="range"] {
       appearance: none;

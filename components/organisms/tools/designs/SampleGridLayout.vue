@@ -49,6 +49,9 @@ const props = defineProps({
     height: 100%;
     grid-column: var(--startX) / var(--endX);
     grid-row: var(--startY) / var(--endY);
+    transition:
+      background 0.4s ease,
+      opacity 0.4s ease;
   }
 }
 </style>

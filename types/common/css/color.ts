@@ -237,10 +237,10 @@ export class TOUHSBColor {
     this.hue = hue ?? 0;
     this.setHue(this.hue);
 
-    this.saturation = saturation ?? 0;
+    this.saturation = saturation ?? 1;
     this.setSaturation(this.saturation);
 
-    this.brightness = brightness ?? 0;
+    this.brightness = brightness ?? 0.5;
     this.setBrightness(this.brightness);
 
     this.alpha = alpha ?? 1;

@@ -30,7 +30,7 @@ watch(
     input.value.red = props.color.getRed();
     input.value.green = props.color.getGreen();
     input.value.blue = props.color.getBlue();
-    input.value.opacity = props.color.opacity * 100;
+    input.value.opacity = Math.round(props.color.opacity * 100);
   }
 );
 watch(

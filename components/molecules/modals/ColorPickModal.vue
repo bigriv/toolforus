@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
-import ColorPicker from "@/components/molecules/interfaces/ColorPicker.vue";
 import { TOURGBColor } from "@/types/common/css/color";
+import IntegratedColorPicker from "@/components/organisms/interfaces/IntegratedColorPicker.vue";
 
 const props = defineProps({
   isShowModal: {
@@ -66,9 +66,9 @@ const onSubmit = () => {
     <transition>
       <div v-show="isShowModal" class="c-color_pick_modal__inner">
         <div class="c-color_pick_modal__inner__contents">
-          <ColorPicker
+          <IntegratedColorPicker
             v-model:color="color"
-            :pickableOpacity="props.pickableOpacity"
+            :pickableAlpha="props.pickableOpacity"
           />
         </div>
 
@@ -85,6 +85,7 @@ const onSubmit = () => {
 .c-color_pick_modal {
   position: absolute;
   z-index: 10;
+  box-shadow: 0rem 0rem 0.8rem #aaa;
   &__inner {
     background-color: #ffffff;
     border: 0.1rem black solid;

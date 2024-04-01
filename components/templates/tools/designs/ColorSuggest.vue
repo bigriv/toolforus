@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ColorPicker from "@/components/molecules/interfaces/ColorPicker.vue";
+import IntegratedColorPicker from "@/components/organisms/interfaces/IntegratedColorPicker.vue";
 import CopyIcon from "@/components/molecules/icons/CopyIcon.vue";
 import DescriptionIcon from "@/components/molecules/icons/DescriptionIcon.vue";
 import SampleGridLayout from "@/components/organisms/tools/designs/SampleGridLayout.vue";
@@ -9,7 +9,7 @@ import { TOUPosition } from "@/types/common/position";
 import { TOUGridContent } from "@/types/tools/designs/colorsuggest/content";
 
 // 基準色
-const baseColor = ref(new TOURGBColor(TOURGBColor.CODE_BLACK, 1));
+const baseColor = ref(new TOURGBColor(TOURGBColor.CODE_WHITE, 1));
 const provides: ComputedRef<{
   [key: string]: {
     label: string;
@@ -210,8 +210,8 @@ const hLayouts = computed(() => [
       background: provides.value.complementary.colors[0],
     }),
     new TOUGridContent({
-      start: new TOUPosition(1, 1),
-      end: new TOUPosition(15, 8),
+      start: new TOUPosition(2, 1),
+      end: new TOUPosition(14, 8),
       background: baseColor.value,
     }),
     new TOUGridContent({
@@ -302,7 +302,7 @@ const hLayouts = computed(() => [
     <div class="c-container__input">
       <div class="c-container__input__text">基準色</div>
       <div class="c-container__input__picker">
-        <ColorPicker v-model:color="baseColor" />
+        <IntegratedColorPicker v-model:color="baseColor" />
       </div>
     </div>
     <div class="c-container__provides">
@@ -414,6 +414,9 @@ const hLayouts = computed(() => [
           width: 8rem;
           height: 8rem;
           border: 0.1rem lightgray solid;
+          transition:
+            background 0.4s ease,
+            opacity 0.4s ease;
         }
         &__detail {
           font-size: 0.8rem;

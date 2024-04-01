@@ -51,7 +51,8 @@ watch(
   { deep: true }
 );
 const color = computed(() => props.color.rgba());
-const onChangeCode = (text: string) => {
+const onChangeCode = (event: Event) => {
+  const text = (event.target as HTMLInputElement).value;
   if (!TOURGBColor.CODE_FORMAT.test(text)) {
     return;
   }
@@ -135,6 +136,7 @@ const onChangeCode = (text: string) => {
     display: flex;
     flex-direction: column;
     gap: 0.4rem 0;
+    font-size: 0.9rem;
     &__inputs {
       display: flex;
       flex-direction: row;

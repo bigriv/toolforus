@@ -29,7 +29,7 @@ export class TOUFont implements ConversionableCss {
     color: ${this.color.rgba()};
     font-weight: ${this.weight};
     font-family: ${this.family};
-    font-shadow: ${this.shadow.map((s) => s.converte()).join(",")};
+    font-shadow: ${this.shadow.map((s) => s.convert()).join(",")};
     `;
   }
 

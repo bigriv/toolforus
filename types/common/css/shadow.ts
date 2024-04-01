@@ -21,7 +21,7 @@ export class TOUShadow {
     this.color = define.color ?? new TOURGBColor(TOURGBColor.CODE_BLACK);
   }
 
-  converte(): string {
+  convert(): string {
     let style = "";
     style += this.vertical + "rem ";
     style += this.horizontal + "rem ";

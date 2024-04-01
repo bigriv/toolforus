@@ -107,6 +107,11 @@ export class TOURGBColor {
     return blue;
   }
 
+  /**
+   * カラーコードをセットする
+   * カラーコードが#ffffffのフォーマットでない場合は渡された値をセットしない
+   * @param code カラーコード
+   */
   setCode(code: string) {
     if (!TOURGBColor.CODE_FORMAT.test(code)) {
       // 色コードとしてふさわしくない値の場合は色を更新しない
@@ -116,6 +121,11 @@ export class TOURGBColor {
     }
   }
 
+  /**
+   * 透明度をセットする
+   * 透明度が0未満なら0、1以上なら1にする
+   * @param opacity 透明度
+   */
   setOpacity(opacity: number) {
     if (opacity < 0) {
       this.opacity = 0;
@@ -147,6 +157,68 @@ export class TOURGBColor {
     const g = convertToHex(green);
     const b = convertToHex(blue);
     return `#${r}${g}${b}`;
+  }
+
+  /**
+   * 補色の取得
+   * RGB値の最小値と最大値の和を取得し、その値からRGBの各値を減算することで新しいRGB値を算出する。
+   * @param color 基準色
+   * @returns 補色
+   */
+  static getComplementary(color: TOURGBColor): TOURGBColor {
+    const r = color.getRed();
+    const g = color.getGreen();
+    const b = color.getBlue();
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    const standard = max + min;
+    return new TOURGBColor(
+      TOURGBColor.numberToCode(standard - r, standard - g, standard - b),
+      color.opacity
+    );
+  }
+
+  /**
+   * 反転色を取得する
+   * 255からRGBの各値を減算することで新しいRGB値を算出する。
+   * @param color 基準色
+   * @returns 反転色
+   */
+  static getInverted(color: TOURGBColor): TOURGBColor {
+    return new TOURGBColor(
+      TOURGBColor.numberToCode(
+        255 - color.getRed(),
+        255 - color.getGreen(),
+        255 - color.getBlue()
+      ),
+      color.opacity
+    );
+  }
+
+  /**
+   * 反対色を取得する
+   * RGB値からHSV値に変換⇒H値に±8した値を取得⇒RGB値に戻す
+   * @param color 基準色
+   * @returns 反対色のリスト
+   */
+  static getOppositeColors(color: TOURGBColor): TOURGBColor[] {
+    const hsb = color.hsba();
+    const shiftMinus = hsb.shiftHue(-8);
+    const shiftPlus = hsb.shiftHue(8);
+    return [shiftMinus.rgba(), shiftPlus.rgba()];
+  }
+
+  /**
+   * 類似色を取得する
+   * RGB値からHSV値に変換⇒H値に±1した値を取得⇒RGB値に戻す
+   * @param color 基準色
+   * @returns 類似色のリスト
+   */
+  static getSimilarColor(color: TOURGBColor): TOURGBColor[] {
+    const hsb = color.hsba();
+    const shiftMinus = hsb.shiftHue(-1);
+    const shiftPlus = hsb.shiftHue(1);
+    return [shiftMinus.rgba(), shiftPlus.rgba()];
   }
 }
 

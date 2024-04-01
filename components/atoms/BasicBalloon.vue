@@ -67,7 +67,7 @@ const onMouseLeave = () => {
 
   &__balloon {
     position: absolute;
-    top: 0;
+    top: 50%;
     left: calc(100% + 1rem);
     padding: 0.4rem 0.8rem;
     background-color: gray;
@@ -75,6 +75,7 @@ const onMouseLeave = () => {
     font-size: 1rem;
     white-space: pre;
     z-index: 1;
+    transform: translateY(-50%);
     &::before {
       content: "";
       position: absolute;

@@ -2,7 +2,11 @@
 import ColorPicker from "@/components/molecules/interfaces/ColorPicker.vue";
 import CopyIcon from "@/components/molecules/icons/CopyIcon.vue";
 import DescriptionIcon from "@/components/molecules/icons/DescriptionIcon.vue";
+import SampleGridLayout from "@/components/organisms/tools/designs/SampleGridLayout.vue";
 import { TOURGBColor } from "@/types/common/css/color";
+import { TOUGridLayout } from "@/types/tools/designs/colorsuggest/layout";
+import { TOUPosition } from "@/types/common/position";
+import { TOUGridContent } from "@/types/tools/designs/colorsuggest/content";
 
 // 基準色
 const baseColor = ref(new TOURGBColor(TOURGBColor.CODE_BLACK, 1));
@@ -17,90 +21,280 @@ const provides: ComputedRef<{
     inverted: {
       label: "反転色",
       description: "基準となる色のRGB値を反転させた色。",
-      colors: [getInverted(baseColor.value)],
+      colors: [TOURGBColor.getInverted(baseColor.value)],
     },
     complementary: {
       label: "補色",
       description:
         "色相環で正反対の位置関係にある色の組み合わせのこと。\nお互いの色を引き立てる効果があります。",
-      colors: [getComplementary(baseColor.value)],
+      colors: [TOURGBColor.getComplementary(baseColor.value)],
     },
     opposite: {
       label: "反対色",
       description:
         "色相環上で、基準となる色の両斜めに位置する色。\n基準となる色と組み合わせることでメリハリや緊張感を与えることができます。",
-      colors: getOppositeColors(baseColor.value),
+      colors: TOURGBColor.getOppositeColors(baseColor.value),
     },
     similar: {
       label: "類似色",
       description:
         "色相環上で、基準となる色の両隣の2色。\n基準の色と似ているため、組み合わせて使うことで安定感を表現することができます。",
-      colors: getSimilarColor(baseColor.value),
+      colors: TOURGBColor.getSimilarColor(baseColor.value),
     },
   };
 });
 
-/**
- * 補色の取得
- * RGB値の最小値と最大値の和を取得し、その値からRGBの各値を減算することで新しいRGB値を算出する。
- * @param color 基準色
- * @returns 補色
- */
-const getComplementary = (color: TOURGBColor): TOURGBColor => {
-  const r = color.getRed();
-  const g = color.getGreen();
-  const b = color.getBlue();
-  const max = Math.max(r, g, b);
-  const min = Math.min(r, g, b);
-  const standard = max + min;
-  return new TOURGBColor(
-    TOURGBColor.numberToCode(standard - r, standard - g, standard - b),
-    color.opacity
-  );
-};
+// 縦長のサンプルレイアウトの定義
+const vLayouts = computed(() => [
+  new TOUGridLayout(9, 16, [
+    new TOUGridContent({
+      start: new TOUPosition(0, 0),
+      end: new TOUPosition(9, 12),
+      background: baseColor.value,
+    }),
+    new TOUGridContent({
+      start: new TOUPosition(0, 12),
+      end: new TOUPosition(9, 16),
+      background: provides.value.opposite.colors[0],
+    }),
+  ]),
 
-/**
- * 反転色を取得する
- * 255からRGBの各値を減算することで新しいRGB値を算出する。
- * @param color 基準色
- * @returns 反転色
- */
-const getInverted = (color: TOURGBColor): TOURGBColor => {
-  return new TOURGBColor(
-    TOURGBColor.numberToCode(
-      255 - color.getRed(),
-      255 - color.getGreen(),
-      255 - color.getBlue()
-    ),
-    color.opacity
-  );
-};
+  new TOUGridLayout(9, 16, [
+    new TOUGridContent({
+      start: new TOUPosition(0, 0),
+      end: new TOUPosition(9, 16),
+      background: baseColor.value,
+    }),
+    new TOUGridContent({
+      start: new TOUPosition(0, 6),
+      end: new TOUPosition(9, 7),
+      background: provides.value.opposite.colors[0],
+    }),
+  ]),
 
-/**
- * 反対色を取得する
- * RGB値からHSV値に変換⇒H値に±8した値を取得⇒RGB値に戻す
- * @param color 基準色
- * @returns 反対色のリスト
- */
-const getOppositeColors = (color: TOURGBColor): TOURGBColor[] => {
-  const hsb = color.hsba();
-  const shiftMinus = hsb.shiftHue(-8);
-  const shiftPlus = hsb.shiftHue(8);
-  return [shiftMinus.rgba(), shiftPlus.rgba()];
-};
+  new TOUGridLayout(9, 16, [
+    new TOUGridContent({
+      start: new TOUPosition(0, 0),
+      end: new TOUPosition(9, 8),
+      background: baseColor.value,
+    }),
+    new TOUGridContent({
+      start: new TOUPosition(0, 8),
+      end: new TOUPosition(9, 12),
+      background: provides.value.opposite.colors[0],
+    }),
+    new TOUGridContent({
+      start: new TOUPosition(0, 12),
+      end: new TOUPosition(9, 16),
+      background: baseColor.value,
+    }),
+  ]),
 
-/**
- * 類似色を取得する
- * RGB値からHSV値に変換⇒H値に±1した値を取得⇒RGB値に戻す
- * @param color 基準色
- * @returns 類似色のリスト
- */
-const getSimilarColor = (color: TOURGBColor): TOURGBColor[] => {
-  const hsb = color.hsba();
-  const shiftMinus = hsb.shiftHue(-1);
-  const shiftPlus = hsb.shiftHue(1);
-  return [shiftMinus.rgba(), shiftPlus.rgba()];
-};
+  new TOUGridLayout(9, 16, [
+    new TOUGridContent({
+      start: new TOUPosition(0, 0),
+      end: new TOUPosition(9, 16),
+      background: baseColor.value,
+    }),
+    new TOUGridContent({
+      start: new TOUPosition(5, 0),
+      end: new TOUPosition(16, 7),
+      background: provides.value.opposite.colors[0],
+    }),
+    new TOUGridContent({
+      start: new TOUPosition(0, 7),
+      end: new TOUPosition(9, 13),
+      background: provides.value.complementary.colors[0],
+    }),
+  ]),
+
+  new TOUGridLayout(9, 16, [
+    new TOUGridContent({
+      start: new TOUPosition(0, 0),
+      end: new TOUPosition(9, 16),
+      background: provides.value.complementary.colors[0],
+    }),
+    new TOUGridContent({
+      start: new TOUPosition(1, 1),
+      end: new TOUPosition(8, 15),
+      background: baseColor.value,
+    }),
+    new TOUGridContent({
+      start: new TOUPosition(0, 0),
+      end: new TOUPosition(9, 1),
+      background: provides.value.opposite.colors[0],
+    }),
+    new TOUGridContent({
+      start: new TOUPosition(0, 15),
+      end: new TOUPosition(9, 16),
+      background: provides.value.opposite.colors[0],
+    }),
+  ]),
+
+  new TOUGridLayout(9, 16, [
+    new TOUGridContent({
+      start: new TOUPosition(0, 0),
+      end: new TOUPosition(9, 16),
+      background: provides.value.complementary.colors[0],
+    }),
+    new TOUGridContent({
+      start: new TOUPosition(0, 5),
+      end: new TOUPosition(9, 15),
+      background: baseColor.value,
+    }),
+    new TOUGridContent({
+      start: new TOUPosition(1, 6),
+      end: new TOUPosition(4, 8),
+      background: provides.value.opposite.colors[0],
+    }),
+    new TOUGridContent({
+      start: new TOUPosition(1, 9),
+      end: new TOUPosition(4, 11),
+      background: provides.value.opposite.colors[0],
+    }),
+    new TOUGridContent({
+      start: new TOUPosition(1, 12),
+      end: new TOUPosition(4, 14),
+      background: provides.value.opposite.colors[0],
+    }),
+    new TOUGridContent({
+      start: new TOUPosition(5, 6),
+      end: new TOUPosition(8, 8),
+      background: provides.value.opposite.colors[0],
+    }),
+    new TOUGridContent({
+      start: new TOUPosition(5, 9),
+      end: new TOUPosition(8, 11),
+      background: provides.value.opposite.colors[0],
+    }),
+    new TOUGridContent({
+      start: new TOUPosition(5, 12),
+      end: new TOUPosition(8, 14),
+      background: provides.value.opposite.colors[0],
+    }),
+  ]),
+]);
+
+// 横長のサンプルレイアウトの定義
+const hLayouts = computed(() => [
+  new TOUGridLayout(16, 9, [
+    new TOUGridContent({
+      start: new TOUPosition(0, 0),
+      end: new TOUPosition(12, 9),
+      background: baseColor.value,
+    }),
+    new TOUGridContent({
+      start: new TOUPosition(12, 0),
+      end: new TOUPosition(16, 9),
+      background: provides.value.opposite.colors[0],
+    }),
+  ]),
+
+  new TOUGridLayout(16, 9, [
+    new TOUGridContent({
+      start: new TOUPosition(0, 0),
+      end: new TOUPosition(16, 9),
+      background: baseColor.value,
+    }),
+    new TOUGridContent({
+      start: new TOUPosition(3, 1),
+      end: new TOUPosition(16, 9),
+      background: provides.value.opposite.colors[0],
+    }),
+  ]),
+
+  new TOUGridLayout(16, 9, [
+    new TOUGridContent({
+      start: new TOUPosition(0, 0),
+      end: new TOUPosition(16, 9),
+      background: provides.value.complementary.colors[0],
+    }),
+    new TOUGridContent({
+      start: new TOUPosition(1, 1),
+      end: new TOUPosition(15, 8),
+      background: baseColor.value,
+    }),
+    new TOUGridContent({
+      start: new TOUPosition(0, 1),
+      end: new TOUPosition(2, 8),
+      background: provides.value.opposite.colors[0],
+    }),
+    new TOUGridContent({
+      start: new TOUPosition(14, 1),
+      end: new TOUPosition(16, 8),
+      background: provides.value.opposite.colors[0],
+    }),
+  ]),
+
+  new TOUGridLayout(16, 9, [
+    new TOUGridContent({
+      start: new TOUPosition(0, 0),
+      end: new TOUPosition(16, 9),
+      background: provides.value.complementary.colors[0],
+    }),
+    new TOUGridContent({
+      start: new TOUPosition(0, 0),
+      end: new TOUPosition(16, 1),
+      background: baseColor.value,
+    }),
+    new TOUGridContent({
+      start: new TOUPosition(5, 1),
+      end: new TOUPosition(11, 9),
+      background: provides.value.opposite.colors[0],
+    }),
+  ]),
+
+  new TOUGridLayout(16, 9, [
+    new TOUGridContent({
+      start: new TOUPosition(0, 0),
+      end: new TOUPosition(16, 9),
+      background: provides.value.complementary.colors[0],
+    }),
+    new TOUGridContent({
+      start: new TOUPosition(0, 5),
+      end: new TOUPosition(5, 9),
+      background: baseColor.value,
+    }),
+    new TOUGridContent({
+      start: new TOUPosition(11, 0),
+      end: new TOUPosition(16, 4),
+      background: baseColor.value,
+    }),
+    new TOUGridContent({
+      start: new TOUPosition(5, 0),
+      end: new TOUPosition(11, 9),
+      background: provides.value.opposite.colors[0],
+    }),
+  ]),
+
+  new TOUGridLayout(16, 9, [
+    new TOUGridContent({
+      start: new TOUPosition(0, 0),
+      end: new TOUPosition(16, 5),
+      background: provides.value.complementary.colors[0],
+    }),
+    new TOUGridContent({
+      start: new TOUPosition(0, 5),
+      end: new TOUPosition(16, 9),
+      background: baseColor.value,
+    }),
+    new TOUGridContent({
+      start: new TOUPosition(1, 6),
+      end: new TOUPosition(5, 8),
+      background: provides.value.opposite.colors[0],
+    }),
+    new TOUGridContent({
+      start: new TOUPosition(6, 6),
+      end: new TOUPosition(10, 8),
+      background: provides.value.opposite.colors[0],
+    }),
+    new TOUGridContent({
+      start: new TOUPosition(11, 6),
+      end: new TOUPosition(15, 8),
+      background: provides.value.opposite.colors[0],
+    }),
+  ]),
+]);
 </script>
 
 <template>
@@ -153,14 +347,40 @@ const getSimilarColor = (color: TOURGBColor): TOURGBColor[] => {
         </template>
       </div>
     </div>
-    <div class="c-container__samples"></div>
+    <div class="c-container__samples">
+      <section>
+        <div class="c-container__samples__title">レイアウトサンプル(縦長)</div>
+        <div class="c-container__samples__layouts">
+          <div
+            v-for="layout in vLayouts"
+            class="c-container__samples__layouts__content c-container__samples__layouts__content--vertical"
+          >
+            <SampleGridLayout :layout="layout" />
+          </div>
+        </div>
+      </section>
+      <section>
+        <div class="c-container__samples__title">レイアウトサンプル(横長)</div>
+        <div class="c-container__samples__layouts">
+          <div
+            v-for="layout in hLayouts"
+            class="c-container__samples__layouts__content c-container__samples__layouts__content--horizontal"
+          >
+            <SampleGridLayout :layout="layout" />
+          </div>
+        </div>
+      </section>
+    </div>
   </div>
 </template>
 
 <style scoped lang="scss">
 .c-container {
   &__input {
-    position: relative;
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 1;
     &__text {
       font-weight: bold;
       font-size: 1.6rem;
@@ -205,6 +425,34 @@ const getSimilarColor = (color: TOURGBColor): TOURGBColor[] => {
             width: 1.4em;
             height: 1.4em;
           }
+        }
+      }
+    }
+  }
+  &__samples {
+    margin-top: 1.6rem;
+    section + section {
+      margin-top: 0.8rem;
+    }
+    &__title {
+      font-weight: bold;
+      font-size: 1.6rem;
+      font-family: "MS Gothic", "Hiragino Sans";
+      color: #555;
+    }
+    &__layouts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin-top: 0.4rem;
+      &__content {
+        &--vertical {
+          width: 8rem;
+          aspect-ratio: 0.56;
+        }
+        &--horizontal {
+          width: 16.8rem;
+          aspect-ratio: 1.78;
         }
       }
     }

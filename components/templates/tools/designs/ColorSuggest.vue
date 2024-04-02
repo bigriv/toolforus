@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import IntegratedColorPicker from "@/components/organisms/interfaces/IntegratedColorPicker.vue";
+import InputColor from "@/components/organisms/interfaces/InputColor.vue";
 import CopyIcon from "@/components/molecules/icons/CopyIcon.vue";
 import DescriptionIcon from "@/components/molecules/icons/DescriptionIcon.vue";
 import SampleGridLayout from "@/components/organisms/tools/designs/SampleGridLayout.vue";
@@ -301,8 +301,8 @@ const hLayouts = computed(() => [
   <div class="c-container">
     <div class="c-container__input">
       <div class="c-container__input__text">基準色</div>
-      <div class="c-container__input__picker">
-        <IntegratedColorPicker v-model:color="baseColor" />
+      <div class="c-container__input__color">
+        <InputColor v-model:color="baseColor" />
       </div>
     </div>
     <div class="c-container__provides">
@@ -387,7 +387,7 @@ const hLayouts = computed(() => [
       font-family: "MS Gothic", "Hiragino Sans";
       color: #555;
     }
-    &__picker {
+    &__color {
       margin-top: 0.4rem;
     }
   }

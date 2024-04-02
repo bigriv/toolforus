@@ -10,7 +10,7 @@ const props = defineProps({
     required: true,
   },
   // 透明度の選択可否
-  pickableAlpha: {
+  inputAlpha: {
     type: Boolean,
     default: true,
   },
@@ -63,10 +63,10 @@ const onChangeCode = (event: Event) => {
 </script>
 
 <template>
-  <div class="c-color_picker">
-    <i class="c-color_picker__display" :style="{ background: color }" />
-    <div class="c-color_picker__forms">
-      <div class="c-color_picker__forms__inputs">
+  <div class="c-input_color">
+    <i class="c-input_color__display" :style="{ background: color }" />
+    <div class="c-input_color__forms">
+      <div class="c-input_color__forms__inputs">
         <div>16進数</div>
         <InputText
           :text="props.color.code"
@@ -74,45 +74,45 @@ const onChangeCode = (event: Event) => {
           @blur="onChangeCode"
         />
       </div>
-      <div class="c-color_picker__forms__inputs">
+      <div class="c-input_color__forms__inputs">
         <input
           v-model.number="input.hue"
           type="range"
           :max="359"
           :min="0"
-          class="c-color_picker__forms__inputs__slider--hue"
+          class="c-input_color__forms__inputs__slider--hue"
         />
         <InputNumber v-model="input.hue" :max="359" :min="0" />
       </div>
-      <div class="c-color_picker__forms__inputs">
+      <div class="c-input_color__forms__inputs">
         <input
           v-model.number="input.saturation"
           type="range"
           :max="100"
           :min="0"
-          class="c-color_picker__forms__inputs__slider--saturation"
+          class="c-input_color__forms__inputs__slider--saturation"
           :style="{ '--hue': input.hue }"
         />
         <InputNumber v-model="input.saturation" :max="100" :min="0" />
       </div>
-      <div class="c-color_picker__forms__inputs">
+      <div class="c-input_color__forms__inputs">
         <input
           v-model.number="input.brightness"
           type="range"
           :max="100"
           :min="0"
-          class="c-color_picker__forms__inputs__slider--brightness"
+          class="c-input_color__forms__inputs__slider--brightness"
         />
         <InputNumber v-model="input.brightness" :max="100" :min="0" />
       </div>
-      <template v-if="pickableAlpha">
-        <div class="c-color_picker__forms__inputs">
+      <template v-if="inputAlpha">
+        <div class="c-input_color__forms__inputs">
           <input
             v-model.number="input.alpha"
             type="range"
             :max="100"
             :min="0"
-            class="c-color_picker__forms__inputs__slider--alpha"
+            class="c-input_color__forms__inputs__slider--alpha"
           />
           <InputNumber v-model="input.alpha" :max="100" :min="0" />
         </div>
@@ -122,7 +122,7 @@ const onChangeCode = (event: Event) => {
 </template>
 
 <style scoped lang="scss">
-.c-color_picker {
+.c-input_color {
   display: flex;
   gap: 0.8rem;
   flex-wrap: wrap;
@@ -131,6 +131,9 @@ const onChangeCode = (event: Event) => {
     min-width: 8rem;
     min-height: 8rem;
     border: 0.1rem lightgray solid;
+    transition:
+      background 0.4s ease,
+      opacity 0.4s ease;
   }
   &__forms {
     display: flex;

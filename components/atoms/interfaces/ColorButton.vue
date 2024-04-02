@@ -23,13 +23,13 @@ const onClickButton = () => {
   <button
     :disabled="props.disabled"
     :style="{ '--color': color }"
-    class="c-color_pick_button"
+    class="c-color_button"
     @click="onClickButton"
   ></button>
 </template>
 
 <style scoped lang="scss">
-.c-color_pick_button {
+.c-color_button {
   display: block;
   position: relative;
   width: 100%;

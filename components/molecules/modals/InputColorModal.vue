@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
+import InputColor from "@/components/organisms/interfaces/InputColor.vue";
 import { TOURGBColor } from "@/types/common/css/color";
-import IntegratedColorPicker from "@/components/organisms/interfaces/IntegratedColorPicker.vue";
 
 const props = defineProps({
   isShowModal: {
@@ -13,7 +13,7 @@ const props = defineProps({
     required: true,
   },
   // 透明度の選択可否
-  pickableOpacity: {
+  inputOpacity: {
     type: Boolean,
     default: true,
   },
@@ -62,17 +62,17 @@ const onSubmit = () => {
 </script>
 
 <template>
-  <div class="c-color_pick_modal">
+  <div class="c-input_color_modal">
     <transition>
-      <div v-show="isShowModal" class="c-color_pick_modal__inner">
-        <div class="c-color_pick_modal__inner__contents">
-          <IntegratedColorPicker
+      <div v-show="isShowModal" class="c-input_color_modal__inner">
+        <div class="c-input_color_modal__inner__contents">
+          <InputColor
             v-model:color="color"
-            :pickableAlpha="props.pickableOpacity"
+            :inputAlpha="props.inputOpacity"
           />
         </div>
 
-        <div class="c-color_pick_modal__inner__buttons">
+        <div class="c-input_color_modal__inner__buttons">
           <button @click="onClose">Cancel</button>
           <button @click="onSubmit">OK</button>
         </div>
@@ -82,7 +82,7 @@ const onSubmit = () => {
 </template>
 
 <style scoped lang="scss">
-.c-color_pick_modal {
+.c-input_color_modal {
   position: absolute;
   z-index: 10;
   box-shadow: 0rem 0rem 0.8rem #aaa;

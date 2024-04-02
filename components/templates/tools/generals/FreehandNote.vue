@@ -3,10 +3,10 @@ import { computed, reactive, ref } from "vue";
 import ToolButton from "@/components/atoms/interfaces/ToolButton.vue";
 import BasicButton from "@/components/atoms/interfaces/BasicButton.vue";
 import InputNumber from "@/components/molecules/interfaces/InputNumber.vue";
-import ColorPickModal from "@/components/molecules/modals/ColorPickModal.vue";
+import InputColorModal from "@/components/molecules/modals/InputColorModal.vue";
 import { TOURGBColor } from "@/types/common/css/color";
 
-const isShowPenColorPicker = ref(false);
+const isShowPenColorModal = ref(false);
 const pen = reactive({
   color: new TOURGBColor(TOURGBColor.CODE_BLACK),
   isUseEraser: false,
@@ -105,10 +105,10 @@ const onDrawEnd = () => {
   <div class="c-container">
     <div class="c-container__toolbar">
       <div class="c-container__toolbar__menu">
-        <div class="c-container__toolbar__menu__colorpicker">
-          <ToolButton @click="isShowPenColorPicker = true">
+        <div class="c-container__toolbar__menu__inputcolor">
+          <ToolButton @click="isShowPenColorModal = true">
             <div
-              class="c-container__toolbar__menu__colorpicker__button"
+              class="c-container__toolbar__menu__inputcolor__button"
               :style="{
                 '--color': pen.color.code,
                 '--opacity': pen.color.opacity,
@@ -121,10 +121,10 @@ const onDrawEnd = () => {
               />
             </div>
           </ToolButton>
-          <ColorPickModal
-            v-model:isShowModal="isShowPenColorPicker"
+          <InputColorModal
+            v-model:isShowModal="isShowPenColorModal"
             :color="pen.color"
-            class="c-container__toolbar__menu__colorpicker__picker"
+            class="c-container__toolbar__menu__inputcolor__input"
             @submit="onSubmitPenColor"
           />
         </div>
@@ -191,7 +191,7 @@ const onDrawEnd = () => {
     height: 2rem;
     &__menu {
       display: flex;
-      &__colorpicker {
+      &__inputcolor {
         position: relative;
         &__button {
           &::before {
@@ -206,7 +206,7 @@ const onDrawEnd = () => {
             height: 0.2rem;
           }
         }
-        &__picker {
+        &__input {
           position: absolute;
           top: 0;
           left: 2.4rem;

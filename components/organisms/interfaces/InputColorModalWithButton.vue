@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import ColorPickModal from "@/components/molecules/modals/ColorPickModal.vue";
-import ColorPickButton from "@/components/atoms/interfaces/ColorPickButton.vue";
+import InputColorModal from "@/components/molecules/modals/InputColorModal.vue";
+import ColorButton from "@/components/atoms/interfaces/ColorButton.vue";
 import { TOURGBColor } from "@/types/common/css/color";
 
 const props = defineProps({
@@ -9,7 +9,7 @@ const props = defineProps({
     type: TOURGBColor,
     default: new TOURGBColor(TOURGBColor.CODE_WHITE),
   },
-  pickableOpacity: {
+  inputOpacity: {
     type: Boolean,
     default: true,
   },
@@ -28,24 +28,24 @@ const onSubmit = (color: TOURGBColor) => {
 </script>
 
 <template>
-  <div class="c-color_pick_with_button">
-    <ColorPickButton :color="props.color" @click="onClickButton" />
-    <ColorPickModal
+  <div class="c-input_color_with_button">
+    <ColorButton :color="props.color" @click="onClickButton" />
+    <InputColorModal
       v-model:isShowModal="isShowModal"
       :color="props.color"
-      :pickableOpacity="props.pickableOpacity"
-      class="c-color_pick_with_button__picker"
+      :inputOpacity="props.inputOpacity"
+      class="c-input_color_with_button__input"
       @submit="onSubmit"
     />
   </div>
 </template>
 
 <style scoped lang="scss">
-.c-color_pick_with_button {
+.c-input_color_with_button {
   position: relative;
   width: 100%;
   height: 100%;
-  &__picker {
+  &__input {
     position: absolute;
     top: 0;
     left: 50%;

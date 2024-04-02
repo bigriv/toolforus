@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import HSBColorPicker from "@/components/molecules/interfaces/HSBColorPicker.vue";
-import RGBColorPicker from "@/components/molecules/interfaces/RGBColorPicker.vue";
+import InputHSBColor from "@/components/molecules/interfaces/InputHSBColor.vue";
+import InputRGBColor from "@/components/molecules/interfaces/InputRGBColor.vue";
 import { TOURGBColor } from "@/types/common/css/color";
 
 const props = defineProps({
@@ -8,7 +8,7 @@ const props = defineProps({
     type: Object as PropType<TOURGBColor>,
     required: true,
   },
-  pickableAlpha: {
+  inputAlpha: {
     type: Boolean,
     default: true,
   },
@@ -24,40 +24,40 @@ const mode: Ref<ColorMode> = ref("RGB");
 </script>
 
 <template>
-  <div class="c-color_picker">
-    <div class="c-color_picker__tab">
+  <div class="c-input_color">
+    <div class="c-input_color__tab">
       <button
-        class="c-color_picker__tab__button"
-        :class="{ 'c-color_picker__tab__button--selected': mode === 'RGB' }"
+        class="c-input_color__tab__button"
+        :class="{ 'c-input_color__tab__button--selected': mode === 'RGB' }"
         @click="mode = 'RGB'"
       >
         RGB
       </button>
       <button
-        class="c-color_picker__tab__button"
-        :class="{ 'c-color_picker__tab__button--selected': mode === 'HSV' }"
+        class="c-input_color__tab__button"
+        :class="{ 'c-input_color__tab__button--selected': mode === 'HSV' }"
         @click="mode = 'HSV'"
       >
         HSV
       </button>
     </div>
-    <div class="c-color_picker__main">
-      <RGBColorPicker
+    <div class="c-input_color__main">
+      <InputRGBColor
         v-if="mode === 'RGB'"
         v-model:color="color"
-        :pickableOpacity="props.pickableAlpha"
+        :inputOpacity="props.inputAlpha"
       />
-      <HSBColorPicker
+      <InputHSBColor
         v-else-if="mode === 'HSV'"
         v-model:color="color"
-        :pickableAlpha="props.pickableAlpha"
+        :inputAlpha="props.inputAlpha"
       />
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
-.c-color_picker {
+.c-input_color {
   &__tab {
     display: flex;
     flex-wrap: nowrap;

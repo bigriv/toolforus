@@ -10,7 +10,7 @@ const props = defineProps({
     required: true,
   },
   // 透明度の選択可否
-  pickableOpacity: {
+  inputOpacity: {
     type: Boolean,
     default: true,
   },
@@ -64,10 +64,10 @@ const onChangeCode = (event: Event) => {
 </script>
 
 <template>
-  <div class="c-color_picker">
-    <i class="c-color_picker__display" :style="{ background: color }" />
-    <div class="c-color_picker__forms">
-      <div class="c-color_picker__forms__inputs">
+  <div class="c-input_color">
+    <i class="c-input_color__display" :style="{ background: color }" />
+    <div class="c-input_color__forms">
+      <div class="c-input_color__forms__inputs">
         <div>16進数</div>
         <InputText
           :text="props.color.code"
@@ -75,44 +75,44 @@ const onChangeCode = (event: Event) => {
           @blur="onChangeCode"
         />
       </div>
-      <div class="c-color_picker__forms__inputs">
+      <div class="c-input_color__forms__inputs">
         <input
           v-model.number="input.red"
           type="range"
           :max="255"
           :min="0"
-          class="c-color_picker__forms__inputs__slider--red"
+          class="c-input_color__forms__inputs__slider--red"
         />
         <InputNumber v-model="input.red" :max="255" :min="0" />
       </div>
-      <div class="c-color_picker__forms__inputs">
+      <div class="c-input_color__forms__inputs">
         <input
           v-model.number="input.green"
           type="range"
           :max="255"
           :min="0"
-          class="c-color_picker__forms__inputs__slider--green"
+          class="c-input_color__forms__inputs__slider--green"
         />
         <InputNumber v-model="input.green" :max="255" :min="0" />
       </div>
-      <div class="c-color_picker__forms__inputs">
+      <div class="c-input_color__forms__inputs">
         <input
           v-model.number="input.blue"
           type="range"
           :max="255"
           :min="0"
-          class="c-color_picker__forms__inputs__slider--blue"
+          class="c-input_color__forms__inputs__slider--blue"
         />
         <InputNumber v-model="input.blue" :max="255" :min="0" />
       </div>
-      <template v-if="pickableOpacity">
-        <div class="c-color_picker__forms__inputs">
+      <template v-if="inputOpacity">
+        <div class="c-input_color__forms__inputs">
           <input
             v-model.number="input.opacity"
             type="range"
             :max="100"
             :min="0"
-            class="c-color_picker__forms__inputs__slider--opacity"
+            class="c-input_color__forms__inputs__slider--opacity"
           />
           <InputNumber v-model="input.opacity" :max="100" :min="0" />
         </div>
@@ -122,7 +122,7 @@ const onChangeCode = (event: Event) => {
 </template>
 
 <style scoped lang="scss">
-.c-color_picker {
+.c-input_color {
   display: flex;
   gap: 0.8rem;
   flex-wrap: wrap;
@@ -131,6 +131,9 @@ const onChangeCode = (event: Event) => {
     min-width: 8rem;
     min-height: 8rem;
     border: 0.1rem lightgray solid;
+    transition:
+      background 0.4s ease,
+      opacity 0.4s ease;
   }
   &__forms {
     display: flex;

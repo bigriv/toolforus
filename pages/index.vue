@@ -30,6 +30,10 @@ const contents = [
     title: "カラーサジェスト",
     path: "/tools/designs/colorsuggest",
   },
+  {
+    title: "簡易画像編集",
+    path: "/tools/designs/iie",
+  },
 ];
 </script>
 

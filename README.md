@@ -16,6 +16,9 @@
   - npm install --save-dev prettier
 - lint
   - npm install --save-dev @nuxtjs/eslint-config-typescript
+- fabric
+  - npm install @types/fabric
+  - npm install fabric
 
 ## build
 

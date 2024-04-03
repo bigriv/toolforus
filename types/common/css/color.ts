@@ -1,6 +1,7 @@
 export class TOURGBColor {
   static readonly CODE_BLACK = "#000000";
   static readonly CODE_WHITE = "#ffffff";
+  static readonly CODE_LIGHT_GRAY = "#d3d3d3";
   static readonly CODE_FORMAT = /^#[0-9a-fA-F]{6}$/;
 
   code: string;

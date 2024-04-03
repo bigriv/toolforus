@@ -18,7 +18,7 @@ const props = defineProps({
     default: true,
   },
 });
-const emits = defineEmits(["update:color"]);
+const emits = defineEmits(["update:color", "submit"]);
 
 const isShowModal = ref(false);
 const color = computed({
@@ -26,8 +26,9 @@ const color = computed({
   set: (newValue) => emits("update:color", newValue),
 });
 
-const onSubmitPenColor = (newColor: TOURGBColor) => {
+const onSubmitnColor = (newColor: TOURGBColor) => {
   color.value = newColor;
+  emits("submit");
 };
 </script>
 
@@ -47,7 +48,7 @@ const onSubmitPenColor = (newColor: TOURGBColor) => {
       :color="color"
       :inputOpacity="props.inputAlpha"
       class="c-input_color_tool_button__modal"
-      @submit="onSubmitPenColor"
+      @submit="onSubmitnColor"
     />
   </div>
 </template>

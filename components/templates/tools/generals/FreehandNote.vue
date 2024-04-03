@@ -1,19 +1,17 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from "vue";
-import ToolButton from "@/components/atoms/interfaces/ToolButton.vue";
 import BasicButton from "@/components/atoms/interfaces/BasicButton.vue";
 import InputNumber from "@/components/molecules/interfaces/InputNumber.vue";
-import InputColorModal from "@/components/molecules/modals/InputColorModal.vue";
+import InputColorToolButton from "@/components/organisms/interfaces/InputColorToolButton.vue";
 import { TOURGBColor } from "@/types/common/css/color";
 
-const isShowPenColorModal = ref(false);
 const pen = reactive({
   color: new TOURGBColor(TOURGBColor.CODE_BLACK),
   isUseEraser: false,
   size: 1,
 });
 
-const canvas: Ref<HTMLCanvasElement | null> = ref(null);
+const canvas = ref<HTMLCanvasElement>();
 const mouse = ref({ x: 0, y: 0 });
 const drawer = computed(() => {
   if (!canvas || !canvas.value) {
@@ -25,10 +23,6 @@ const draw = {
   x: 0,
   y: 0,
   isMoved: false,
-};
-
-const onSubmitPenColor = (newColor: TOURGBColor) => {
-  pen.color = newColor;
 };
 
 const onClear = () => {
@@ -105,29 +99,10 @@ const onDrawEnd = () => {
   <div class="c-container">
     <div class="c-container__toolbar">
       <div class="c-container__toolbar__menu">
-        <div class="c-container__toolbar__menu__inputcolor">
-          <ToolButton @click="isShowPenColorModal = true">
-            <div
-              class="c-container__toolbar__menu__inputcolor__button"
-              :style="{
-                '--color': pen.color.code,
-                '--opacity': pen.color.opacity,
-              }"
-            >
-              <img
-                src="/commons/icons/pen.svg"
-                alt="ペン色"
-                class="u-absolute--center"
-              />
-            </div>
-          </ToolButton>
-          <InputColorModal
-            v-model:isShowModal="isShowPenColorModal"
-            :color="pen.color"
-            class="c-container__toolbar__menu__inputcolor__input"
-            @submit="onSubmitPenColor"
-          />
-        </div>
+        <InputColorToolButton
+          v-model:color="pen.color"
+          icon="/commons/icons/pen.svg"
+        />
         <div class="c-container__toolbar__menu__eraser">
           <input
             v-model="pen.isUseEraser"

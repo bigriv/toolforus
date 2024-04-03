@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
-import InputNumber from "@/components/molecules/interfaces/InputNumber.vue";
 import InputText from "@/components/atoms/interfaces/InputText.vue";
+import InputSlideAndNumber from "@/components/molecules/interfaces/InputSlideAndNumber.vue";
 import { TOUHSBColor, TOURGBColor } from "@/types/common/css/color";
 
 const props = defineProps({
@@ -75,46 +75,68 @@ const onChangeCode = (event: Event) => {
         />
       </div>
       <div class="c-input_color__forms__inputs">
-        <input
-          v-model.number="input.hue"
-          type="range"
+        <InputSlideAndNumber
+          v-model="input.hue"
           :max="359"
           :min="0"
-          class="c-input_color__forms__inputs__slider--hue"
+          sliderBackground="linear-gradient(
+              to right,
+              hsl(0deg 100% 50%) 0,
+              hsl(15deg 100% 50%) calc(15 / 360 * 100%),
+              hsl(30deg 100% 50%) calc(15 * 2 / 360 * 100%),
+              hsl(45deg 100% 50%) calc(15 * 3 / 360 * 100%),
+              hsl(60deg 100% 50%) calc(15 * 4 / 360 * 100%),
+              hsl(75deg 100% 50%) calc(15 * 5 / 360 * 100%),
+              hsl(90deg 100% 50%) calc(15 * 6 / 360 * 100%),
+              hsl(105deg 100% 50%) calc(15 * 7 / 360 * 100%),
+              hsl(120deg 100% 50%) calc(15 * 8 / 360 * 100%),
+              hsl(135deg 100% 50%) calc(15 * 9 / 360 * 100%),
+              hsl(150deg 100% 50%) calc(15 * 10 / 360 * 100%),
+              hsl(165deg 100% 50%) calc(15 * 11 / 360 * 100%),
+              hsl(180deg 100% 50%) calc(15 * 12 / 360 * 100%),
+              hsl(195deg 100% 50%) calc(15 * 13 / 360 * 100%),
+              hsl(210deg 100% 50%) calc(15 * 14 / 360 * 100%),
+              hsl(225deg 100% 50%) calc(15 * 15 / 360 * 100%),
+              hsl(240deg 100% 50%) calc(15 * 16 / 360 * 100%),
+              hsl(255deg 100% 50%) calc(15 * 17 / 360 * 100%),
+              hsl(270deg 100% 50%) calc(15 * 18 / 360 * 100%),
+              hsl(285deg 100% 50%) calc(15 * 19 / 360 * 100%),
+              hsl(300deg 100% 50%) calc(15 * 20 / 360 * 100%),
+              hsl(315deg 100% 50%) calc(15 * 21 / 360 * 100%),
+              hsl(330deg 100% 50%) calc(15 * 22 / 360 * 100%),
+              hsl(345deg 100% 50%) calc(15 * 23 / 360 * 100%),
+              hsl(360deg 100% 50%) calc(15 * 24 / 360 * 100%)
+            )"
         />
-        <InputNumber v-model="input.hue" :max="359" :min="0" />
       </div>
-      <div class="c-input_color__forms__inputs">
-        <input
-          v-model.number="input.saturation"
-          type="range"
+      <div class="c-input_color__forms__inputs" :style="{ '--hue': input.hue }">
+        <InputSlideAndNumber
+          v-model="input.saturation"
           :max="100"
           :min="0"
-          class="c-input_color__forms__inputs__slider--saturation"
-          :style="{ '--hue': input.hue }"
+          sliderBackground="linear-gradient(
+              to right,
+              hsl(calc(var(--hue) * 1deg) 0% 50%),
+              hsl(calc(var(--hue) * 1deg) 100% 50%)
+            )"
         />
-        <InputNumber v-model="input.saturation" :max="100" :min="0" />
       </div>
       <div class="c-input_color__forms__inputs">
-        <input
-          v-model.number="input.brightness"
-          type="range"
+        <InputSlideAndNumber
+          v-model="input.brightness"
           :max="100"
           :min="0"
-          class="c-input_color__forms__inputs__slider--brightness"
+          sliderBackground="linear-gradient(to right, #000, #fff)"
         />
-        <InputNumber v-model="input.brightness" :max="100" :min="0" />
       </div>
       <template v-if="inputAlpha">
         <div class="c-input_color__forms__inputs">
-          <input
-            v-model.number="input.alpha"
-            type="range"
+          <InputSlideAndNumber
+            v-model="input.alpha"
             :max="100"
             :min="0"
-            class="c-input_color__forms__inputs__slider--alpha"
+            sliderBackground="linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1))"
           />
-          <InputNumber v-model="input.alpha" :max="100" :min="0" />
         </div>
       </template>
     </div>
@@ -147,142 +169,10 @@ const onChangeCode = (event: Event) => {
       align-items: center;
       gap: 0 0.4rem;
       height: 1.2rem;
-      &__slider {
-        &--hue {
-          &::-webkit-slider-runnable-track {
-            background: linear-gradient(
-              to right,
-              hsl(0deg 100% 50%) 0,
-              hsl(15deg 100% 50%) calc(15 / 360 * 100%),
-              hsl(30deg 100% 50%) calc(15 * 2 / 360 * 100%),
-              hsl(45deg 100% 50%) calc(15 * 3 / 360 * 100%),
-              hsl(60deg 100% 50%) calc(15 * 4 / 360 * 100%),
-              hsl(75deg 100% 50%) calc(15 * 5 / 360 * 100%),
-              hsl(90deg 100% 50%) calc(15 * 6 / 360 * 100%),
-              hsl(105deg 100% 50%) calc(15 * 7 / 360 * 100%),
-              hsl(120deg 100% 50%) calc(15 * 8 / 360 * 100%),
-              hsl(135deg 100% 50%) calc(15 * 9 / 360 * 100%),
-              hsl(150deg 100% 50%) calc(15 * 10 / 360 * 100%),
-              hsl(165deg 100% 50%) calc(15 * 11 / 360 * 100%),
-              hsl(180deg 100% 50%) calc(15 * 12 / 360 * 100%),
-              hsl(195deg 100% 50%) calc(15 * 13 / 360 * 100%),
-              hsl(210deg 100% 50%) calc(15 * 14 / 360 * 100%),
-              hsl(225deg 100% 50%) calc(15 * 15 / 360 * 100%),
-              hsl(240deg 100% 50%) calc(15 * 16 / 360 * 100%),
-              hsl(255deg 100% 50%) calc(15 * 17 / 360 * 100%),
-              hsl(270deg 100% 50%) calc(15 * 18 / 360 * 100%),
-              hsl(285deg 100% 50%) calc(15 * 19 / 360 * 100%),
-              hsl(300deg 100% 50%) calc(15 * 20 / 360 * 100%),
-              hsl(315deg 100% 50%) calc(15 * 21 / 360 * 100%),
-              hsl(330deg 100% 50%) calc(15 * 22 / 360 * 100%),
-              hsl(345deg 100% 50%) calc(15 * 23 / 360 * 100%),
-              hsl(360deg 100% 50%) calc(15 * 24 / 360 * 100%)
-            );
-          }
-          &::-moz-range-track {
-            background: linear-gradient(
-              to right,
-              hsl(0deg 100% 50%) 0,
-              hsl(15deg 100% 50%) calc(15 / 360 * 100%),
-              hsl(30deg 100% 50%) calc(15 * 2 / 360 * 100%),
-              hsl(45deg 100% 50%) calc(15 * 3 / 360 * 100%),
-              hsl(60deg 100% 50%) calc(15 * 4 / 360 * 100%),
-              hsl(75deg 100% 50%) calc(15 * 5 / 360 * 100%),
-              hsl(90deg 100% 50%) calc(15 * 6 / 360 * 100%),
-              hsl(105deg 100% 50%) calc(15 * 7 / 360 * 100%),
-              hsl(120deg 100% 50%) calc(15 * 8 / 360 * 100%),
-              hsl(135deg 100% 50%) calc(15 * 9 / 360 * 100%),
-              hsl(150deg 100% 50%) calc(15 * 10 / 360 * 100%),
-              hsl(165deg 100% 50%) calc(15 * 11 / 360 * 100%),
-              hsl(180deg 100% 50%) calc(15 * 12 / 360 * 100%),
-              hsl(195deg 100% 50%) calc(15 * 13 / 360 * 100%),
-              hsl(210deg 100% 50%) calc(15 * 14 / 360 * 100%),
-              hsl(225deg 100% 50%) calc(15 * 15 / 360 * 100%),
-              hsl(240deg 100% 50%) calc(15 * 16 / 360 * 100%),
-              hsl(255deg 100% 50%) calc(15 * 17 / 360 * 100%),
-              hsl(270deg 100% 50%) calc(15 * 18 / 360 * 100%),
-              hsl(285deg 100% 50%) calc(15 * 19 / 360 * 100%),
-              hsl(300deg 100% 50%) calc(15 * 20 / 360 * 100%),
-              hsl(315deg 100% 50%) calc(15 * 21 / 360 * 100%),
-              hsl(330deg 100% 50%) calc(15 * 22 / 360 * 100%),
-              hsl(345deg 100% 50%) calc(15 * 23 / 360 * 100%),
-              hsl(360deg 100% 50%) calc(15 * 24 / 360 * 100%)
-            );
-          }
-        }
-        &--saturation {
-          &::-webkit-slider-runnable-track {
-            background: linear-gradient(
-              to right,
-              hsl(calc(var(--hue) * 1deg) 0% 50%),
-              hsl(calc(var(--hue) * 1deg) 100% 50%)
-            );
-          }
-          &::-moz-range-track {
-            background: linear-gradient(
-              to right,
-              hsl(calc(var(--hue) * 1deg) 0% 50%),
-              hsl(calc(var(--hue) * 1deg) 100% 50%)
-            );
-          }
-        }
-        &--brightness {
-          &::-webkit-slider-runnable-track {
-            background: linear-gradient(to right, #000, #fff);
-          }
-          &::-moz-range-track {
-            background: linear-gradient(to right, #000, #fff);
-          }
-        }
-      }
     }
     input[type="text"] {
       width: 5rem;
       text-align: right;
-    }
-    input[type="range"] {
-      appearance: none;
-      -webkit-appearance: none;
-      outline: none;
-      background: transparent;
-      width: 12rem;
-      height: 1rem;
-      &:hover {
-        cursor: grab;
-      }
-      &:active {
-        cursor: grabbing;
-      }
-      &::-webkit-slider-runnable-track {
-        height: 0.8rem;
-        border-radius: 0.8rem;
-        border: 0.1rem lightgray solid;
-      }
-      &::-moz-range-track {
-        height: 0.8rem;
-        border-radius: 0.8rem;
-        border: 0.1rem lightgray solid;
-      }
-      &::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        height: 1rem;
-        width: 1rem;
-        background-color: #4cabe2;
-        border-radius: 50%;
-        border: 0.1rem lightgray solid;
-        margin-top: -0.1rem; // (trackのheight - thumbのheight) / 2
-      }
-      &::-moz-range-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        height: 1rem;
-        width: 1rem;
-        background-color: #4cabe2;
-        border-radius: 50%;
-        border: 0.1rem lightgray solid;
-        margin-top: -0.1rem; // (trackのheight - thumbのheight) / 2
-      }
     }
   }
 }

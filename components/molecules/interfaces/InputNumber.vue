@@ -55,6 +55,9 @@ const getValue = (value: string) => {
   }
   return num;
 };
+const onFocus = (event: Event) => {
+  emits("focus", event);
+};
 const onBlur = (event: Event) => {
   if (!(event instanceof FocusEvent)) {
     modelValue.value = 0;
@@ -65,6 +68,7 @@ const onBlur = (event: Event) => {
     return;
   }
   modelValue.value = getValue(event.target.value);
+  emits("blur", event, modelValue.value);
 };
 const onChange = (event: Event) => {
   if (!(event instanceof KeyboardEvent)) {
@@ -96,7 +100,10 @@ const onChange = (event: Event) => {
       }
       break;
   }
-  return getValue(event.target.value + event.key);
+  emits("change", event, modelValue.value);
+};
+const onInput = (event: Event) => {
+  emits("input", event, modelValue.value);
 };
 const onKeydown = (event: Event) => {
   if (!(event instanceof KeyboardEvent)) {
@@ -130,6 +137,7 @@ const onKeydown = (event: Event) => {
       break;
   }
   modelValue.value = Math.round(newValue * 1000) / 1000;
+  emits("keypress", event, modelValue.value);
 };
 </script>
 
@@ -138,7 +146,9 @@ const onKeydown = (event: Event) => {
     mode="number"
     :num="modelValue"
     @change="onChange"
+    @focus="onFocus"
     @blur="onBlur"
+    @input="onInput"
     @keydown="onKeydown"
   />
 </template>

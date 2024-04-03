@@ -35,7 +35,7 @@ const integrater = computed({
 const COL_NUM = computed(() => props.col);
 const ROW_NUM = computed(() => props.row);
 
-const custom_main: Ref<HTMLElement | null> = ref(null);
+const custom_main = ref<HTMLCanvasElement>();
 const grabbing: Ref<TOUComponent | undefined> = ref();
 const resizing: Ref<TOUComponent | undefined> = ref();
 const resizeDirection: Ref<{

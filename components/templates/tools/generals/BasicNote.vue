@@ -4,7 +4,7 @@ import ToolDataList from "@/components/molecules/interfaces/ToolDataList.vue";
 import { TOUNote } from "@/types/tools/generals/note/note";
 
 const DEFAULT_NOTE_NAME = "Untitled_1";
-const textarea: Ref<HTMLElement | null> = ref(null);
+const textarea = ref<HTMLElement>();
 const noteName = ref(DEFAULT_NOTE_NAME);
 const noteList: Ref<{ [key: string]: TOUNote }> = ref({});
 const note = ref(new TOUNote());

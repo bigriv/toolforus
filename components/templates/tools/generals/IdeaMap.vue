@@ -2,11 +2,12 @@
 import Idea from "@/components/atoms/tools/generals/ideamap/Idea.vue";
 import ToolDataList from "@/components/molecules/interfaces/ToolDataList.vue";
 import ToolButton from "@/components/atoms/interfaces/ToolButton.vue";
+import ToolRadioButtons from "@/components/atoms/interfaces/ToolRadioButtons.vue";
 import { TOUPosition } from "@/types/common/position";
 import { TOUIdea } from "@/types/tools/generals/ideamap/idea";
 
 const DEFAULT_IDEA_NAME = "Untitled_1";
-const canvas: Ref<HTMLElement | null> = ref(null);
+const canvas = ref<HTMLCanvasElement>();
 const ideaName = ref(DEFAULT_IDEA_NAME);
 const ideaList: Ref<{ [key: string]: TOUIdea }> = ref({});
 const ideaMap = ref(new TOUIdea({ position: new TOUPosition() }));
@@ -17,20 +18,20 @@ const canvasCenter = ref(new TOUPosition(50, 50));
 const currentTool = ref("cursor");
 const toolList = [
   {
+    value: "cursor",
     icon: "/commons/icons/cursor.svg",
-    name: "cursor",
   },
   {
+    value: "zoom_in",
     icon: "/commons/icons/zoom_in.svg",
-    name: "zoom_in",
   },
   {
+    value: "zoom_out",
     icon: "/commons/icons/zoom_out.svg",
-    name: "zoom_out",
   },
   {
+    value: "move",
     icon: "/commons/icons/drag_pan.svg",
-    name: "move",
   },
 ];
 
@@ -218,20 +219,7 @@ onBeforeUnmount(() => {
     </div>
     <div class="c-container__toolbar">
       <div class="c-container__toolbar__menu">
-        <template v-for="tool in toolList">
-          <div class="c-container__toolbar__menu__tool">
-            <input
-              v-model="currentTool"
-              :id="`tool__${tool.name}`"
-              type="radio"
-              name="tool"
-              :value="tool.name"
-            />
-            <label :for="`tool__${tool.name}`">
-              <img :src="tool.icon" />
-            </label>
-          </div>
-        </template>
+        <ToolRadioButtons v-model:selected="currentTool" :list="toolList" />
         <div>
           <ToolButton @click="onResetFocus">
             <img src="/commons/icons/recenter.svg" class="u-absolute--center" />
@@ -309,32 +297,6 @@ onBeforeUnmount(() => {
       }
       &__tool {
         position: relative;
-        input[type="radio"] {
-          appearance: none;
-          display: none;
-          width: 2.4rem;
-          height: 100%;
-          + label {
-            display: block;
-            width: 2.4rem;
-            height: 100%;
-            background-color: white;
-            border: 0.1rem solid black;
-            cursor: pointer;
-            img {
-              position: absolute;
-              top: 50%;
-              left: 50%;
-              transform: translate(-50%, -50%);
-            }
-            &:hover {
-              background-color: #eee;
-            }
-          }
-          &:checked + label {
-            background-color: #ffaaaa;
-          }
-        }
       }
     }
   }

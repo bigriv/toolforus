@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
-import InputNumber from "@/components/molecules/interfaces/InputNumber.vue";
 import InputText from "@/components/atoms/interfaces/InputText.vue";
+import InputSlideAndNumber from "@/components/molecules/interfaces/InputSlideAndNumber.vue";
 import { TOURGBColor } from "@/types/common/css/color";
 
 const props = defineProps({
@@ -76,45 +76,37 @@ const onChangeCode = (event: Event) => {
         />
       </div>
       <div class="c-input_color__forms__inputs">
-        <input
-          v-model.number="input.red"
-          type="range"
+        <InputSlideAndNumber
+          v-model="input.red"
           :max="255"
           :min="0"
-          class="c-input_color__forms__inputs__slider--red"
+          sliderBackground="linear-gradient(to right, #fff, #ff0000)"
         />
-        <InputNumber v-model="input.red" :max="255" :min="0" />
       </div>
       <div class="c-input_color__forms__inputs">
-        <input
-          v-model.number="input.green"
-          type="range"
+        <InputSlideAndNumber
+          v-model="input.green"
           :max="255"
           :min="0"
-          class="c-input_color__forms__inputs__slider--green"
+          sliderBackground="linear-gradient(to right, #fff, #00ff00)"
         />
-        <InputNumber v-model="input.green" :max="255" :min="0" />
       </div>
       <div class="c-input_color__forms__inputs">
-        <input
-          v-model.number="input.blue"
-          type="range"
+        <InputSlideAndNumber
+          v-model="input.blue"
           :max="255"
           :min="0"
-          class="c-input_color__forms__inputs__slider--blue"
+          sliderBackground="linear-gradient(to right, #fff, #0000ff)"
         />
-        <InputNumber v-model="input.blue" :max="255" :min="0" />
       </div>
       <template v-if="inputOpacity">
         <div class="c-input_color__forms__inputs">
-          <input
-            v-model.number="input.opacity"
-            type="range"
+          <InputSlideAndNumber
+            v-model="input.opacity"
             :max="100"
             :min="0"
-            class="c-input_color__forms__inputs__slider--opacity"
+            sliderBackground="linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1))"
           />
-          <InputNumber v-model="input.opacity" :max="100" :min="0" />
         </div>
       </template>
     </div>
@@ -147,80 +139,10 @@ const onChangeCode = (event: Event) => {
       align-items: center;
       gap: 0 0.4rem;
       height: 1.2rem;
-      &__slider {
-        &--red {
-          &::-webkit-slider-runnable-track {
-            background: linear-gradient(to right, #fff, #ff0000);
-          }
-          &::-moz-range-track {
-            background: linear-gradient(to right, #fff, #ff0000);
-          }
-        }
-        &--green {
-          &::-webkit-slider-runnable-track {
-            background: linear-gradient(to right, #fff, #00ff00);
-          }
-          &::-moz-range-track {
-            background: linear-gradient(to right, #fff, #00ff00);
-          }
-        }
-        &--blue {
-          &::-webkit-slider-runnable-track {
-            background: linear-gradient(to right, #fff, #0000ff);
-          }
-          &::-moz-range-track {
-            background: linear-gradient(to right, #fff, #0000ff);
-          }
-        }
-      }
     }
     input[type="text"] {
       width: 5rem;
       text-align: right;
-    }
-    input[type="range"] {
-      appearance: none;
-      -webkit-appearance: none;
-      outline: none;
-      background: transparent;
-      width: 12rem;
-      height: 1rem;
-      &:hover {
-        cursor: grab;
-      }
-      &:active {
-        cursor: grabbing;
-      }
-      &::-webkit-slider-runnable-track {
-        height: 0.8rem;
-        border-radius: 0.8rem;
-        border: 0.1rem lightgray solid;
-      }
-      &::-moz-range-track {
-        height: 0.8rem;
-        border-radius: 0.8rem;
-        border: 0.1rem lightgray solid;
-      }
-      &::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        height: 1rem;
-        width: 1rem;
-        background-color: #4cabe2;
-        border-radius: 50%;
-        border: 0.1rem lightgray solid;
-        margin-top: -0.1rem; // (trackのheight - thumbのheight) / 2
-      }
-      &::-moz-range-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        height: 1rem;
-        width: 1rem;
-        background-color: #4cabe2;
-        border-radius: 50%;
-        border: 0.1rem lightgray solid;
-        margin-top: -0.1rem; // (trackのheight - thumbのheight) / 2
-      }
     }
   }
 }

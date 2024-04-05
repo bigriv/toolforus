@@ -7,7 +7,7 @@ const props = defineProps({
     default: false,
   },
 });
-const emits = defineEmits(["update:isShowModal", "submit"]);
+const emits = defineEmits(["update:isShowModal", "submit", "cancel"]);
 
 const isShowModal = ref(false);
 watch(
@@ -26,6 +26,7 @@ watch(
 // アクションイベント
 const onClose = () => {
   isShowModal.value = false;
+  emits("cancel");
 };
 const onSubmit = () => {
   isShowModal.value = false;

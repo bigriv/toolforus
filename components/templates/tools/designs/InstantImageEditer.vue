@@ -7,51 +7,16 @@ import ToolRadioButtons from "@/components/atoms/interfaces/ToolRadioButtons.vue
 import InputNumber from "@/components/molecules/interfaces/InputNumber.vue";
 import InputSlideAndNumber from "@/components/molecules/interfaces/InputSlideAndNumber.vue";
 import InputColorToolButton from "@/components/organisms/interfaces/InputColorToolButton.vue";
-import { TOURGBColor } from "@/types/common/css/color";
-
-const toolList = [
-  {
-    value: "cursor",
-    icon: "/commons/icons/cursor.svg",
-  },
-  {
-    value: "pen",
-    icon: "/commons/icons/pen.svg",
-  },
-  {
-    value: "shape",
-    icon: "/commons/icons/category.svg",
-  },
-];
-
-const shpaes = [
-  {
-    value: "circle",
-    icon: "/commons/icons/circle.svg",
-  },
-  {
-    value: "triangle",
-    icon: "/commons/icons/triangle.svg",
-  },
-  {
-    value: "square",
-    icon: "/commons/icons/square.svg",
-  },
-];
+import InputText from "@/components/atoms/interfaces/InputText.vue";
+import { useIieCanvas } from "@/composables/tools/designs/iie/canvas";
+import { useIieFilter } from "@/composables/tools/designs/iie/filter";
+import { useIiePen } from "@/composables/tools/designs/iie/pen";
+import { useIieShape } from "@/composables/tools/designs/iie/shape";
+import { useIieCrop } from "@/composables/tools/designs/iie/crop";
+import { useIieText } from "@/composables/tools/designs/iie/text";
 
 const canvasRef = ref<HTMLCanvasElement>();
-const size = reactive({
-  width: 500,
-  height: 600,
-});
-const currentTool = ref(toolList[0].value);
-const currentShape = ref(shpaes[0].value);
-const canvas = computed(
-  () =>
-    new fabric.Canvas(canvasRef.value!, {
-      preserveObjectStacking: true,
-    })
-);
+
 const mouse = ref({
   isDown: false,
   drag: {
@@ -62,60 +27,41 @@ const mouse = ref({
     end: { x: 0, y: 0 },
   },
 });
-const penSetting = reactive({
-  color: new TOURGBColor(TOURGBColor.CODE_BLACK),
-  size: 1,
-});
-const shapeSetting = reactive({
-  fill: new TOURGBColor(TOURGBColor.CODE_LIGHT_GRAY),
-  border: new TOURGBColor(TOURGBColor.CODE_BLACK),
-  borderWidth: 1,
-});
-const isShape = (object: fabric.Object) => {
-  return (
-    object instanceof fabric.Ellipse ||
-    object instanceof fabric.Rect ||
-    object instanceof fabric.Triangle
-  );
-};
-const resetShapeSetting = () => {
-  shapeSetting.fill = new TOURGBColor(TOURGBColor.CODE_LIGHT_GRAY);
-  shapeSetting.border = new TOURGBColor(TOURGBColor.CODE_BLACK);
-  shapeSetting.borderWidth = 1;
-};
-const filter = reactive({
-  isShowModal: false,
-  contrast: 0,
-  hueRotation: 0,
-  saturation: 0,
-  brightness: 0,
-  blur: 0,
-  opacity: 100,
-});
-const resetFilter = () => {
-  filter.contrast = 0;
-  filter.hueRotation = 0;
-  filter.saturation = 0;
-  filter.brightness = 0;
-  filter.blur = 0;
-  filter.opacity = 100;
-};
+
+const {
+  toolList,
+  canvasRatioList,
+  canvas,
+  size,
+  currentCanvasRatio,
+  currentTool,
+  onChangeCanvasRatio,
+  onChangeTool,
+  onChangteCanvasSize,
+} = useIieCanvas(canvasRef);
+const { filter, reflectFilter } = useIieFilter(canvas);
+const { penSetting } = useIiePen(canvas);
+const {
+  shpaeList,
+  shapeSetting,
+  currentShape,
+  isShape,
+  reflectShapeSetting,
+  generateShape,
+} = useIieShape(canvas);
+const { cropping, onCropStart, onCropCancel, onCropSubmit } =
+  useIieCrop(canvas);
+const { textSetting, reflectTextSetting, generateTextObject } =
+  useIieText(canvas);
+
 const selectedObjects = ref<fabric.Object[]>([]);
 const isSelectingShape = computed(
-  () => selectedObjects.value.filter((object) => isShape(object)).length > 0
+  () => selectedObjects.value.filter((object) => isShape(object)).length === 1
 );
 const isSelectingImage = computed(
   () =>
     selectedObjects.value.filter((object) => object instanceof fabric.Image)
-      .length > 0
-);
-watch(
-  () => penSetting,
-  () => {
-    canvas.value.freeDrawingBrush.color = penSetting.color.rgba();
-    canvas.value.freeDrawingBrush.width = penSetting.size;
-  },
-  { deep: true }
+      .length === 1
 );
 
 const onMouseDown = (options: fabric.IEvent) => {
@@ -145,70 +91,28 @@ const onMouseUp = (options: fabric.IEvent) => {
   if (!options.pointer) {
     return;
   }
-  const width = mouse.value.drag.end.x - mouse.value.drag.start.x;
-  const height = mouse.value.drag.end.y - mouse.value.drag.start.y;
-  if (width <= 0 || height <= 0) {
-    return;
-  }
+
   if (currentTool.value === "shape") {
-    const shape = generateShape(width, height);
+    const shape = generateShape(mouse.value.drag.start, mouse.value.drag.end);
     if (shape) {
       canvas.value.add(shape);
     }
+  } else if (currentTool.value === "text") {
+    canvas.value.add(generateTextObject(mouse.value.drag.end));
+    return;
   }
 };
 
-const generateShape = (
-  width: number,
-  height: number
-): fabric.Object | undefined => {
-  const defaultFill = TOURGBColor.CODE_LIGHT_GRAY;
-  const defaultStroke = TOURGBColor.CODE_BLACK;
-  switch (currentShape.value) {
-    case "circle":
-      return new fabric.Ellipse({
-        left: mouse.value.drag.start.x,
-        top: mouse.value.drag.start.y,
-        rx: width / 2,
-        ry: height / 2,
-        fill: defaultFill,
-        opacity: 1,
-        angle: 0,
-        stroke: defaultStroke,
-        strokeWidth: 1,
-        strokeUniform: true,
-      });
-    case "square":
-      return new fabric.Rect({
-        left: mouse.value.drag.start.x,
-        top: mouse.value.drag.start.y,
-        width: width,
-        height: height,
-        fill: defaultFill,
-        opacity: 1,
-        stroke: defaultStroke,
-        strokeWidth: 1,
-        strokeUniform: true,
-      });
-    case "triangle":
-      return new fabric.Triangle({
-        left: mouse.value.drag.start.x,
-        top: mouse.value.drag.start.y,
-        width: width,
-        height: height,
-        fill: defaultFill,
-        opacity: 1,
-        stroke: defaultStroke,
-        strokeWidth: 1,
-        strokeUniform: true,
-      });
-  }
-  return undefined;
-};
 const onUpdateSelectingObjects = () => {
+  console.log(canvas.value.getActiveObject());
   selectedObjects.value = canvas.value.getActiveObjects();
-  resetShapeSetting();
-  resetFilter();
+  if (currentTool.value === "cursor") {
+    reflectFilter();
+  } else if (currentTool.value === "shape") {
+    reflectShapeSetting();
+  } else if (currentTool.value === "text") {
+    reflectTextSetting();
+  }
 };
 const initCanvas = () => {
   canvas.value.clear(); // 以前の描画をクリア
@@ -220,6 +124,8 @@ const initCanvas = () => {
   canvas.value.on("selection:updated", onUpdateSelectingObjects);
   canvas.value.on("selection:cleared", onUpdateSelectingObjects);
   canvas.value.setWidth(size.width).setHeight(size.height);
+  canvas.value.freeDrawingBrush.color = penSetting.color.code;
+  canvas.value.freeDrawingBrush.width = penSetting.size;
   return canvas;
 };
 
@@ -273,70 +179,13 @@ const onExport = () => {
   link.click();
 };
 
-const onChangteCanvasSize = () => {
-  canvas.value.setWidth(size.width).setHeight(size.height);
-};
-const onChangeTool = (event: Event) => {
-  const target = event.target as HTMLInputElement;
-  if (!target?.value) {
-    return;
-  }
-  if (target.value === "pen") {
-    canvas.value.isDrawingMode = true;
-    canvas.value.freeDrawingBrush.color = penSetting.color.code;
-    canvas.value.freeDrawingBrush.width = penSetting.size;
-  } else {
-    canvas.value.isDrawingMode = false;
-  }
-};
 const onDeleteObjects = () => {
   canvas.value.getActiveObjects().forEach((object) => {
     canvas.value.remove(object);
   });
   canvas.value.discardActiveObject();
 };
-const onChangeShapeSetting = () => {
-  canvas.value.getActiveObjects().forEach((object) => {
-    if (!isShape(object)) {
-      return;
-    }
-    object.set({
-      fill: shapeSetting.fill.rgba(),
-      stroke: shapeSetting.border.rgba(),
-      strokeWidth: shapeSetting.borderWidth,
-    });
-  });
-  canvas.value.renderAll();
-};
-const onChangeFilter = () => {
-  canvas.value.getActiveObjects().forEach((object) => {
-    if (!(object instanceof fabric.Image)) {
-      return;
-    }
-    object.filters = [];
-    object.applyFilters([
-      new fabric.Image.filters.Contrast({
-        contrast: filter.contrast / 100,
-      }),
-      new fabric.Image.filters.HueRotation({
-        rotation: filter.hueRotation / 100,
-      }),
-      new fabric.Image.filters.Blur({
-        blur: filter.blur / 100,
-      }),
-      new fabric.Image.filters.Brightness({
-        brightness: filter.brightness / 100,
-      }),
-      new fabric.Image.filters.Saturation({
-        saturation: filter.saturation / 100,
-      }),
-    ]);
-    object.set({
-      opacity: filter.opacity / 100,
-    });
-  });
-  canvas.value.renderAll();
-};
+
 onMounted(() => {
   initCanvas();
 });
@@ -354,28 +203,45 @@ onMounted(() => {
         <ToolButton @click="onExport">
           <img src="/commons/icons/download.svg" />
         </ToolButton>
-        <div class="c-container__toolbar__menu__input">
-          <div class="c-container__toolbar__menu__input__label">Width</div>
-          <div class="c-container__toolbar__menu__input__text">
-            <InputNumber
-              v-model="size.width"
-              :min="1"
-              :max="2000"
-              @update:modelValue="onChangteCanvasSize"
-            />
-          </div>
+        <div
+          v-for="ratio in canvasRatioList"
+          :key="ratio.value"
+          class="c-container__toolbar__menu__radio"
+        >
+          <input
+            v-model="currentCanvasRatio"
+            type="radio"
+            :id="`canvas_ratio__${ratio.value}`"
+            :value="ratio.value"
+            name="canvas_ratio"
+            @change="onChangeCanvasRatio"
+          />
+          <label :for="`canvas_ratio__${ratio.value}`">{{ ratio.label }}</label>
         </div>
-        <div class="c-container__toolbar__menu__input">
-          <div class="c-container__toolbar__menu__input__label">Height</div>
-          <div class="c-container__toolbar__menu__input__text">
-            <InputNumber
-              v-model="size.height"
-              :min="1"
-              :max="2000"
-              @update:modelValue="onChangteCanvasSize"
-            />
+        <template v-if="currentCanvasRatio === 'custom'">
+          <div class="c-container__toolbar__menu__input">
+            <div class="c-container__toolbar__menu__input__label">Width</div>
+            <div class="c-container__toolbar__menu__input__text">
+              <InputNumber
+                v-model="size.width"
+                :min="1"
+                :max="2000"
+                @update:modelValue="onChangteCanvasSize"
+              />
+            </div>
           </div>
-        </div>
+          <div class="c-container__toolbar__menu__input">
+            <div class="c-container__toolbar__menu__input__label">Height</div>
+            <div class="c-container__toolbar__menu__input__text">
+              <InputNumber
+                v-model="size.height"
+                :min="1"
+                :max="2000"
+                @update:modelValue="onChangteCanvasSize"
+              />
+            </div>
+          </div>
+        </template>
       </div>
     </div>
     <div class="c-container__toolbar">
@@ -390,120 +256,173 @@ onMounted(() => {
     </div>
     <div class="c-container__toolbar">
       <div class="c-container__toolbar__menu">
-        <template v-if="currentTool === 'cursor'">
-          <template v-if="isSelectingShape">
+        <template v-if="cropping.target">
+          <ToolButton @click="onCropSubmit">
+            <img src="/commons/icons/flag.svg" />
+          </ToolButton>
+          <ToolButton @click="onCropCancel">
+            <img src="/commons/icons/close.svg" />
+          </ToolButton>
+        </template>
+        <template v-else>
+          <template v-if="currentTool === 'cursor'">
+            <template v-if="isSelectingShape">
+              <InputColorToolButton
+                v-model:color="shapeSetting.fill"
+                icon="/commons/icons/colors.svg"
+              />
+              <InputColorToolButton
+                v-model:color="shapeSetting.border"
+                icon="/commons/icons/pen.svg"
+              />
+              <div class="c-container__toolbar__menu__input">
+                <img
+                  src="/commons/icons/line_weight.svg"
+                  alt="ボーダーの太さ"
+                />
+                <div class="c-container__toolbar__menu__input__text">
+                  <InputNumber
+                    v-model="shapeSetting.borderWidth"
+                    :min="0"
+                    :max="100"
+                  />
+                </div>
+              </div>
+            </template>
+            <template v-if="isSelectingImage">
+              <div class="c-container__toolbar__menu__modal_wrap">
+                <ToolButton @click="filter.isShowModal = true">
+                  <img src="/commons/icons/swap_driving_apps_wheel.svg" />
+                </ToolButton>
+                <div class="c-container__toolbar__menu__modal_wrap__modal">
+                  <BasicDialog v-model:isShowModal="filter.isShowModal">
+                    <div class="c-container__toolbar__menu__filter">
+                      <div>コントラスト</div>
+                      <InputSlideAndNumber
+                        v-model="filter.contrast"
+                        :max="100"
+                        :min="-100"
+                      />
+                    </div>
+                    <div class="c-container__toolbar__menu__filter">
+                      <div>明度</div>
+                      <InputSlideAndNumber
+                        v-model="filter.brightness"
+                        :max="100"
+                        :min="-100"
+                      />
+                    </div>
+                    <div class="c-container__toolbar__menu__filter">
+                      <div>彩度</div>
+                      <InputSlideAndNumber
+                        v-model="filter.saturation"
+                        :max="100"
+                        :min="-100"
+                      />
+                    </div>
+                    <div class="c-container__toolbar__menu__filter">
+                      <div>色相</div>
+                      <InputSlideAndNumber
+                        v-model="filter.hueRotation"
+                        :max="100"
+                        :min="-100"
+                      />
+                    </div>
+                    <div class="c-container__toolbar__menu__filter">
+                      <div>ぼかし</div>
+                      <InputSlideAndNumber
+                        v-model="filter.blur"
+                        :max="100"
+                        :min="0"
+                      />
+                    </div>
+                    <div class="c-container__toolbar__menu__filter">
+                      <div>透明度</div>
+                      <InputSlideAndNumber
+                        v-model="filter.opacity"
+                        :max="100"
+                        :min="0"
+                      />
+                    </div>
+                  </BasicDialog>
+                </div>
+              </div>
+              <ToolButton @click="onCropStart">
+                <img src="/commons/icons/crop.svg" />
+              </ToolButton>
+            </template>
+            <ToolButton @click="onDeleteObjects">
+              <img src="/commons/icons/delete.svg" />
+            </ToolButton>
+          </template>
+          <template v-else-if="currentTool === 'pen'">
             <InputColorToolButton
-              v-model:color="shapeSetting.fill"
-              icon="/commons/icons/colors.svg"
-              @submit="onChangeShapeSetting"
-            />
-            <InputColorToolButton
-              v-model:color="shapeSetting.border"
+              v-model:color="penSetting.color"
               icon="/commons/icons/pen.svg"
-              @submit="onChangeShapeSetting"
             />
             <div class="c-container__toolbar__menu__input">
-              <img src="/commons/icons/line_weight.svg" alt="ボーダーの太さ" />
+              <img src="/commons/icons/line_weight.svg" alt="ペンサイズ" />
               <div class="c-container__toolbar__menu__input__text">
                 <InputNumber
-                  v-model="shapeSetting.borderWidth"
-                  :min="0"
-                  :max="100"
-                  @blur="onChangeShapeSetting"
+                  v-model="penSetting.size"
+                  :min="1"
+                  :max="72"
+                  mode="uint"
                 />
               </div>
             </div>
           </template>
-          <div
-            v-if="isSelectingImage"
-            class="c-container__toolbar__menu__modal_wrap"
+          <template
+            v-else-if="currentTool === 'crop' || currentTool === 'shape'"
           >
-            <ToolButton @click="filter.isShowModal = true">
-              <img src="/commons/icons/swap_driving_apps_wheel.svg" />
-            </ToolButton>
-            <div class="c-container__toolbar__menu__modal_wrap__modal">
-              <BasicDialog
-                v-model:isShowModal="filter.isShowModal"
-                @submit="onChangeFilter"
-              >
-                <div class="c-container__toolbar__menu__filter">
-                  <div>コントラスト</div>
-                  <InputSlideAndNumber
-                    v-model="filter.contrast"
-                    :max="100"
-                    :min="-100"
-                  />
-                </div>
-                <div class="c-container__toolbar__menu__filter">
-                  <div>明度</div>
-                  <InputSlideAndNumber
-                    v-model="filter.brightness"
-                    :max="100"
-                    :min="-100"
-                  />
-                </div>
-                <div class="c-container__toolbar__menu__filter">
-                  <div>彩度</div>
-                  <InputSlideAndNumber
-                    v-model="filter.saturation"
-                    :max="100"
-                    :min="-100"
-                  />
-                </div>
-                <div class="c-container__toolbar__menu__filter">
-                  <div>色相</div>
-                  <InputSlideAndNumber
-                    v-model="filter.hueRotation"
-                    :max="100"
-                    :min="-100"
-                  />
-                </div>
-                <div class="c-container__toolbar__menu__filter">
-                  <div>ぼかし</div>
-                  <InputSlideAndNumber
-                    v-model="filter.blur"
-                    :max="100"
-                    :min="0"
-                  />
-                </div>
-                <div class="c-container__toolbar__menu__filter">
-                  <div>透明度</div>
-                  <InputSlideAndNumber
-                    v-model="filter.opacity"
-                    :max="100"
-                    :min="0"
-                  />
-                </div>
-              </BasicDialog>
+            <ToolRadioButtons
+              v-model:selected="currentShape"
+              name="shape"
+              :list="shpaeList"
+            />
+          </template>
+          <template v-else-if="currentTool === 'text'">
+            <div class="c-container__toolbar__menu__input">
+              <img src="/commons/icons/title.svg" alt="テキスト" />
+              <div class="c-container__toolbar__menu__input__text">
+                <InputText
+                  v-model:text="textSetting.text"
+                  placeholder="テキスト"
+                  :maxlength="100"
+                />
+              </div>
             </div>
-          </div>
-          <ToolButton @click="onDeleteObjects">
-            <img src="/commons/icons/delete.svg" />
-          </ToolButton>
-        </template>
-        <template v-else-if="currentTool === 'pen'">
-          <InputColorToolButton
-            v-model:color="penSetting.color"
-            icon="/commons/icons/pen.svg"
-          />
-          <div class="c-container__toolbar__menu__input">
-            <img src="/commons/icons/line_weight.svg" alt="ペンサイズ" />
-            <div class="c-container__toolbar__menu__input__text">
-              <InputNumber
-                v-model="penSetting.size"
-                :min="1"
-                :max="72"
-                mode="uint"
-              />
+            <div class="c-container__toolbar__menu__input">
+              <img src="/commons/icons/font_size.svg" alt="フォントサイズ" />
+              <div class="c-container__toolbar__menu__input__text">
+                <InputNumber
+                  v-model="textSetting.size"
+                  :min="10"
+                  :max="72"
+                  mode="uint"
+                />
+              </div>
             </div>
-          </div>
-        </template>
-        <template v-else-if="currentTool === 'shape'">
-          <ToolRadioButtons
-            v-model:selected="currentShape"
-            name="shape"
-            :list="shpaes"
-          />
+            <InputColorToolButton
+              v-model:color="textSetting.color"
+              icon="/commons/icons/colors.svg"
+            />
+            <InputColorToolButton
+              v-model:color="textSetting.stroke"
+              icon="/commons/icons/pen.svg"
+            />
+            <div class="c-container__toolbar__menu__input">
+              <img src="/commons/icons/line_weight.svg" alt="ボーダー太さ" />
+              <div class="c-container__toolbar__menu__input__text">
+                <InputNumber
+                  v-model="textSetting.strokeWidth"
+                  :min="0"
+                  :max="100"
+                  mode="uint"
+                />
+              </div>
+            </div>
+          </template>
         </template>
       </div>
     </div>
@@ -533,9 +452,6 @@ onMounted(() => {
     height: 2rem;
     &__menu {
       display: flex;
-      &__tool {
-        position: relative;
-      }
       &__input {
         display: flex;
         align-items: center;
@@ -545,6 +461,39 @@ onMounted(() => {
         &__text {
           width: 6em;
           height: 80%;
+        }
+      }
+      &__radio {
+        position: relative;
+        input[type="radio"] {
+          appearance: none;
+          display: none;
+          width: 2.4rem;
+          height: 100%;
+          + label {
+            display: block;
+            width: 2.4rem;
+            height: 100%;
+            background-color: white;
+            border: 0.1rem solid black;
+            font-size: 0.8rem;
+            font-family: monospace;
+            align-content: center;
+            text-align: center;
+            cursor: pointer;
+            img {
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+            }
+            &:hover {
+              background-color: #eee;
+            }
+          }
+          &:checked + label {
+            background-color: #ffaaaa;
+          }
         }
       }
       &__modal_wrap {
@@ -581,7 +530,8 @@ onMounted(() => {
     }
   }
 }
-.u-mouse_icon--pen {
+.u-mouse_icon--pen,
+.u-mouse_icon--default {
   :deep(canvas.upper-canvas) {
     cursor: inherit !important;
   }

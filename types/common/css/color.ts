@@ -161,6 +161,29 @@ export class TOURGBColor {
   }
 
   /**
+   * rgba値からRGBカラーインスタンスに変換する
+   * @param rgba rgba(red, green, bule, opacity)形式の文字列（red, green, blue, opacityは数値）
+   * @returns RGBカラー（フォーマットが適していないなどで変換できなかった場合はundefined）
+   */
+  static rgbaToRGBAColor(rgba: string): TOURGBColor | undefined {
+    const values = rgba.match(/^rgba\(\d{1,3}, \d{1,3}, \d{1,3}, [0-9.]+\)$/);
+    if (!values) {
+      return undefined;
+    }
+    const r = values[0];
+    const g = values[1];
+    const b = values[2];
+    const opacity = values[3];
+    if (!r || !g || !b || !opacity) {
+      return undefined;
+    }
+    return new TOURGBColor(
+      this.numberToCode(Number(r), Number(g), Number(b)),
+      Number(opacity)
+    );
+  }
+
+  /**
    * 補色の取得
    * RGB値の最小値と最大値の和を取得し、その値からRGBの各値を減算することで新しいRGB値を算出する。
    * @param color 基準色

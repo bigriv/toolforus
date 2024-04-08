@@ -18,7 +18,7 @@ const props = defineProps({
     default: true,
   },
 });
-const emits = defineEmits(["update:isShowModal", "submit"]);
+const emits = defineEmits(["update:isShowModal", "submit", "cancel"]);
 
 const isShowModal = ref(false);
 watch(
@@ -54,6 +54,7 @@ onMounted(() => {
 const onClose = () => {
   resetColor();
   isShowModal.value = false;
+  emits("cancel");
 };
 const onSubmit = () => {
   isShowModal.value = false;
@@ -66,10 +67,7 @@ const onSubmit = () => {
     <transition>
       <div v-show="isShowModal" class="c-input_color_modal__inner">
         <div class="c-input_color_modal__inner__contents">
-          <InputColor
-            v-model:color="color"
-            :inputAlpha="props.inputOpacity"
-          />
+          <InputColor v-model:color="color" :inputAlpha="props.inputOpacity" />
         </div>
 
         <div class="c-input_color_modal__inner__buttons">

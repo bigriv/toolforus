@@ -35,14 +35,14 @@ const onSubmit = () => {
 </script>
 
 <template>
-  <div class="c-input_color_modal">
+  <div class="c-basic_dialog">
     <transition>
-      <div v-show="isShowModal" class="c-input_color_modal__inner">
-        <div class="c-input_color_modal__inner__contents">
+      <div v-show="isShowModal" class="c-basic_dialog__inner">
+        <div class="c-basic_dialog__inner__contents">
           <slot />
         </div>
 
-        <div class="c-input_color_modal__inner__buttons">
+        <div class="c-basic_dialog__inner__buttons">
           <button @click="onClose">Cancel</button>
           <button @click="onSubmit">OK</button>
         </div>
@@ -52,7 +52,7 @@ const onSubmit = () => {
 </template>
 
 <style scoped lang="scss">
-.c-input_color_modal {
+.c-basic_dialog {
   position: absolute;
   z-index: 10;
   box-shadow: 0rem 0rem 0.8rem #aaa;

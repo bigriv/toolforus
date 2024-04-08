@@ -3,6 +3,14 @@ import { fabric } from "fabric";
 export const useIieFilter = (canvas: ComputedRef<fabric.Canvas>) => {
   const filter = reactive({
     isShowModal: false,
+    backup: {
+      contrast: 0,
+      hueRotation: 0,
+      saturation: 0,
+      brightness: 0,
+      blur: 0,
+      opacity: 100,
+    },
     contrast: 0,
     hueRotation: 0,
     saturation: 0,
@@ -66,15 +74,35 @@ export const useIieFilter = (canvas: ComputedRef<fabric.Canvas>) => {
     filter.opacity = (image.opacity ?? 1) * 100;
   };
 
-  const onSubmitFilter = () => {
-    
-  }
-  const onCancelFilter = () => {
+  const backupFilter = () => {
+    const activeImages = canvas.value
+      .getActiveObjects()
+      .filter((object) => object instanceof fabric.Image);
+    if (activeImages.length !== 1) {
+      return;
+    }
+    const image = activeImages[0] as fabric.Image;
+    filter.backup.contrast = 0;
+    filter.backup.hueRotation = 0;
+    filter.backup.saturation = 0;
+    filter.backup.brightness = 0;
+    filter.backup.blur = 0;
+    filter.backup.opacity = (image.opacity ?? 1) * 100;
+  };
 
-  }
+  const rollbackFilter = () => {
+    filter.contrast = filter.backup.contrast;
+    filter.hueRotation = filter.backup.hueRotation;
+    filter.saturation = filter.backup.saturation;
+    filter.brightness = filter.backup.brightness;
+    filter.blur = filter.backup.blur;
+    filter.opacity = filter.backup.opacity;
+  };
 
   return {
     filter,
     reflectFilter,
+    backupFilter,
+    rollbackFilter,
   };
 };

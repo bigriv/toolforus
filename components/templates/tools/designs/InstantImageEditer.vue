@@ -8,7 +8,9 @@ import InputNumber from "@/components/molecules/interfaces/InputNumber.vue";
 import InputSlideAndNumber from "@/components/molecules/interfaces/InputSlideAndNumber.vue";
 import InputColorToolButton from "@/components/organisms/interfaces/InputColorToolButton.vue";
 import InputText from "@/components/atoms/interfaces/InputText.vue";
+import { useShortcutKey } from "@/composables/common/shortcut";
 import { useIieCanvas } from "@/composables/tools/designs/iie/canvas";
+import { useIieFile } from "@/composables/tools/designs/iie/file";
 import { useIieFilter } from "@/composables/tools/designs/iie/filter";
 import { useIiePen } from "@/composables/tools/designs/iie/pen";
 import { useIieShape } from "@/composables/tools/designs/iie/shape";
@@ -39,7 +41,16 @@ const {
   onChangeTool,
   onChangteCanvasSize,
 } = useIieCanvas(canvasRef);
-const { filter, reflectFilter } = useIieFilter(canvas);
+const {
+  extensionList,
+  exportFile,
+  onOpenExportModal,
+  onImport,
+  onExport,
+  onDropFile,
+} = useIieFile(canvas);
+const { filter, reflectFilter, backupFilter, rollbackFilter } =
+  useIieFilter(canvas);
 const { penSetting } = useIiePen(canvas);
 const {
   shpaeList,
@@ -48,12 +59,32 @@ const {
   isShape,
   reflectShapeSetting,
   generateShape,
+  backupShapeSetting,
+  rollbackShapeSetting,
 } = useIieShape(canvas);
 const { cropping, onCropStart, onCropCancel, onCropSubmit } =
   useIieCrop(canvas);
-const { textSetting, reflectTextSetting, generateTextObject } =
-  useIieText(canvas);
-
+const {
+  textSetting,
+  reflectTextSetting,
+  generateTextObject,
+  backupTextSetting,
+  rollbackTextSetting,
+  onChangeText,
+} = useIieText(canvas);
+const { addShortcutKey, removeShortcutKey } = useShortcutKey([
+  {
+    code: "Delete",
+    onKeydown: () => onDeleteObjects(),
+  },
+  {
+    code: "Escape",
+    onKeydown: () => {
+      canvas.value.discardActiveObject();
+      canvas.value.renderAll();
+    },
+  },
+]);
 const selectedObjects = ref<fabric.Object[]>([]);
 const isSelectingShape = computed(
   () => selectedObjects.value.filter((object) => isShape(object)).length === 1
@@ -98,13 +129,18 @@ const onMouseUp = (options: fabric.IEvent) => {
       canvas.value.add(shape);
     }
   } else if (currentTool.value === "text") {
-    canvas.value.add(generateTextObject(mouse.value.drag.end));
+    if (mouse.value.drag.end.x - mouse.value.drag.start.x <= 0) {
+      return;
+    }
+    if (mouse.value.drag.end.y - mouse.value.drag.start.y <= 0) {
+      return;
+    }
+    canvas.value.add(generateTextObject(mouse.value.drag.start));
     return;
   }
 };
 
 const onUpdateSelectingObjects = () => {
-  console.log(canvas.value.getActiveObject());
   selectedObjects.value = canvas.value.getActiveObjects();
   if (currentTool.value === "cursor") {
     reflectFilter();
@@ -129,56 +165,10 @@ const initCanvas = () => {
   return canvas;
 };
 
-const onChangeFile = (event: Event) => {
-  const files = (event.target as HTMLInputElement)?.files;
-
-  if (!files || files.length <= 0) {
-    return;
-  }
-
-  const reader = new FileReader();
-
-  reader.onload = (event: Event) => {
-    if (!canvasRef.value) {
-      return;
-    }
-
-    const imageData = (event.target as FileReader).result;
-    if (!imageData) {
-      return;
-    }
-
-    fabric.Image.fromURL(
-      imageData instanceof ArrayBuffer
-        ? Buffer.from(imageData).toString()
-        : imageData,
-      (img) => {
-        if (!canvasRef.value) {
-          return;
-        }
-        // 画像をFabric.jsのImageオブジェクトに読み込む
-        canvas.value.add(img); // Canvasに画像を追加
-      }
-    );
-  };
-
-  reader.readAsDataURL(files[0]); // 画像の読み込みを開始
+const onOpenFilterSetting = () => {
+  backupFilter();
+  filter.isShowModal = true;
 };
-
-const onExport = () => {
-  const dataURL = canvas.value.toDataURL({
-    format: "png", // 画像の形式を指定（デフォルトはpng）
-    quality: 1, // 画像の品質を指定（0〜1の範囲、デフォルトは1）
-  });
-
-  // データURLを画像としてダウンロードする方法
-  // 例えば、ダウンロード用のリンクを作成し、クリックしたときにダウンロードさせる
-  var link = document.createElement("a");
-  link.href = dataURL;
-  link.download = "image.png"; // ダウンロードする画像のファイル名を指定
-  link.click();
-};
-
 const onDeleteObjects = () => {
   canvas.value.getActiveObjects().forEach((object) => {
     canvas.value.remove(object);
@@ -188,6 +178,10 @@ const onDeleteObjects = () => {
 
 onMounted(() => {
   initCanvas();
+  addShortcutKey();
+});
+onUnmounted(() => {
+  removeShortcutKey();
 });
 </script>
 
@@ -198,9 +192,9 @@ onMounted(() => {
         <ToolFileButton
           accept=".jpeg,.png,.bmp,.tiff,.gif"
           icon="/commons/icons/upload_file.svg"
-          @change="onChangeFile"
+          @change="onImport"
         />
-        <ToolButton @click="onExport">
+        <ToolButton @click="onOpenExportModal">
           <img src="/commons/icons/download.svg" />
         </ToolButton>
         <div
@@ -270,10 +264,14 @@ onMounted(() => {
               <InputColorToolButton
                 v-model:color="shapeSetting.fill"
                 icon="/commons/icons/colors.svg"
+                @open="backupShapeSetting"
+                @cancel="rollbackShapeSetting"
               />
               <InputColorToolButton
                 v-model:color="shapeSetting.border"
                 icon="/commons/icons/pen.svg"
+                @open="backupShapeSetting"
+                @cancel="rollbackShapeSetting"
               />
               <div class="c-container__toolbar__menu__input">
                 <img
@@ -291,11 +289,14 @@ onMounted(() => {
             </template>
             <template v-if="isSelectingImage">
               <div class="c-container__toolbar__menu__modal_wrap">
-                <ToolButton @click="filter.isShowModal = true">
+                <ToolButton @click="onOpenFilterSetting">
                   <img src="/commons/icons/swap_driving_apps_wheel.svg" />
                 </ToolButton>
                 <div class="c-container__toolbar__menu__modal_wrap__modal">
-                  <BasicDialog v-model:isShowModal="filter.isShowModal">
+                  <BasicDialog
+                    v-model:isShowModal="filter.isShowModal"
+                    @cancel="rollbackFilter"
+                  >
                     <div class="c-container__toolbar__menu__filter">
                       <div>コントラスト</div>
                       <InputSlideAndNumber
@@ -389,6 +390,7 @@ onMounted(() => {
                   v-model:text="textSetting.text"
                   placeholder="テキスト"
                   :maxlength="100"
+                  @update:text="onChangeText"
                 />
               </div>
             </div>
@@ -406,10 +408,14 @@ onMounted(() => {
             <InputColorToolButton
               v-model:color="textSetting.color"
               icon="/commons/icons/colors.svg"
+              @open="backupTextSetting"
+              @cancel="rollbackTextSetting"
             />
             <InputColorToolButton
               v-model:color="textSetting.stroke"
               icon="/commons/icons/pen.svg"
+              @open="backupTextSetting"
+              @cancel="rollbackTextSetting"
             />
             <div class="c-container__toolbar__menu__input">
               <img src="/commons/icons/line_weight.svg" alt="ボーダー太さ" />
@@ -426,7 +432,7 @@ onMounted(() => {
         </template>
       </div>
     </div>
-    <div class="c-container__editer">
+    <div class="c-container__editer" @drop.prevent="onDropFile">
       <div
         class="c-container__editer__canvas"
         :class="{
@@ -437,6 +443,33 @@ onMounted(() => {
       </div>
     </div>
   </div>
+  <Teleport to="body">
+    <div v-show="exportFile.isShowModal" class="c-export__background"></div>
+    <BasicDialog
+      v-model:isShowModal="exportFile.isShowModal"
+      class="u-absolute--center"
+      @submit="onExport"
+    >
+      <div class="c-export__modal__name">
+        <InputText
+          v-model:text="exportFile.name"
+          placeholder="出力するファイルの名前"
+        />
+      </div>
+      <div class="c-export__modal__extension">
+        <template v-for="extension in extensionList">
+          <label>
+            <input
+              v-model="exportFile.extension"
+              type="radio"
+              :value="extension"
+            />
+            {{ extension }}
+          </label>
+        </template>
+      </div>
+    </BasicDialog>
+  </Teleport>
 </template>
 
 <style scoped lang="scss">
@@ -527,6 +560,35 @@ onMounted(() => {
       margin: auto;
       border: 0.1rem solid black;
       background-color: white;
+    }
+  }
+}
+.c-export {
+  &__background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: black;
+    opacity: 0.5;
+  }
+  &__modal {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    &__extension {
+      margin-top: 0.4rem;
+      display: flex;
+      justify-content: flex-start;
+      gap: 0.8rem;
+      label {
+        cursor: pointer;
+      }
     }
   }
 }

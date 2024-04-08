@@ -4,12 +4,12 @@ export const useIieCrop = (canvas: ComputedRef<fabric.Canvas>) => {
   const cropping: Ref<{
     target: fabric.Object | undefined;
     clipPath: {
-      before: fabric.Object | undefined;
+      backup: fabric.Object | undefined;
     };
   }> = ref({
     target: undefined,
     clipPath: {
-      before: undefined,
+      backup: undefined,
     },
   });
 
@@ -19,7 +19,7 @@ export const useIieCrop = (canvas: ComputedRef<fabric.Canvas>) => {
       return;
     }
     cropping.value.target = object;
-    cropping.value.clipPath.before = cropping.value.target.clipPath;
+    cropping.value.clipPath.backup = cropping.value.target.clipPath;
     cropping.value.target.clipPath = undefined;
 
     // キャンバス内のオブジェクトの選択を解除し、選択不可にする
@@ -50,7 +50,7 @@ export const useIieCrop = (canvas: ComputedRef<fabric.Canvas>) => {
       endCrop();
       return;
     }
-    cropping.value.target.clipPath = cropping.value.clipPath.before;
+    cropping.value.target.clipPath = cropping.value.clipPath.backup;
     endCrop();
   };
   const onCropSubmit = () => {
@@ -96,7 +96,7 @@ export const useIieCrop = (canvas: ComputedRef<fabric.Canvas>) => {
   };
   const endCrop = () => {
     cropping.value.target = undefined;
-    cropping.value.clipPath.before = undefined;
+    cropping.value.clipPath.backup = undefined;
     const cropFrame = canvas.value
       .getObjects()
       .find((object) => object.name === "crop_frame");

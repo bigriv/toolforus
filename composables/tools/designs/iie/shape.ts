@@ -19,6 +19,10 @@ export const useIieShape = (canvas: ComputedRef<fabric.Canvas>) => {
   const currentShape = ref(shpaeList[0].value);
 
   const shapeSetting = reactive({
+    backup: {
+      fill: new TOURGBColor(TOURGBColor.CODE_LIGHT_GRAY),
+      border: new TOURGBColor(TOURGBColor.CODE_BLACK),
+    },
     fill: new TOURGBColor(TOURGBColor.CODE_LIGHT_GRAY),
     border: new TOURGBColor(TOURGBColor.CODE_BLACK),
     borderWidth: 1,
@@ -58,7 +62,7 @@ export const useIieShape = (canvas: ComputedRef<fabric.Canvas>) => {
   };
 
   const reflectShapeSetting = () => {
-    resetShapeSetting()
+    resetShapeSetting();
     const activeShapes = canvas.value
       .getActiveObjects()
       .filter((object) => isShape(object));
@@ -131,7 +135,26 @@ export const useIieShape = (canvas: ComputedRef<fabric.Canvas>) => {
     }
     return undefined;
   };
+  const backupShapeSetting = () => {
+    const activeShpaes = canvas.value
+      .getActiveObjects()
+      .filter((object) => isShape(object));
+    if (activeShpaes.length !== 1) {
+      return;
+    }
+    const shape = activeShpaes[0] as fabric.Object;
 
+    shapeSetting.backup.fill =
+      TOURGBColor.rgbaToRGBAColor(shape.fill as string) ??
+      new TOURGBColor(TOURGBColor.CODE_BLACK);
+    shapeSetting.backup.border =
+      TOURGBColor.rgbaToRGBAColor(shape.stroke as string) ??
+      new TOURGBColor(TOURGBColor.CODE_BLACK);
+  };
+  const rollbackShapeSetting = () => {
+    shapeSetting.fill = shapeSetting.backup.fill;
+    shapeSetting.border = shapeSetting.backup.border;
+  };
   return {
     shpaeList,
     shapeSetting,
@@ -139,5 +162,7 @@ export const useIieShape = (canvas: ComputedRef<fabric.Canvas>) => {
     isShape,
     reflectShapeSetting,
     generateShape,
+    backupShapeSetting,
+    rollbackShapeSetting,
   };
 };

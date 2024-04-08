@@ -166,14 +166,16 @@ export class TOURGBColor {
    * @returns RGBカラー（フォーマットが適していないなどで変換できなかった場合はundefined）
    */
   static rgbaToRGBAColor(rgba: string): TOURGBColor | undefined {
-    const values = rgba.match(/^rgba\(\d{1,3}, \d{1,3}, \d{1,3}, [0-9.]+\)$/);
+    const values = rgba.match(
+      /^rgba\((\d{1,3}), (\d{1,3}), (\d{1,3}), ([0-9.]+)\)$/
+    );
     if (!values) {
       return undefined;
     }
-    const r = values[0];
-    const g = values[1];
-    const b = values[2];
-    const opacity = values[3];
+    const r = values[1];
+    const g = values[2];
+    const b = values[3];
+    const opacity = values[4];
     if (!r || !g || !b || !opacity) {
       return undefined;
     }

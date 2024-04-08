@@ -18,7 +18,13 @@ const props = defineProps({
     default: true,
   },
 });
-const emits = defineEmits(["update:color", "submit"]);
+const emits = defineEmits([
+  "update:color",
+  "open",
+  "close",
+  "cancel",
+  "submit",
+]);
 
 const isShowModal = ref(false);
 const color = computed({
@@ -26,9 +32,22 @@ const color = computed({
   set: (newValue) => emits("update:color", newValue),
 });
 
+watch(
+  () => isShowModal.value,
+  () => {
+    if (isShowModal.value) {
+      emits("open");
+    } else {
+      emits("close");
+    }
+  }
+);
 const onSubmitnColor = (newColor: TOURGBColor) => {
   color.value = newColor;
   emits("submit");
+};
+const onCancel = () => {
+  emits("cancel");
 };
 </script>
 
@@ -49,6 +68,7 @@ const onSubmitnColor = (newColor: TOURGBColor) => {
       :inputOpacity="props.inputAlpha"
       class="c-input_color_tool_button__modal"
       @submit="onSubmitnColor"
+      @cancel="onCancel"
     />
   </div>
 </template>

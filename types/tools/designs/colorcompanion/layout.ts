@@ -1,4 +1,4 @@
-import type { TOUGridContent } from "@/types/tools/designs/colorsuggest/content";
+import type { TOUGridContent } from "@/types/tools/designs/colorcompanion/content";
 
 export class TOUGridLayout {
   col: number;

@@ -482,7 +482,7 @@ onUnmounted(() => {
     display: flex;
     justify-content: space-between;
     background-color: white;
-    height: 2rem;
+    min-height: 2rem;
     &__menu {
       display: flex;
       &__input {

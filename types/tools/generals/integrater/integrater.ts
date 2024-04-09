@@ -1,6 +1,9 @@
 import { TOUPosition } from "@/types/common/position";
 import type { TOUSavable } from "@/types/common/savable";
-import { TOUComponent, TOU_COMPONENT_TYPE } from "@/types/tools/generals/integrater/component";
+import {
+  TOUComponent,
+  TOU_COMPONENT_TYPE,
+} from "@/types/tools/generals/integrater/component";
 
 export class TOUIntegrater implements TOUSavable {
   components: Array<TOUComponent>;
@@ -8,6 +11,9 @@ export class TOUIntegrater implements TOUSavable {
     this.components = [];
   }
 
+  remove(component: TOUComponent) {
+    this.components = this.components.filter((c) => c !== component);
+  }
   static build(object: any): TOUIntegrater {
     const integrater = new TOUIntegrater();
     if (!Array.isArray(object)) {

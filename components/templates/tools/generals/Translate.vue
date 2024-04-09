@@ -57,6 +57,7 @@ const onTranslate = async () => {
   width: 100%;
   height: 100%;
   min-width: 300px;
+  container-type: inline-size;
   &__language {
     display: flex;
     justify-content: space-between;
@@ -90,7 +91,7 @@ const onTranslate = async () => {
     }
   }
 }
-@media screen and (max-width: 740px) {
+@container (max-width: 740px) {
   .c-translate__language {
     select {
       width: 40%;
@@ -110,7 +111,7 @@ const onTranslate = async () => {
     }
   }
 }
-@media screen and (min-width: 740px) {
+@container (min-width: 740px) {
   .c-translate__language {
     select {
       width: 40%;

@@ -4,6 +4,8 @@ import FreehandNote from "@/components/templates/tools/generals/FreehandNote.vue
 import IdeaMap from "@/components/templates/tools/generals/IdeaMap.vue";
 import Translate from "@/components/templates/tools/generals/Translate.vue";
 import StopWatch from "@/components/templates/tools/generals/StopWatch.vue";
+import ColorCompanion from "@/components/templates/tools/designs/ColorCompanion.vue";
+import InstantImageEditer from "@/components/templates/tools/designs/InstantImageEditer.vue";
 import { TOU_COMPONENT_TYPE } from "@/types/tools/generals/integrater/component";
 import type { TOUIntegrater } from "@/types/tools/generals/integrater/integrater";
 
@@ -51,11 +53,7 @@ const ROW_NUM = computed(() => props.row);
           '--endY': content.end.y,
         }"
       >
-        <div
-          class="c-integrater_view__main__container__content"
-          @mousemove.prevent.stop
-          @mouseleave.prevent.stop
-        >
+        <div class="c-integrater_view__main__container__content">
           <BasicNote v-if="content.type === TOU_COMPONENT_TYPE.BASIC_NOTE" />
           <FreehandNote
             v-else-if="content.type === TOU_COMPONENT_TYPE.FREEHAND_NOTE"
@@ -66,6 +64,12 @@ const ROW_NUM = computed(() => props.row);
           />
           <Translate
             v-else-if="content.type === TOU_COMPONENT_TYPE.TRANSLATE"
+          />
+          <ColorCompanion
+            v-else-if="content.type === TOU_COMPONENT_TYPE.COLOR_COMPANION"
+          />
+          <InstantImageEditer
+            v-else-if="content.type === TOU_COMPONENT_TYPE.INSTANT_IMAGE_EDITER"
           />
         </div>
       </div>

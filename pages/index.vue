@@ -24,11 +24,11 @@ const contents = [
   },
   {
     title: "統合",
-    path: "/tools/generals/integrater/custom",
+    path: "/tools/generals/integrater",
   },
   {
-    title: "カラーサジェスト",
-    path: "/tools/designs/colorsuggest",
+    title: "カラーコンパニオン",
+    path: "/tools/designs/colorcompanion",
   },
   {
     title: "簡易画像編集",

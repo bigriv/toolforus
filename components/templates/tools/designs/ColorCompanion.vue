@@ -3,10 +3,10 @@ import InputColor from "@/components/organisms/interfaces/InputColor.vue";
 import CopyIcon from "@/components/molecules/icons/CopyIcon.vue";
 import DescriptionIcon from "@/components/molecules/icons/DescriptionIcon.vue";
 import SampleGridLayout from "@/components/organisms/tools/designs/SampleGridLayout.vue";
-import { TOURGBColor } from "@/types/common/css/color";
-import { TOUGridLayout } from "@/types/tools/designs/colorsuggest/layout";
 import { TOUPosition } from "@/types/common/position";
-import { TOUGridContent } from "@/types/tools/designs/colorsuggest/content";
+import { TOURGBColor } from "@/types/common/css/color";
+import { TOUGridLayout } from "@/types/tools/designs/colorcompanion/layout";
+import { TOUGridContent } from "@/types/tools/designs/colorcompanion/content";
 
 // 基準色
 const baseColor = ref(new TOURGBColor(TOURGBColor.CODE_WHITE, 1));

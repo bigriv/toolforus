@@ -5,6 +5,8 @@ import FreehandNote from "@/components/templates/tools/generals/FreehandNote.vue
 import IdeaMap from "@/components/templates/tools/generals/IdeaMap.vue";
 import Translate from "@/components/templates/tools/generals/Translate.vue";
 import StopWatch from "@/components/templates/tools/generals/StopWatch.vue";
+import ColorCompanion from "@/components/templates/tools/designs/ColorCompanion.vue";
+import InstantImageEditer from "@/components/templates/tools/designs/InstantImageEditer.vue";
 import { TOUPosition } from "@/types/common/position";
 import {
   TOU_COMPONENT_TYPE,
@@ -172,6 +174,9 @@ const onGrab = (content: TOUComponent) => {
   newStart.value = content.start;
   newEnd.value = content.end;
 };
+const onDelete = (content: TOUComponent) => {
+  integrater.value.remove(content);
+};
 const onResize = (
   content: TOUComponent,
   horizontal: number,
@@ -230,7 +235,7 @@ const onRelease = () => {
     <div
       class="c-integrater_custom__moving_panel"
       :style="{
-        'z-index': grabbing || resizing ? 1 : 0,
+        'z-index': grabbing || resizing ? 10 : 0,
       }"
       :class="{
         'u-mouse_icon--grabbing': grabbing,
@@ -303,8 +308,8 @@ const onRelease = () => {
               : content.end.y,
         }"
         :class="{
-          'c-integrater_custom__main__container--slecting':
-            content === grabbing || content === resizing,
+          'c-integrater_custom__main__container--selecting':
+            content === resizing || content === grabbing,
         }"
       >
         <div
@@ -322,6 +327,12 @@ const onRelease = () => {
           />
           <Translate
             v-else-if="content.type === TOU_COMPONENT_TYPE.TRANSLATE"
+          />
+          <ColorCompanion
+            v-else-if="content.type === TOU_COMPONENT_TYPE.COLOR_COMPANION"
+          />
+          <InstantImageEditer
+            v-else-if="content.type === TOU_COMPONENT_TYPE.INSTANT_IMAGE_EDITER"
           />
         </div>
         <div
@@ -360,6 +371,12 @@ const onRelease = () => {
           class="c-integrater_custom__main__container__layer--grab"
           @mousedown="() => onGrab(content)"
         ></div>
+        <div
+          class="c-integrater_custom__main__container__layer--delete"
+          @mousedown="() => onDelete(content)"
+        >
+          <img src="/commons/icons/delete.svg" />
+        </div>
       </div>
     </div>
   </div>
@@ -409,6 +426,7 @@ const onRelease = () => {
       grid-row: var(--startY) / var(--endY);
       background: white;
       user-select: none;
+      opacity: 0.8;
       &__content {
         position: relative;
         width: 100%;
@@ -417,7 +435,7 @@ const onRelease = () => {
         overflow: auto;
       }
       &--selecting {
-        opacity: 0.8;
+        opacity: 1;
       }
       &__layer {
         &--resize_up {
@@ -426,6 +444,7 @@ const onRelease = () => {
           left: 5%;
           width: 90%;
           height: 5%;
+          z-index: 1;
           cursor: ns-resize;
         }
         &--resize_down {
@@ -434,6 +453,7 @@ const onRelease = () => {
           left: 5%;
           width: 90%;
           height: 5%;
+          z-index: 1;
           cursor: ns-resize;
         }
         &--resize_left {
@@ -442,6 +462,7 @@ const onRelease = () => {
           left: 0;
           width: 5%;
           height: 90%;
+          z-index: 1;
           cursor: ew-resize;
         }
         &--resize_right {
@@ -450,6 +471,7 @@ const onRelease = () => {
           right: 0;
           width: 5%;
           height: 90%;
+          z-index: 1;
           cursor: ew-resize;
         }
         &--resize_left_up {
@@ -458,6 +480,7 @@ const onRelease = () => {
           left: 0;
           width: 5%;
           height: 5%;
+          z-index: 1;
           cursor: nwse-resize;
         }
         &--resize_right_up {
@@ -466,6 +489,7 @@ const onRelease = () => {
           right: 0;
           width: 5%;
           height: 5%;
+          z-index: 1;
           cursor: nesw-resize;
         }
         &--resize_left_down {
@@ -474,6 +498,7 @@ const onRelease = () => {
           left: 0;
           width: 5%;
           height: 5%;
+          z-index: 1;
           cursor: nesw-resize;
         }
         &--resize_right_down {
@@ -482,6 +507,7 @@ const onRelease = () => {
           right: 0;
           width: 5%;
           height: 5%;
+          z-index: 1;
           cursor: nwse-resize;
         }
         &--grab {
@@ -490,7 +516,32 @@ const onRelease = () => {
           left: 5%;
           width: 90%;
           height: 90%;
+          z-index: 1;
           cursor: grab;
+        }
+        &--delete {
+          position: absolute;
+          top: 5%;
+          right: 5%;
+          width: 2rem;
+          height: 2rem;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.8);
+          box-shadow: 0 0 0.1rem black;
+          z-index: 1;
+          cursor: pointer;
+          &:hover {
+            background: rgba(221, 221, 221, 1);
+          }
+          img {
+            width: 80%;
+            height: 80%;
+            text-align: center;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+          }
         }
       }
     }

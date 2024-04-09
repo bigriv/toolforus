@@ -35,6 +35,14 @@ const COMPONENT_DEFINES = [
     type: TOU_COMPONENT_TYPE.TRANSLATE,
     label: "翻訳機",
   },
+  {
+    type: TOU_COMPONENT_TYPE.COLOR_COMPANION,
+    label: "カラーコンパニオン",
+  },
+  {
+    type: TOU_COMPONENT_TYPE.INSTANT_IMAGE_EDITER,
+    label: "簡易画像編集",
+  },
 ];
 
 const integraterList: Ref<{ [key: string]: TOUIntegrater }> = ref({});

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { TOUGridLayout } from "@/types/tools/designs/colorsuggest/layout";
+import { TOUGridLayout } from "@/types/tools/designs/colorcompanion/layout";
 
 const props = defineProps({
   layout: {

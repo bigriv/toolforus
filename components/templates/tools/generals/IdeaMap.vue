@@ -20,18 +20,22 @@ const toolList = [
   {
     value: "cursor",
     icon: "/commons/icons/cursor.svg",
+    label: "選択",
   },
   {
     value: "zoom_in",
     icon: "/commons/icons/zoom_in.svg",
+    label: "拡大",
   },
   {
     value: "zoom_out",
     icon: "/commons/icons/zoom_out.svg",
+    label: "縮小",
   },
   {
     value: "move",
     icon: "/commons/icons/drag_pan.svg",
+    label: "移動",
   },
 ];
 
@@ -221,9 +225,11 @@ onBeforeUnmount(() => {
       <div class="c-container__toolbar__menu">
         <ToolRadioButtons v-model:selected="currentTool" :list="toolList" />
         <div>
-          <ToolButton @click="onResetFocus">
-            <img src="/commons/icons/recenter.svg" class="u-absolute--center" />
-          </ToolButton>
+          <ToolButton
+            icon="/commons/icons/recenter.svg"
+            label="中央に戻す"
+            @click="onResetFocus"
+          />
         </div>
       </div>
     </div>

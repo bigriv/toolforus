@@ -122,51 +122,41 @@ const onDelete = () => {
     </div>
     <template v-if="edit.isEditing">
       <div>
-        <ToolButton :disabled="!isSubmitable" @click="onEditSave">
-          <img
-            src="/commons/icons/flag.svg"
-            alt="保存"
-            class="u-absolute--center"
-          />
-        </ToolButton>
+        <ToolButton
+          icon="/commons/icons/flag.svg"
+          label="保存"
+          :disabled="!isSubmitable"
+          @click="onEditSave"
+        />
       </div>
       <div>
-        <ToolButton @click="onEditCancel">
-          <img
-            src="/commons/icons/close.svg"
-            alt="キャンセル"
-            class="u-icon--red u-absolute--center"
-          />
-        </ToolButton>
+        <ToolButton
+          icon="/commons/icons/close.svg"
+          label="キャンセル"
+          color="red"
+          @click="onEditCancel"
+        />
       </div>
       <div>
-        <ToolButton :disabled="!isDeletable" @click="onDelete">
-          <img
-            src="/commons/icons/delete.svg"
-            alt="削除"
-            class="u-icon--red u-absolute--center"
-          />
-        </ToolButton>
+        <ToolButton
+          icon="/commons/icons/delete.svg"
+          label="削除"
+          color="red"
+          :disabled="!isDeletable"
+          @click="onDelete"
+        />
       </div>
     </template>
     <template v-else>
       <div>
-        <ToolButton @click="onEdit">
-          <img
-            src="/commons/icons/pen.svg"
-            alt="編集"
-            class="u-absolute--center"
-          />
-        </ToolButton>
+        <ToolButton
+          icon="/commons/icons/pen.svg"
+          label="編集"
+          @click="onEdit"
+        />
       </div>
       <div>
-        <ToolButton @click="onAdd">
-          <img
-            src="/commons/icons/add.svg"
-            alt="新規"
-            class="u-absolute--center"
-          />
-        </ToolButton>
+        <ToolButton icon="/commons/icons/add.svg" label="新規" @click="onAdd" />
       </div>
     </template>
   </div>

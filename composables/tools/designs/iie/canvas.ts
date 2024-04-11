@@ -5,18 +5,22 @@ export const useIieCanvas = (canvasRef: Ref<HTMLCanvasElement | undefined>) => {
     {
       value: "cursor",
       icon: "/commons/icons/cursor.svg",
+      label: "選択",
     },
     {
       value: "pen",
       icon: "/commons/icons/pen.svg",
+      label: "ペン",
     },
     {
       value: "shape",
       icon: "/commons/icons/category.svg",
+      label: "図形",
     },
     {
       value: "text",
       icon: "/commons/icons/title.svg",
+      label: "テキスト",
     },
   ];
 

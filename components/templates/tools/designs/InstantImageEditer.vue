@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { fabric } from "fabric";
 import BasicDialog from "@/components/atoms/BasicDialog.vue";
+import InputText from "@/components/atoms/interfaces/InputText.vue";
 import ToolButton from "@/components/atoms/interfaces/ToolButton.vue";
 import ToolFileButton from "@/components/atoms/interfaces/ToolFileButton.vue";
 import ToolRadioButtons from "@/components/atoms/interfaces/ToolRadioButtons.vue";
 import InputNumber from "@/components/molecules/interfaces/InputNumber.vue";
 import InputSlideAndNumber from "@/components/molecules/interfaces/InputSlideAndNumber.vue";
+import ToolInputText from "@/components/molecules/interfaces/ToolInputText.vue";
+import ToolInputNumber from "@/components/molecules/interfaces/ToolInputNumber.vue";
 import InputColorToolButton from "@/components/organisms/interfaces/InputColorToolButton.vue";
-import InputText from "@/components/atoms/interfaces/InputText.vue";
 import { useShortcutKey } from "@/composables/common/shortcut";
 import { useIieCanvas } from "@/composables/tools/designs/iie/canvas";
 import { useIieFile } from "@/composables/tools/designs/iie/file";
@@ -192,11 +194,14 @@ onUnmounted(() => {
         <ToolFileButton
           accept=".jpeg,.png,.bmp,.tiff,.gif"
           icon="/commons/icons/upload_file.svg"
+          label="インポート"
           @change="onImport"
         />
-        <ToolButton @click="onOpenExportModal">
-          <img src="/commons/icons/download.svg" />
-        </ToolButton>
+        <ToolButton
+          icon="/commons/icons/download.svg"
+          label="エクスポート"
+          @click="onOpenExportModal"
+        />
         <div
           v-for="ratio in canvasRatioList"
           :key="ratio.value"
@@ -251,12 +256,16 @@ onUnmounted(() => {
     <div class="c-container__toolbar">
       <div class="c-container__toolbar__menu">
         <template v-if="cropping.target">
-          <ToolButton @click="onCropSubmit">
-            <img src="/commons/icons/flag.svg" />
-          </ToolButton>
-          <ToolButton @click="onCropCancel">
-            <img src="/commons/icons/close.svg" />
-          </ToolButton>
+          <ToolButton
+            icon="/commons/icons/flag.svg"
+            label="適用"
+            @click="onCropSubmit"
+          />
+          <ToolButton
+            icon="/commons/icons/close.svg"
+            label="キャンセル"
+            @click="onCropCancel"
+          />
         </template>
         <template v-else>
           <template v-if="currentTool === 'cursor'">
@@ -264,34 +273,32 @@ onUnmounted(() => {
               <InputColorToolButton
                 v-model:color="shapeSetting.fill"
                 icon="/commons/icons/colors.svg"
+                label="図形の塗りつぶし色"
                 @open="backupShapeSetting"
                 @cancel="rollbackShapeSetting"
               />
               <InputColorToolButton
                 v-model:color="shapeSetting.border"
                 icon="/commons/icons/pen.svg"
+                label="図形の枠線色"
                 @open="backupShapeSetting"
                 @cancel="rollbackShapeSetting"
               />
-              <div class="c-container__toolbar__menu__input">
-                <img
-                  src="/commons/icons/line_weight.svg"
-                  alt="ボーダーの太さ"
-                />
-                <div class="c-container__toolbar__menu__input__text">
-                  <InputNumber
-                    v-model="shapeSetting.borderWidth"
-                    :min="0"
-                    :max="100"
-                  />
-                </div>
-              </div>
+              <ToolInputNumber
+                v-model="shapeSetting.borderWidth"
+                :min="0"
+                :max="100"
+                icon="/commons/icons/line_weight.svg"
+                label="図形の枠線太さ"
+              />
             </template>
             <template v-if="isSelectingImage">
               <div class="c-container__toolbar__menu__modal_wrap">
-                <ToolButton @click="onOpenFilterSetting">
-                  <img src="/commons/icons/swap_driving_apps_wheel.svg" />
-                </ToolButton>
+                <ToolButton
+                  icon="/commons/icons/swap_driving_apps_wheel.svg"
+                  label="フィルター"
+                  @click="onOpenFilterSetting"
+                />
                 <div class="c-container__toolbar__menu__modal_wrap__modal">
                   <BasicDialog
                     v-model:isShowModal="filter.isShowModal"
@@ -348,30 +355,32 @@ onUnmounted(() => {
                   </BasicDialog>
                 </div>
               </div>
-              <ToolButton @click="onCropStart">
-                <img src="/commons/icons/crop.svg" />
-              </ToolButton>
+              <ToolButton
+                icon="/commons/icons/crop.svg"
+                label="トリミング"
+                @click="onCropStart"
+              />
             </template>
-            <ToolButton @click="onDeleteObjects">
-              <img src="/commons/icons/delete.svg" />
-            </ToolButton>
+            <ToolButton
+              icon="/commons/icons/delete.svg"
+              label="削除"
+              @click="onDeleteObjects"
+            />
           </template>
           <template v-else-if="currentTool === 'pen'">
             <InputColorToolButton
               v-model:color="penSetting.color"
               icon="/commons/icons/pen.svg"
+              label="ペンの色"
             />
-            <div class="c-container__toolbar__menu__input">
-              <img src="/commons/icons/line_weight.svg" alt="ペンサイズ" />
-              <div class="c-container__toolbar__menu__input__text">
-                <InputNumber
-                  v-model="penSetting.size"
-                  :min="1"
-                  :max="72"
-                  mode="uint"
-                />
-              </div>
-            </div>
+            <ToolInputNumber
+              v-model="penSetting.size"
+              :min="1"
+              :max="72"
+              mode="uint"
+              icon="/commons/icons/line_weight.svg"
+              label="ペンサイズ"
+            />
           </template>
           <template
             v-else-if="currentTool === 'crop' || currentTool === 'shape'"
@@ -383,51 +392,46 @@ onUnmounted(() => {
             />
           </template>
           <template v-else-if="currentTool === 'text'">
-            <div class="c-container__toolbar__menu__input">
-              <img src="/commons/icons/title.svg" alt="テキスト" />
-              <div class="c-container__toolbar__menu__input__text">
-                <InputText
-                  v-model:text="textSetting.text"
-                  placeholder="テキスト"
-                  :maxlength="100"
-                  @update:text="onChangeText"
-                />
-              </div>
+            <div class="c-container__toolbar__menu__text">
+              <ToolInputText
+                v-model="textSetting.text"
+                placeholder="テキスト"
+                :maxlength="100"
+                icon="/commons/icons/title.svg"
+                label="テキスト"
+                @update:modelValue="onChangeText"
+              />
             </div>
-            <div class="c-container__toolbar__menu__input">
-              <img src="/commons/icons/font_size.svg" alt="フォントサイズ" />
-              <div class="c-container__toolbar__menu__input__text">
-                <InputNumber
-                  v-model="textSetting.size"
-                  :min="10"
-                  :max="72"
-                  mode="uint"
-                />
-              </div>
-            </div>
+            <ToolInputNumber
+              v-model="textSetting.size"
+              :min="10"
+              :max="72"
+              mode="uint"
+              icon="/commons/icons/font_size.svg"
+              label="フォントサイズ"
+            />
             <InputColorToolButton
               v-model:color="textSetting.color"
               icon="/commons/icons/colors.svg"
+              label="テキストの塗りつぶし色"
               @open="backupTextSetting"
               @cancel="rollbackTextSetting"
             />
             <InputColorToolButton
               v-model:color="textSetting.stroke"
               icon="/commons/icons/pen.svg"
+              label="テキストの枠線色"
               @open="backupTextSetting"
               @cancel="rollbackTextSetting"
             />
-            <div class="c-container__toolbar__menu__input">
-              <img src="/commons/icons/line_weight.svg" alt="ボーダー太さ" />
-              <div class="c-container__toolbar__menu__input__text">
-                <InputNumber
-                  v-model="textSetting.strokeWidth"
-                  :min="0"
-                  :max="100"
-                  mode="uint"
-                />
-              </div>
-            </div>
+            <ToolInputNumber
+              v-model="textSetting.strokeWidth"
+              :min="0"
+              :max="100"
+              mode="uint"
+              icon="/commons/icons/line_weight.svg"
+              label="テキストの枠線太さ"
+            />
           </template>
         </template>
       </div>
@@ -495,6 +499,9 @@ onUnmounted(() => {
           width: 6em;
           height: 80%;
         }
+      }
+      &__text {
+        width: 16rem;
       }
       &__radio {
         position: relative;

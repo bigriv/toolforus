@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { PropType } from "vue";
 import BasicNote from "@/components/templates/tools/generals/BasicNote.vue";
 import FreehandNote from "@/components/templates/tools/generals/FreehandNote.vue";
 import IdeaMap from "@/components/templates/tools/generals/IdeaMap.vue";

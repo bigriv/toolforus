@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from "vue";
 import BasicButton from "@/components/atoms/interfaces/BasicButton.vue";
-import InputNumber from "@/components/molecules/interfaces/InputNumber.vue";
+import ToolCheckButton from "@/components/atoms/interfaces/ToolCheckButton.vue";
+import ToolInputNumber from "@/components/molecules/interfaces/ToolInputNumber.vue";
 import InputColorToolButton from "@/components/organisms/interfaces/InputColorToolButton.vue";
 import { TOURGBColor } from "@/types/common/css/color";
 
@@ -102,24 +103,21 @@ const onDrawEnd = () => {
         <InputColorToolButton
           v-model:color="pen.color"
           icon="/commons/icons/pen.svg"
+          label="ペンの色"
         />
-        <div class="c-container__toolbar__menu__eraser">
-          <input
-            v-model="pen.isUseEraser"
-            type="checkbox"
-            id="pen__eraser"
-            @mousedown.prevent
-          />
-          <label for="pen__eraser" @mousedown.prevent>
-            <img src="/commons/icons/eraser.svg" alt="消しゴム" />
-          </label>
-        </div>
-        <div class="c-container__toolbar__menu__size">
-          <img src="/commons/icons/line_weight.svg" alt="ペンサイズ" />
-          <div class="c-container__toolbar__menu__size--input">
-            <InputNumber v-model="pen.size" :min="1" :max="72" mode="uint" />
-          </div>
-        </div>
+        <ToolCheckButton
+          v-model="pen.isUseEraser"
+          icon="/commons/icons/eraser.svg"
+          label="消しゴム"
+        />
+        <ToolInputNumber
+          v-model="pen.size"
+          icon="/commons/icons/line_weight.svg"
+          label="ペンサイズ"
+          :min="1"
+          :max="72"
+          mode="uint"
+        />
       </div>
       <div class="c-container__toolbar__menu">
         <div class="c-container__toolbar__menu__button">
@@ -166,70 +164,6 @@ const onDrawEnd = () => {
     height: 2rem;
     &__menu {
       display: flex;
-      &__inputcolor {
-        position: relative;
-        &__button {
-          &::before {
-            content: "";
-            position: absolute;
-            top: 1.5rem;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: var(--color);
-            opacity: var(--opacity);
-            width: 1em;
-            height: 0.2rem;
-          }
-        }
-        &__input {
-          position: absolute;
-          top: 0;
-          left: 2.4rem;
-        }
-      }
-      &__eraser {
-        position: relative;
-        input[type="checkbox"] {
-          appearance: none;
-          display: none;
-          width: 2.4rem;
-          height: 100%;
-          + label {
-            display: block;
-            width: 2.4rem;
-            height: 100%;
-            background-color: white;
-            border: 0.1rem solid black;
-            cursor: pointer;
-            img {
-              position: absolute;
-              top: 50%;
-              left: 50%;
-              transform: translate(-50%, -50%);
-            }
-            &:hover {
-              background-color: #eee;
-            }
-          }
-          &:checked + label {
-            background-color: #ffaaaa;
-          }
-        }
-      }
-      // フォントサイズ用のstyle
-      &__size {
-        display: flex;
-        align-items: center;
-        height: 100%;
-        width: 6rem;
-        border: 0.1rem solid black;
-        padding: 0rem 0.4rem;
-        gap: 0 0.4rem;
-        &--input {
-          height: 80%;
-          width: 3em;
-        }
-      }
       &__button {
         width: 4rem;
       }

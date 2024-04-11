@@ -12,6 +12,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  label: {
+    type: String,
+    default: "",
+  },
   // 透明度の選択可否
   inputAlpha: {
     type: Boolean,
@@ -59,9 +63,11 @@ const onCancel = () => {
       '--opacity': color.opacity,
     }"
   >
-    <ToolButton @click="isShowModal = true">
-      <img :src="props.icon" />
-    </ToolButton>
+    <ToolButton
+      :icon="props.icon"
+      :label="props.label"
+      @click="isShowModal = true"
+    />
     <InputColorModal
       v-model:isShowModal="isShowModal"
       :color="color"

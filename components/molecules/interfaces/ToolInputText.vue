@@ -1,0 +1,125 @@
+<script setup lang="ts">
+import InputText from "@/components/atoms/interfaces/InputText.vue";
+
+const props = defineProps({
+  modelValue: {
+    type: String,
+    default: "",
+  },
+  maxlength: {
+    type: Number,
+    default: undefined,
+  },
+  placeholder: {
+    type: String,
+    default: undefined,
+  },
+  label: {
+    type: String,
+    default: "",
+  },
+  icon: {
+    type: String,
+    required: true,
+  },
+});
+const emits = defineEmits([
+  "update:modelValue",
+  "focus",
+  "blur",
+  "input",
+  "change",
+  "keydown",
+]);
+
+const isHover = ref(false);
+const modelValue = computed({
+  get: () => props.modelValue,
+  set: (newValue) => emits("update:modelValue", newValue),
+});
+
+const onFocus = (event: Event) => {
+  emits("focus", event);
+};
+const onBlur = (event: Event) => {
+  emits("blur", event);
+};
+const onInput = (event: Event) => {
+  emits("input", event);
+};
+const onChange = (event: Event) => {
+  emits("change", event);
+};
+const onKeydown = (event: Event) => {
+  emits("keydown", event);
+};
+</script>
+
+<template>
+  <div
+    class="c-tool_input_text"
+    @mouseover="isHover = true"
+    @mouseleave="isHover = false"
+  >
+    <img :src="props.icon" :alt="props.label" />
+    <div class="c-tool_input_text__input">
+      <InputText
+        v-model:text="modelValue"
+        :maxlength="props.maxlength"
+        :placeholder="props.placeholder"
+        @focus="onFocus"
+        @blur="onBlur"
+        @input="onInput"
+        @change="onChange"
+        @keydown="onKeydown"
+      />
+    </div>
+    <Transition v-if="props.label">
+      <span v-show="isHover" class="c-tool_input_text__label">
+        {{ props.label }}
+      </span>
+    </Transition>
+  </div>
+</template>
+
+<style scoped lang="scss">
+.c-tool_input_text {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  border: 0.1rem solid black;
+  padding: 0rem 0.4rem;
+  gap: 0 0.4rem;
+  img {
+    height: 80%;
+    aspect-ratio: 1;
+  }
+  &__input {
+    height: 80%;
+    flex-grow: 1;
+  }
+  &__label {
+    position: absolute;
+    top: 50%;
+    left: calc(100% + 1rem);
+    padding: 0.4rem 0.8rem;
+    background-color: white;
+    color: black;
+    border: 0.1rem solid black;
+    font-size: 1rem;
+    white-space: pre;
+    z-index: 1;
+    transform: translateY(-50%);
+  }
+}
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.2s ease-in;
+}
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+</style>

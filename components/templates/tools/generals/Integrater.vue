@@ -133,13 +133,11 @@ onBeforeUnmount(() => {
           </select>
         </div>
         <div>
-          <ToolButton @click="onAddComponent">
-            <img
-              src="/commons/icons/add.svg"
-              alt="追加"
-              class="u-absolute--center"
-            />
-          </ToolButton>
+          <ToolButton
+            icon="/commons/icons/add.svg"
+            label="追加"
+            @click="onAddComponent"
+          />
         </div>
       </div>
     </div>

@@ -1,61 +1,48 @@
 <script setup lang="ts">
 const props = defineProps({
-  disabled: {
-    type: Boolean,
-    default: false,
+  modelValue: { type: Boolean, required: true },
+  icon: {
+    type: String,
+    default: undefined,
   },
   label: {
     type: String,
     default: "",
   },
-  icon: {
-    type: String,
-    required: true,
-  },
-  color: {
-    type: String as PropType<"black" | "red">,
-    default: "black",
-  },
 });
-const emits = defineEmits(["click"]);
+
+const emits = defineEmits(["update:modelValue"]);
 
 const isHover = ref(false);
-const onClick = () => {
-  emits("click");
-};
+const modelValue = computed({
+  get: () => props.modelValue,
+  set: (newValue) => emits("update:modelValue", newValue),
+});
 </script>
 
 <template>
-  <button
-    :disabled="props.disabled"
-    class="c-tool_button"
+  <label
+    class="c-tool_check_button"
     @mouseover="isHover = true"
     @mouseleave="isHover = false"
-    @click="onClick"
   >
-    <img
-      :src="props.icon"
-      :alt="props.label"
-      :class="{
-        'u-icon--red': props.color === 'red',
-      }"
-    />
+    <input v-model="modelValue" type="checkbox" />
+    <img :src="props.icon" :alt="props.label" />
     <Transition v-if="props.label">
-      <span v-show="isHover" class="c-tool_button__label">
+      <span v-show="isHover" class="c-tool_check_button__label">
         {{ props.label }}
       </span>
     </Transition>
-    <slot />
-  </button>
+  </label>
 </template>
 
 <style scoped lang="scss">
-.c-tool_button {
+.c-tool_check_button {
   position: relative;
   display: block;
   width: 2.4rem;
   height: 100%;
-  background: white;
+  background-color: white;
   border: 0.1rem solid black;
   cursor: pointer;
   img {
@@ -63,6 +50,18 @@ const onClick = () => {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+  }
+  &:hover {
+    background-color: #eee;
+  }
+  input[type="checkbox"] {
+    appearance: none;
+    display: none;
+    width: 2.4rem;
+    height: 100%;
+  }
+  &:has(input[type="checkbox"]:checked) {
+    background-color: #ffaaaa;
   }
   &__label {
     position: absolute;
@@ -77,16 +76,6 @@ const onClick = () => {
     z-index: 1;
     transform: translateY(-50%);
   }
-  &:hover {
-    background-color: #eee;
-  }
-  &:disabled {
-    background-color: #ddd;
-    cursor: not-allowed;
-    &:hover {
-      background-color: #ddd;
-    }
-  }
 }
 .v-enter-active,
 .v-leave-active {
@@ -95,9 +84,5 @@ const onClick = () => {
 .v-enter-from,
 .v-leave-to {
   opacity: 0;
-}
-.u-icon--red {
-  filter: invert(15%) sepia(95%) saturate(6932%) hue-rotate(358deg)
-    brightness(95%) contrast(112%);
 }
 </style>

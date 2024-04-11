@@ -14,6 +14,7 @@ const porps = defineProps({
     type: Array<{
       value: string;
       icon: string;
+      label: string;
     }>,
     required: true,
   },
@@ -28,10 +29,17 @@ const selected = computed({
 const onChange = (event: Event) => {
   emits("change", event);
 };
+const hovering: Ref<Number | undefined> = ref();
 </script>
 
 <template>
-  <div v-for="tool in porps.list" :key="tool.value" class="c-tool_radio_button">
+  <div
+    v-for="(tool, index) in porps.list"
+    :key="tool.value"
+    class="c-tool_radio_button"
+    @mouseover="hovering = index"
+    @mouseleave="hovering = undefined"
+  >
     <input
       v-model="selected"
       :id="`${name}__${tool.value}`"
@@ -43,6 +51,11 @@ const onChange = (event: Event) => {
     <label :for="`${name}__${tool.value}`">
       <img :src="tool.icon" />
     </label>
+    <Transition v-if="tool.label">
+      <span v-show="hovering === index" class="c-tool_radio_button__label">
+        {{ tool.label }}
+      </span>
+    </Transition>
   </div>
 </template>
 
@@ -75,5 +88,26 @@ const onChange = (event: Event) => {
       background-color: #ffaaaa;
     }
   }
+  &__label {
+    position: absolute;
+    top: 50%;
+    left: calc(100% + 1rem);
+    padding: 0.4rem 0.8rem;
+    background-color: white;
+    color: black;
+    border: 0.1rem solid black;
+    font-size: 1rem;
+    white-space: pre;
+    z-index: 1;
+    transform: translateY(-50%);
+  }
+}
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.2s ease-in;
+}
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }
 </style>

@@ -6,14 +6,17 @@ export const useIieShape = (canvas: ComputedRef<fabric.Canvas>) => {
     {
       value: "circle",
       icon: "/commons/icons/circle.svg",
+      label: "円",
     },
     {
       value: "triangle",
       icon: "/commons/icons/triangle.svg",
+      label: "三角",
     },
     {
       value: "square",
       icon: "/commons/icons/square.svg",
+      label: "四角",
     },
   ];
   const currentShape = ref(shpaeList[0].value);

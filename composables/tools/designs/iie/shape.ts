@@ -1,5 +1,5 @@
 import { fabric } from "fabric";
-import { TOURGBColor } from "@/types/common/css/color";
+import { TOUColor } from "@/types/common/color";
 
 export const useIieShape = (canvas: ComputedRef<fabric.Canvas>) => {
   const shpaeList = [
@@ -23,11 +23,11 @@ export const useIieShape = (canvas: ComputedRef<fabric.Canvas>) => {
 
   const shapeSetting = reactive({
     backup: {
-      fill: new TOURGBColor(TOURGBColor.CODE_LIGHT_GRAY),
-      border: new TOURGBColor(TOURGBColor.CODE_BLACK),
+      fill: new TOUColor(TOUColor.CODE_LIGHT_GRAY),
+      border: new TOUColor(TOUColor.CODE_BLACK),
     },
-    fill: new TOURGBColor(TOURGBColor.CODE_LIGHT_GRAY),
-    border: new TOURGBColor(TOURGBColor.CODE_BLACK),
+    fill: new TOUColor(TOUColor.CODE_LIGHT_GRAY),
+    border: new TOUColor(TOUColor.CODE_BLACK),
     borderWidth: 1,
   });
 
@@ -42,8 +42,8 @@ export const useIieShape = (canvas: ComputedRef<fabric.Canvas>) => {
       }
       const shpae = activeShapes[0] as fabric.Object;
       shpae.set({
-        fill: shapeSetting.fill.rgba(),
-        stroke: shapeSetting.border.rgba(),
+        fill: shapeSetting.fill.getRGBA(),
+        stroke: shapeSetting.border.getRGBA(),
         strokeWidth: shapeSetting.borderWidth,
       });
       canvas.value.renderAll();
@@ -59,8 +59,8 @@ export const useIieShape = (canvas: ComputedRef<fabric.Canvas>) => {
     );
   };
   const resetShapeSetting = () => {
-    shapeSetting.fill = new TOURGBColor(TOURGBColor.CODE_LIGHT_GRAY);
-    shapeSetting.border = new TOURGBColor(TOURGBColor.CODE_BLACK);
+    shapeSetting.fill = new TOUColor(TOUColor.CODE_LIGHT_GRAY);
+    shapeSetting.border = new TOUColor(TOUColor.CODE_BLACK);
     shapeSetting.borderWidth = 1;
   };
 
@@ -75,11 +75,11 @@ export const useIieShape = (canvas: ComputedRef<fabric.Canvas>) => {
     }
     const shape = activeShapes[0] as fabric.Object;
     shapeSetting.fill =
-      TOURGBColor.rgbaToRGBAColor(shape.fill as string) ??
-      new TOURGBColor(TOURGBColor.CODE_LIGHT_GRAY);
+      TOUColor.rgbaToInstance(shape.fill as string) ??
+      new TOUColor(TOUColor.CODE_LIGHT_GRAY);
     shapeSetting.border =
-      TOURGBColor.rgbaToRGBAColor(shape.stroke as string) ??
-      new TOURGBColor(TOURGBColor.CODE_BLACK);
+      TOUColor.rgbaToInstance(shape.stroke as string) ??
+      new TOUColor(TOUColor.CODE_BLACK);
     shapeSetting.borderWidth = shape.strokeWidth ?? 1;
   };
 
@@ -98,8 +98,8 @@ export const useIieShape = (canvas: ComputedRef<fabric.Canvas>) => {
     if (width <= 0 || height <= 0) {
       return undefined;
     }
-    const defaultFill = TOURGBColor.CODE_LIGHT_GRAY;
-    const defaultStroke = TOURGBColor.CODE_BLACK;
+    const defaultFill = TOUColor.CODE_LIGHT_GRAY;
+    const defaultStroke = TOUColor.CODE_BLACK;
     switch (currentShape.value) {
       case "circle":
         return new fabric.Ellipse({
@@ -148,11 +148,11 @@ export const useIieShape = (canvas: ComputedRef<fabric.Canvas>) => {
     const shape = activeShpaes[0] as fabric.Object;
 
     shapeSetting.backup.fill =
-      TOURGBColor.rgbaToRGBAColor(shape.fill as string) ??
-      new TOURGBColor(TOURGBColor.CODE_BLACK);
+      TOUColor.rgbaToInstance(shape.fill as string) ??
+      new TOUColor(TOUColor.CODE_BLACK);
     shapeSetting.backup.border =
-      TOURGBColor.rgbaToRGBAColor(shape.stroke as string) ??
-      new TOURGBColor(TOURGBColor.CODE_BLACK);
+      TOUColor.rgbaToInstance(shape.stroke as string) ??
+      new TOUColor(TOUColor.CODE_BLACK);
   };
   const rollbackShapeSetting = () => {
     shapeSetting.fill = shapeSetting.backup.fill;

@@ -1,24 +1,24 @@
-import { TOURGBColor } from "@/types/common/css/color";
+import { TOUColor } from "@/types/common/color";
 
 export class TOUShadow {
   vertical: number;
   horizontal: number;
   blur?: number;
   spread?: number;
-  color: TOURGBColor;
+  color: TOUColor;
 
   constructor(define: {
     vertical: number;
     horizontal: number;
     blur?: number;
     spread?: number;
-    color?: TOURGBColor;
+    color?: TOUColor;
   }) {
     this.vertical = define.vertical;
     this.horizontal = define.horizontal;
     this.blur = define.blur;
     this.spread = define.spread;
-    this.color = define.color ?? new TOURGBColor(TOURGBColor.CODE_BLACK);
+    this.color = define.color ?? new TOUColor(TOUColor.CODE_BLACK);
   }
 
   convert(): string {
@@ -31,7 +31,7 @@ export class TOUShadow {
     if (this.spread) {
       style += this.spread + "rem ";
     }
-    style += this.color.rgba();
+    style += this.color.getRGBA();
     return style;
   }
 }

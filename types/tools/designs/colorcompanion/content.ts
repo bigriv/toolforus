@@ -1,12 +1,12 @@
 import type { TOUBorder } from "@/types/common/css/border";
-import type { TOURGBColor } from "@/types/common/css/color";
+import type { TOUColor } from "@/types/common/color";
 import type { TOUFont } from "@/types/common/css/font";
 import type { TOUPosition } from "@/types/common/position";
 
 export class TOUGridContent {
   start: TOUPosition;
   end: TOUPosition;
-  background: TOURGBColor;
+  background: TOUColor;
   border?: TOUBorder;
   text?: string;
   font?: TOUFont;
@@ -14,7 +14,7 @@ export class TOUGridContent {
   constructor(define: {
     start: TOUPosition;
     end: TOUPosition;
-    background: TOURGBColor;
+    background: TOUColor;
     border?: TOUBorder;
     text?: string;
     font?: TOUFont;

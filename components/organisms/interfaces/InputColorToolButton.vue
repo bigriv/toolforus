@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import ToolButton from "@/components/atoms/interfaces/ToolButton.vue";
 import InputColorModal from "@/components/molecules/modals/InputColorModal.vue";
-import { TOURGBColor } from "@/types/common/css/color";
+import { TOUColor } from "@/types/common/color";
 
 const props = defineProps({
   color: {
-    type: TOURGBColor,
+    type: TOUColor,
     required: true,
   },
   icon: {
@@ -46,7 +46,7 @@ watch(
     }
   }
 );
-const onSubmitnColor = (newColor: TOURGBColor) => {
+const onSubmitnColor = (newColor: TOUColor) => {
   color.value = newColor;
   emits("submit");
 };
@@ -60,7 +60,7 @@ const onCancel = () => {
     class="c-input_color_tool_button"
     :style="{
       '--color': color.code,
-      '--opacity': color.opacity,
+      '--opacity': color.alpha,
     }"
   >
     <ToolButton

@@ -2,11 +2,11 @@
 import { computed, ref, watch } from "vue";
 import InputText from "@/components/atoms/interfaces/InputText.vue";
 import InputSlideAndNumber from "@/components/molecules/interfaces/InputSlideAndNumber.vue";
-import { TOUHSBColor, TOURGBColor } from "@/types/common/css/color";
+import { TOUColor, TOUHSBColor } from "@/types/common/color";
 
 const props = defineProps({
   color: {
-    type: TOURGBColor,
+    type: TOUColor,
     required: true,
   },
   // 透明度の選択可否
@@ -18,53 +18,51 @@ const props = defineProps({
 
 const emits = defineEmits(["update:color"]);
 
-const hsb = props.color.hsba();
 const input = ref({
-  hue: hsb.hue,
-  saturation: hsb.saturation * 100,
-  brightness: hsb.brightness * 100,
-  alpha: hsb.alpha * 100,
+  hue: props.color.hsb.hue,
+  saturation: props.color.hsb.saturation * 100,
+  brightness: props.color.hsb.brightness * 100,
+  alpha: props.color.alpha * 100,
 });
 watch(
   () => props.color,
   () => {
-    const hsb = props.color.hsba();
+    const hsb = props.color.hsb;
     input.value.hue = hsb.hue;
     input.value.saturation = Math.round(hsb.saturation * 100);
     input.value.brightness = Math.round(hsb.brightness * 100);
-    input.value.alpha = Math.round(hsb.alpha * 100);
+    input.value.alpha = Math.round(props.color.alpha * 100);
   }
 );
 watch(
   () => input.value,
   () => {
-    const hsb = new TOUHSBColor(
+    const code = TOUHSBColor.numberToCode(
       input.value.hue,
       input.value.saturation / 100,
-      input.value.brightness / 100,
-      input.value.alpha / 100
+      input.value.brightness / 100
     );
-    emits("update:color", hsb.rgba());
+    const color = new TOUColor(code, input.value.alpha / 100);
+    emits("update:color", color);
   },
   { deep: true }
 );
-const color = computed(() => props.color.rgba());
+const rgba = computed(() => props.color.getRGBA());
 const onChangeCode = (event: Event) => {
   const text = (event.target as HTMLInputElement).value;
-  if (!TOURGBColor.CODE_FORMAT.test(text)) {
+  if (!TOUColor.CODE_FORMAT.test(text)) {
     return;
   }
-  const newColor = new TOURGBColor(text, props.color.opacity);
-  const hsb = newColor.hsba();
-  input.value.hue = hsb.hue;
-  input.value.saturation = hsb.saturation * 100;
-  input.value.brightness = hsb.brightness * 100;
+  const newColor = new TOUColor(text, props.color.alpha);
+  input.value.hue = newColor.hsb.hue;
+  input.value.saturation = newColor.hsb.saturation * 100;
+  input.value.brightness = newColor.hsb.brightness * 100;
 };
 </script>
 
 <template>
   <div class="c-input_color">
-    <i class="c-input_color__display" :style="{ background: color }" />
+    <i class="c-input_color__display" :style="{ background: rgba }" />
     <div class="c-input_color__forms">
       <div class="c-input_color__forms__inputs">
         <div>16進数</div>

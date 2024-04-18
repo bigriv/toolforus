@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
 import InputColor from "@/components/organisms/interfaces/InputColor.vue";
-import { TOURGBColor } from "@/types/common/css/color";
+import { TOUColor } from "@/types/common/color";
 
 const props = defineProps({
   isShowModal: {
@@ -9,7 +9,7 @@ const props = defineProps({
     default: false,
   },
   color: {
-    type: TOURGBColor,
+    type: TOUColor,
     required: true,
   },
   // 透明度の選択可否

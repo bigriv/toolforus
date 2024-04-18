@@ -26,7 +26,7 @@ const props = defineProps({
           '--startY': content.start.y + 1,
           '--endX': content.end.x + 1,
           '--endY': content.end.y + 1,
-          background: content.background.rgba(),
+          background: content.background.getRGBA(),
         },
         content.font?.getStyle(),
         content.border?.getStyle(),

@@ -1,9 +1,9 @@
-import { TOURGBColor } from "@/types/common/css/color";
+import { TOUColor } from "@/types/common/color";
 import type { ConversionableCss } from "@/types/common/css/inteface";
 
 export class TOUBorder implements ConversionableCss {
   radius: string;
-  color: TOURGBColor;
+  color: TOUColor;
   style:
     | "none"
     | "hidden"
@@ -17,7 +17,7 @@ export class TOUBorder implements ConversionableCss {
     | "outset";
   constructor(define: {
     radius?: string;
-    color?: TOURGBColor;
+    color?: TOUColor;
     style?:
       | "none"
       | "hidden"
@@ -31,12 +31,12 @@ export class TOUBorder implements ConversionableCss {
       | "outset";
   }) {
     this.radius = define.radius ?? "0";
-    this.color = define.color ?? new TOURGBColor();
+    this.color = define.color ?? new TOUColor(TOUColor.CODE_WHITE);
     this.style = define.style ?? "solid";
   }
 
   convert(): string {
-    return `${this.radius} ${this.style} ${this.color.rgba()}`;
+    return `${this.radius} ${this.style} ${this.color.getRGBA()}`;
   }
   getStyle(): string {
     return `border: ${this.convert}`;

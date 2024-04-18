@@ -4,10 +4,10 @@ import BasicButton from "@/components/atoms/interfaces/BasicButton.vue";
 import ToolCheckButton from "@/components/atoms/interfaces/ToolCheckButton.vue";
 import ToolInputNumber from "@/components/molecules/interfaces/ToolInputNumber.vue";
 import InputColorToolButton from "@/components/organisms/interfaces/InputColorToolButton.vue";
-import { TOURGBColor } from "@/types/common/css/color";
+import { TOUColor } from "@/types/common/color";
 
 const pen = reactive({
-  color: new TOURGBColor(TOURGBColor.CODE_BLACK),
+  color: new TOUColor(TOUColor.CODE_BLACK),
   isUseEraser: false,
   size: 1,
 });
@@ -62,7 +62,7 @@ const onDraw = (e: MouseEvent) => {
     drawer.value.globalCompositeOperation = "destination-out";
   } else {
     drawer.value.globalCompositeOperation = "source-over";
-    drawer.value.globalAlpha = pen.color.opacity;
+    drawer.value.globalAlpha = pen.color.alpha;
     drawer.value.strokeStyle = pen.color.code;
   }
 
@@ -85,7 +85,7 @@ const onDrawEnd = () => {
     drawer.value.globalCompositeOperation = "destination-out";
   } else {
     drawer.value.globalCompositeOperation = "source-over";
-    drawer.value.globalAlpha = pen.color.opacity;
+    drawer.value.globalAlpha = pen.color.alpha;
     drawer.value.strokeStyle = pen.color.code;
   }
 

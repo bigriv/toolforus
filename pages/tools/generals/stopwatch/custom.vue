@@ -3,15 +3,15 @@ import BasicBalloon from "@/components/atoms/BasicBalloon.vue";
 import InputNumber from "@/components/molecules/interfaces/InputNumber.vue";
 import InputColorModalWithButton from "@/components/organisms/interfaces/InputColorModalWithButton.vue";
 import StopWatch from "@/components/templates/tools/generals/StopWatch.vue";
-import { TOURGBColor } from "@/types/common/css/color";
+import { TOUColor } from "@/types/common/color";
 import { TOUFont } from "@/types/common/css/font";
 
 const url = ref("");
 const form = reactive({
-  bgColor: new TOURGBColor(TOURGBColor.CODE_WHITE),
+  bgColor: new TOUColor(TOUColor.CODE_WHITE),
   font: new TOUFont({
     size: 1,
-    color: new TOURGBColor(TOURGBColor.CODE_BLACK),
+    color: new TOUColor(TOUColor.CODE_BLACK),
     family: "Arial",
     weight: "normal",
   }),
@@ -68,18 +68,18 @@ const buttonPositionList = [
   },
 ];
 
-const onBgColorSubmit = (newColor: TOURGBColor) => {
+const onBgColorSubmit = (newColor: TOUColor) => {
   form.bgColor = newColor;
 };
-const onFontColorSubmit = (newColor: TOURGBColor) => {
+const onFontColorSubmit = (newColor: TOUColor) => {
   form.font.color = newColor;
 };
 const onCreateURL = () => {
   const temps: { [key: string]: string | number | undefined } = {};
   temps.bgColor = form.bgColor.code ?? "";
-  temps.bgOpacity = form.bgColor.opacity ?? "";
+  temps.bgOpacity = form.bgColor.alpha ?? "";
   temps.fontColor = form.font.color.code ?? "";
-  temps.fontOpacity = form.font.color.opacity ?? "";
+  temps.fontOpacity = form.font.color.alpha ?? "";
   temps.fontSize = form.font.size ?? "";
   temps.fontWeight = form.font.weight ?? "";
   temps.fontFamily = form.font.family ?? "";

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import InputHSBColor from "@/components/molecules/interfaces/InputHSBColor.vue";
 import InputRGBColor from "@/components/molecules/interfaces/InputRGBColor.vue";
-import { TOURGBColor } from "@/types/common/css/color";
+import { TOUColor } from "@/types/common/color";
 
 const props = defineProps({
   color: {
-    type: Object as PropType<TOURGBColor>,
+    type: TOUColor,
     required: true,
   },
   inputAlpha: {

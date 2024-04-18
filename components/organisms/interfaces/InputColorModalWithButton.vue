@@ -2,12 +2,12 @@
 import { ref } from "vue";
 import InputColorModal from "@/components/molecules/modals/InputColorModal.vue";
 import ColorButton from "@/components/atoms/interfaces/ColorButton.vue";
-import { TOURGBColor } from "@/types/common/css/color";
+import { TOUColor } from "@/types/common/color";
 
 const props = defineProps({
   color: {
-    type: TOURGBColor,
-    default: new TOURGBColor(TOURGBColor.CODE_WHITE),
+    type: TOUColor,
+    default: new TOUColor(TOUColor.CODE_WHITE),
   },
   inputOpacity: {
     type: Boolean,
@@ -22,7 +22,7 @@ const onClickButton = () => {
   isShowModal.value = true;
 };
 
-const onSubmit = (color: TOURGBColor) => {
+const onSubmit = (color: TOUColor) => {
   emits("submit", color);
 };
 </script>

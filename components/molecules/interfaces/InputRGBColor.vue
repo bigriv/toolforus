@@ -2,11 +2,11 @@
 import { computed, ref, watch } from "vue";
 import InputText from "@/components/atoms/interfaces/InputText.vue";
 import InputSlideAndNumber from "@/components/molecules/interfaces/InputSlideAndNumber.vue";
-import { TOURGBColor } from "@/types/common/css/color";
+import { TOUColor, TOURGBColor } from "@/types/common/color";
 
 const props = defineProps({
   color: {
-    type: TOURGBColor,
+    type: TOUColor,
     required: true,
   },
   // 透明度の選択可否
@@ -19,47 +19,43 @@ const props = defineProps({
 const emits = defineEmits(["update:color"]);
 
 const input = ref({
-  red: props.color.getRed(),
-  green: props.color.getGreen(),
-  blue: props.color.getBlue(),
-  opacity: props.color.opacity * 100,
+  red: props.color.rgb.red,
+  green: props.color.rgb.green,
+  blue: props.color.rgb.blue,
+  opacity: props.color.alpha * 100,
 });
 watch(
   () => props.color,
   () => {
-    input.value.red = props.color.getRed();
-    input.value.green = props.color.getGreen();
-    input.value.blue = props.color.getBlue();
-    input.value.opacity = Math.round(props.color.opacity * 100);
+    input.value.red = props.color.rgb.red;
+    input.value.green = props.color.rgb.green;
+    input.value.blue = props.color.rgb.blue;
+    input.value.opacity = Math.round(props.color.alpha * 100);
   }
 );
 watch(
   () => input.value,
   () => {
-    emits(
-      "update:color",
-      new TOURGBColor(
-        TOURGBColor.numberToCode(
-          input.value.red,
-          input.value.green,
-          input.value.blue
-        ),
-        input.value.opacity / 100
-      )
+    const code = TOURGBColor.numberToCode(
+      input.value.red,
+      input.value.green,
+      input.value.blue
     );
+    const color = new TOUColor(code, input.value.opacity / 100);
+    emits("update:color", color);
   },
   { deep: true }
 );
-const color = computed(() => props.color.rgba());
+const color = computed(() => props.color.getRGBA());
 const onChangeCode = (event: Event) => {
   const text = (event.target as HTMLInputElement).value;
-  if (!TOURGBColor.CODE_FORMAT.test(text)) {
+  if (!TOUColor.CODE_FORMAT.test(text)) {
     return;
   }
-  const newColor = new TOURGBColor(text, props.color.opacity);
-  input.value.red = newColor.getRed();
-  input.value.green = newColor.getGreen();
-  input.value.blue = newColor.getBlue();
+  const newColor = new TOUColor(text, props.color.alpha);
+  input.value.red = newColor.rgb.red;
+  input.value.green = newColor.rgb.green;
+  input.value.blue = newColor.rgb.blue;
 };
 </script>
 

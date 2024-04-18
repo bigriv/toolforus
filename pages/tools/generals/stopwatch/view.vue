@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 import StopWatch from "@/components/templates/tools/generals/StopWatch.vue";
-import { TOURGBColor } from "@/types/common/css/color";
+import { TOUColor } from "@/types/common/color";
 import { TOUFont } from "@/types/common/css/font";
 
 const route = useRoute();
-const background = ref(new TOURGBColor(TOURGBColor.CODE_WHITE));
+const background = ref(new TOUColor(TOUColor.CODE_WHITE));
 const font = ref(
   new TOUFont({
     size: 1,
     weight: "normal",
     family: "Meiryo",
-    color: new TOURGBColor(TOURGBColor.CODE_BLACK),
+    color: new TOUColor(TOUColor.CODE_BLACK),
   })
 );
 const buttonPosition = ref("right");
@@ -23,12 +23,12 @@ const loadParams = () => {
     return;
   }
   if (parameter.bgColor) {
-    background.value.setCode(parameter.bgColor as string);
+    background.value.setColor(parameter.bgColor as string);
   }
   if (parameter.bgOpacity) {
     const opacity = Number(parameter.bgOpacity);
     if (!Number.isNaN(opacity)) {
-      background.value.setOpacity(opacity);
+      background.value.setAlpha(opacity);
     }
   }
   if (parameter.fontSize) {
@@ -38,12 +38,12 @@ const loadParams = () => {
     }
   }
   if (parameter.fontColor) {
-    font.value.color.setCode(parameter.fontColor as string);
+    font.value.color.setColor(parameter.fontColor as string);
   }
   if (parameter.fontOpacity) {
     const opacity = Number(parameter.fontOpacity);
     if (!Number.isNaN(opacity)) {
-      font.value.color.setOpacity(opacity);
+      font.value.color.setAlpha(opacity);
     }
   }
   if (parameter.fontWeight) {

@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { TOURGBColor } from "@/types/common/css/color";
+import { TOUColor } from '@/types/common/color';
 
 const props = defineProps({
   color: {
-    type: TOURGBColor,
+    type: TOUColor,
     required: true,
   },
   disabled: {
@@ -13,7 +13,7 @@ const props = defineProps({
 });
 const emits = defineEmits(["click"]);
 
-const color = computed(() => props.color.rgba());
+const color = computed(() => props.color.getRGBA());
 const onClickButton = () => {
   emits("click");
 };

@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { computed, onUnmounted, reactive } from "vue";
-import { TOURGBColor } from "@/types/common/css/color";
+import { TOUColor } from "@/types/common/color";
 import { TOUFont } from "@/types/common/css/font";
 
 const props = defineProps({
   bgColor: {
-    type: TOURGBColor,
-    default: new TOURGBColor(TOURGBColor.CODE_WHITE),
+    type: TOUColor,
+    default: new TOUColor(TOUColor.CODE_WHITE),
   },
   font: {
     type: TOUFont,
@@ -49,7 +49,7 @@ const time = computed(() => {
   ].join(":");
 });
 
-const backgroundStyle = computed(() => `background: ${props.bgColor.rgba()}`);
+const backgroundStyle = computed(() => `background: ${props.bgColor.getRGBA()}`);
 const fontStyle = computed(() => props.font.getStyle());
 const buttonPosition = computed(() => {
   if (!["right", "left", "up", "down"].includes(props.button)) {

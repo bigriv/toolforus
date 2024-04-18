@@ -1,16 +1,16 @@
 import { fabric } from "fabric";
-import { TOURGBColor } from "@/types/common/css/color";
+import { TOUColor } from "@/types/common/color";
 
 export const useIieText = (canvas: ComputedRef<fabric.Canvas>) => {
   const textSetting = reactive({
     backup: {
-      color: new TOURGBColor(TOURGBColor.CODE_BLACK),
-      stroke: new TOURGBColor(TOURGBColor.CODE_BLACK),
+      color: new TOUColor(TOUColor.CODE_BLACK),
+      stroke: new TOUColor(TOUColor.CODE_BLACK),
     },
     text: "テキスト",
     size: 20,
-    color: new TOURGBColor(TOURGBColor.CODE_BLACK),
-    stroke: new TOURGBColor(TOURGBColor.CODE_BLACK),
+    color: new TOUColor(TOUColor.CODE_BLACK),
+    stroke: new TOUColor(TOUColor.CODE_BLACK),
     strokeWidth: 0,
   });
 
@@ -32,8 +32,8 @@ export const useIieText = (canvas: ComputedRef<fabric.Canvas>) => {
 
       text.set({
         fontSize: textSetting.size,
-        fill: textSetting.color.rgba(),
-        stroke: textSetting.stroke.rgba(),
+        fill: textSetting.color.getRGBA(),
+        stroke: textSetting.stroke.getRGBA(),
         strokeWidth: textSetting.strokeWidth,
       });
       canvas.value.renderAll();
@@ -46,8 +46,8 @@ export const useIieText = (canvas: ComputedRef<fabric.Canvas>) => {
       ? "テキスト"
       : textSetting.text;
     textSetting.size = 20;
-    textSetting.color = new TOURGBColor(TOURGBColor.CODE_BLACK);
-    textSetting.stroke = new TOURGBColor(TOURGBColor.CODE_BLACK);
+    textSetting.color = new TOUColor(TOUColor.CODE_BLACK);
+    textSetting.stroke = new TOUColor(TOUColor.CODE_BLACK);
     textSetting.strokeWidth = 0;
   };
 
@@ -65,11 +65,11 @@ export const useIieText = (canvas: ComputedRef<fabric.Canvas>) => {
     textSetting.text = text.text ?? "テキスト";
     textSetting.size = text.fontSize ?? 10;
     textSetting.color =
-      TOURGBColor.rgbaToRGBAColor(text.fill as string) ??
-      new TOURGBColor(TOURGBColor.CODE_BLACK);
+      TOUColor.rgbaToInstance(text.fill as string) ??
+      new TOUColor(TOUColor.CODE_BLACK);
     textSetting.stroke =
-      TOURGBColor.rgbaToRGBAColor(text.stroke as string) ??
-      new TOURGBColor(TOURGBColor.CODE_BLACK);
+      TOUColor.rgbaToInstance(text.stroke as string) ??
+      new TOUColor(TOUColor.CODE_BLACK);
     textSetting.strokeWidth = text.strokeWidth ?? 0;
   };
 
@@ -81,8 +81,8 @@ export const useIieText = (canvas: ComputedRef<fabric.Canvas>) => {
       top: position.y,
       left: position.x,
       fontSize: textSetting.size,
-      fill: textSetting.color.rgba(),
-      stroke: textSetting.stroke.rgba(),
+      fill: textSetting.color.getRGBA(),
+      stroke: textSetting.stroke.getRGBA(),
       strokeWidth: textSetting.strokeWidth,
     });
   };
@@ -97,11 +97,11 @@ export const useIieText = (canvas: ComputedRef<fabric.Canvas>) => {
     const text = activeTexts[0] as fabric.Text;
 
     textSetting.backup.color =
-      TOURGBColor.rgbaToRGBAColor(text.fill as string) ??
-      new TOURGBColor(TOURGBColor.CODE_BLACK);
+      TOUColor.rgbaToInstance(text.fill as string) ??
+      new TOUColor(TOUColor.CODE_BLACK);
     textSetting.backup.stroke =
-      TOURGBColor.rgbaToRGBAColor(text.stroke as string) ??
-      new TOURGBColor(TOURGBColor.CODE_BLACK);
+      TOUColor.rgbaToInstance(text.stroke as string) ??
+      new TOUColor(TOUColor.CODE_BLACK);
 
   };
   const rollbackTextSetting = () => {

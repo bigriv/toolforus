@@ -19,6 +19,10 @@
 - fabric
   - npm install @types/fabric
   - npm install fabric
+- test
+  - npm install --save-dev vitest
+  - npm install --save--dev @nuxt/test-utils
+  - npm install --save--dev happy-dom
 
 ## build
 

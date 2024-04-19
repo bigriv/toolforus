@@ -1,4 +1,4 @@
-import { TOUColor } from "@/types/common/color";
+import { TOUColor } from "@/types/common/color/color";
 
 export class TOUShadow {
   vertical: number;

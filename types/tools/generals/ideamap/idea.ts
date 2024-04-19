@@ -1,4 +1,4 @@
-import { TOUColor } from "@/types/common/color";
+import { TOUColor } from "@/types/common/color/color";
 import { TOUFont } from "@/types/common/css/font";
 import { TOUShadow } from "@/types/common/css/shadow";
 import { TOUPosition } from "@/types/common/position";

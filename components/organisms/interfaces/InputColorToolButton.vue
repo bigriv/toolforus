@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import ToolButton from "@/components/atoms/interfaces/ToolButton.vue";
 import InputColorModal from "@/components/molecules/modals/InputColorModal.vue";
-import { TOUColor } from "@/types/common/color";
+import { TOUColor } from "@/types/common/color/color";
 
 const props = defineProps({
   color: {

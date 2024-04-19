@@ -2,7 +2,7 @@
 import { computed, ref, watch } from "vue";
 import InputText from "@/components/atoms/interfaces/InputText.vue";
 import InputSlideAndNumber from "@/components/molecules/interfaces/InputSlideAndNumber.vue";
-import { TOUColor, TOURGBColor } from "@/types/common/color";
+import { TOUColor, TOURGBColor } from "@/types/common/color/color";
 
 const props = defineProps({
   color: {

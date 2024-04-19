@@ -1,5 +1,5 @@
 import { fabric } from "fabric";
-import { TOUColor } from "@/types/common/color";
+import { TOUColor } from "@/types/common/color/color";
 
 export const useIieShape = (canvas: ComputedRef<fabric.Canvas>) => {
   const shpaeList = [

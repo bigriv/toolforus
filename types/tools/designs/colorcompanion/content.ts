@@ -1,5 +1,5 @@
 import type { TOUBorder } from "@/types/common/css/border";
-import type { TOUColor } from "@/types/common/color";
+import type { TOUColor } from "@/types/common/color/color";
 import type { TOUFont } from "@/types/common/css/font";
 import type { TOUPosition } from "@/types/common/position";
 

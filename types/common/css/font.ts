@@ -1,5 +1,5 @@
 import type { ConversionableCss } from "@/types/common/css/inteface";
-import { TOUColor } from "@/types/common/color";
+import { TOUColor } from "@/types/common/color/color";
 import type { TOUShadow } from "@/types/common/css/shadow";
 
 export class TOUFont implements ConversionableCss {

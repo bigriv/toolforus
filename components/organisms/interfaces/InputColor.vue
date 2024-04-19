@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import InputHSBColor from "@/components/molecules/interfaces/InputHSBColor.vue";
 import InputRGBColor from "@/components/molecules/interfaces/InputRGBColor.vue";
-import { TOUColor } from "@/types/common/color";
+import { TOUColor } from "@/types/common/color/color";
 
 const props = defineProps({
   color: {

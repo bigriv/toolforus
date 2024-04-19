@@ -1,5 +1,5 @@
 import { fabric } from "fabric";
-import { TOUColor } from "@/types/common/color";
+import { TOUColor } from "@/types/common/color/color";
 
 export const useIieText = (canvas: ComputedRef<fabric.Canvas>) => {
   const textSetting = reactive({

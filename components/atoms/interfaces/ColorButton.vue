@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { TOUColor } from '@/types/common/color';
+import { TOUColor } from '@/types/common/color/color';
 
 const props = defineProps({
   color: {

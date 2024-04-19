@@ -1,4 +1,4 @@
-import { TOUColor } from "@/types/common/color";
+import { TOUColor } from "@/types/common/color/color";
 import type { ConversionableCss } from "@/types/common/css/inteface";
 
 export class TOUBorder implements ConversionableCss {

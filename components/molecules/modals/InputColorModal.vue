@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
 import InputColor from "@/components/organisms/interfaces/InputColor.vue";
-import { TOUColor } from "@/types/common/color";
+import { TOUColor } from "@/types/common/color/color";
 
 const props = defineProps({
   isShowModal: {

@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import InputColorModal from "@/components/molecules/modals/InputColorModal.vue";
 import ColorButton from "@/components/atoms/interfaces/ColorButton.vue";
-import { TOUColor } from "@/types/common/color";
+import { TOUColor } from "@/types/common/color/color";
 
 const props = defineProps({
   color: {

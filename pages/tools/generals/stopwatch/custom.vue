@@ -3,7 +3,7 @@ import BasicBalloon from "@/components/atoms/BasicBalloon.vue";
 import InputNumber from "@/components/molecules/interfaces/InputNumber.vue";
 import InputColorModalWithButton from "@/components/organisms/interfaces/InputColorModalWithButton.vue";
 import StopWatch from "@/components/templates/tools/generals/StopWatch.vue";
-import { TOUColor } from "@/types/common/color";
+import { TOUColor } from "@/types/common/color/color";
 import { TOUFont } from "@/types/common/css/font";
 
 const url = ref("");

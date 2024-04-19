@@ -4,7 +4,7 @@ import BasicButton from "@/components/atoms/interfaces/BasicButton.vue";
 import ToolCheckButton from "@/components/atoms/interfaces/ToolCheckButton.vue";
 import ToolInputNumber from "@/components/molecules/interfaces/ToolInputNumber.vue";
 import InputColorToolButton from "@/components/organisms/interfaces/InputColorToolButton.vue";
-import { TOUColor } from "@/types/common/color";
+import { TOUColor } from "@/types/common/color/color";
 
 const pen = reactive({
   color: new TOUColor(TOUColor.CODE_BLACK),

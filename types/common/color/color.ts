@@ -1,22 +1,4 @@
-export enum TOUColorTone {
-  VIVID = "VIVID", // ビビットトーン
-  BRIGHT = "BRIGHT", // ブライトトーン
-  STRONG = "STRONG", // ストロングトーン
-  DEEP = "DEEP", // ディープトーン
-  LIGHT = "LIGHT", // ライトトーン
-  SOFT = "SOFT", // ソフトトーン
-  DULL = "DULL", // ダルトーン
-  DARK = "DARK", // ダークトーン
-  PALE = "PALE", // ペールトーン
-  LIGHT_GRAYISH = "LIGHT_GRAYISH", // ライトグレイッシュ
-  GRAYISH = "GRAYISH", // グレイッシュトーン
-  DARK_GRAYISH = "DARK_GRAYISH", // ダークグレイッシュトーン
-  VERY_PALE = "VERY_PALE", // ベリーペールトーン
-  PALE_GRAYISH = "PALE_GRAYISH", // ペールグレイッシュトーン
-  MIDDLE_GRAYISH = "MIDDLE_GRAYISH", // ミドルグレイッシュトーン
-  VERY_GRAYISH = "VERY_GRAYISH", // ベリーグレイッシュ
-  VERY_DARK = "VERY_DARK", // ベリーダーク
-}
+import { TOUColorTone } from "@/types/common/color/tone";
 
 export class TOUColor {
   static readonly CODE_BLACK = "#000000";
@@ -415,19 +397,19 @@ export class TOUHSBColor {
         newBrightness = 100;
         break;
       case TOUColorTone.BRIGHT:
-        newSaturation = 80;
+        newSaturation = 75;
         newBrightness = 100;
         break;
       case TOUColorTone.STRONG:
-        newSaturation = 70;
+        newSaturation = 75;
         newBrightness = 80;
         break;
       case TOUColorTone.DEEP:
-        newSaturation = 60;
-        newBrightness = 70;
+        newSaturation = 75;
+        newBrightness = 60;
         break;
       case TOUColorTone.LIGHT:
-        newSaturation = 60;
+        newSaturation = 50;
         newBrightness = 100;
         break;
       case TOUColorTone.SOFT:
@@ -435,12 +417,12 @@ export class TOUHSBColor {
         newBrightness = 80;
         break;
       case TOUColorTone.DULL:
-        newSaturation = 40;
+        newSaturation = 50;
         newBrightness = 60;
         break;
       case TOUColorTone.DARK:
-        newSaturation = 40;
-        newBrightness = 50;
+        newSaturation = 50;
+        newBrightness = 40;
         break;
       case TOUColorTone.PALE:
         newSaturation = 30;
@@ -452,11 +434,11 @@ export class TOUHSBColor {
         break;
       case TOUColorTone.GRAYISH:
         newSaturation = 30;
-        newBrightness = 70;
+        newBrightness = 60;
         break;
       case TOUColorTone.DARK_GRAYISH:
         newSaturation = 30;
-        newBrightness = 60;
+        newBrightness = 40;
         break;
       case TOUColorTone.VERY_PALE:
         newSaturation = 10;
@@ -468,15 +450,15 @@ export class TOUHSBColor {
         break;
       case TOUColorTone.MIDDLE_GRAYISH:
         newSaturation = 10;
-        newBrightness = 70;
+        newBrightness = 60;
         break;
       case TOUColorTone.VERY_GRAYISH:
         newSaturation = 10;
-        newBrightness = 60;
+        newBrightness = 40;
         break;
       case TOUColorTone.VERY_DARK:
         newSaturation = 10;
-        newBrightness = 50;
+        newBrightness = 30;
         break;
     }
 

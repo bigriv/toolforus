@@ -1,35 +1,37 @@
 <script setup lang="ts">
-import ColorCompanion from "@/components/templates/tools/designs/ColorCompanion.vue";
 import ColorSearcher from "@/components/templates/tools/designs/ColorSearcher.vue";
+import ColorCompanion from "@/components/templates/tools/designs/ColorCompanion.vue";
 import MoveTop from "@/components/atoms/interfaces/MoveTop.vue";
 
-const isShowSearch = ref(false);
+const isShowScheme = ref(false);
 </script>
 
 <template>
-  <div class="c-color_companion">
+  <div class="c-color_searcher">
+    <ColorSearcher />
     <div
-      class="c-color_companion__expand"
-      @click="isShowSearch = !isShowSearch"
+      class="c-color_searcher__expand u-mgt-4"
+      @click="isShowScheme = !isShowScheme"
     >
-      <span data-is_show="false" v-if="!isShowSearch"> 色を検索する </span>
-      <span data-is_show="true" v-else> 色の検索を非表示にする </span>
+      <span data-is_show="false" v-if="!isShowScheme">
+        配色のサンプルを見てみる
+      </span>
+      <span data-is_show="true" v-else> 配色のサンプルを非表示にする </span>
     </div>
     <Transition>
       <div
-        v-show="isShowSearch"
-        class="c-color_companion__color_searcher u-mgt-1"
+        v-show="isShowScheme"
+        class="c-color_searcher__color_companion u-mgt-1"
       >
-        <ColorSearcher />
+        <ColorCompanion />
       </div>
     </Transition>
-    <ColorCompanion class="u-mgt-4" />
   </div>
   <MoveTop />
 </template>
 
 <style scoped lang="scss">
-.c-color_companion {
+.c-color_searcher {
   width: 100%;
   height: 100%;
   max-width: 600px;
@@ -61,7 +63,7 @@ const isShowSearch = ref(false);
       }
     }
   }
-  &__color_searcher {
+  &__color_companion {
     display: grid;
     grid-template-rows: 1fr;
     > * {
@@ -70,7 +72,7 @@ const isShowSearch = ref(false);
   }
 }
 .v-enter-active {
-  transition: all 0.2s ease-out;
+  transition: all 1s ease-out;
 }
 .v-leave-active {
   transition: all 0.3s ease-out;

@@ -3,7 +3,7 @@ import { TOUColor, TOUHSBColor } from "@/types/common/color/color";
 import { TOUColorTone } from "@/types/common/color/tone";
 
 export const useColorCompanionSearch = () => {
-  const { callApi } = useCallApi();
+  const { callApi, isCalling } = useCallApi();
 
   type ColorTagSelection = {
     value: string;
@@ -166,5 +166,6 @@ export const useColorCompanionSearch = () => {
     suggestColorList,
     onSearchColor,
     onChangeSelectingTag,
+    isSearching: isCalling
   };
 };

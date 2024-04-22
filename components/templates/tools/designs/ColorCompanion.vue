@@ -1,26 +1,20 @@
 <script setup lang="ts">
 import InputColor from "@/components/organisms/interfaces/InputColor.vue";
 import DescriptionIcon from "@/components/molecules/icons/DescriptionIcon.vue";
-import BasicButton from "@/components/atoms/interfaces/BasicButton.vue";
 import ColorBalance from "@/components/atoms/designs/ColorBalance.vue";
-import BasicSelect from "@/components/atoms/interfaces/BasicSelect.vue";
-import BasicCheck from "@/components/atoms/interfaces/BasicCheck.vue";
 import ColorList from "@/components/molecules/lists/ColorList.vue";
-import { useColorCompanionSearch } from "@/composables/tools/designs/colorcompanion/search";
 import { useColorScehme } from "@/composables/tools/designs/colorcompanion/scheme";
 import { TOUColor } from "@/types/common/color/color";
 
-const {
-  colorTagSelections,
-  colorOptions,
-  selectingColor,
-  suggestColorList,
-  onSearchColor,
-  onChangeSelectingTag,
-} = useColorCompanionSearch();
+const props = defineProps({
+  baseColor: {
+    type: TOUColor,
+    default: new TOUColor(TOUColor.CODE_WHITE, 1),
+  },
+});
 
 // 基準色
-const baseColor = ref(new TOUColor(TOUColor.CODE_WHITE, 1));
+const baseColor = ref(props.baseColor);
 const provides: ComputedRef<{
   [key: string]: {
     label: string;
@@ -59,47 +53,20 @@ const { schemeList } = useColorScehme(baseColor);
 </script>
 
 <template>
-  <div class="c-container">
-    <div class="c-container__search">
-      <div class="c-container__head">検索</div>
-      <div class="c-container__search__form u-mgt-1">
-        <div class="c-container__search__form__head">イメージ</div>
-        <div class="c-container__search__form__tags u-mgt-1">
-          <div
-            v-for="tag in colorTagSelections"
-            class="c-container__search__form__tags__check"
-            :key="tag.value"
-          >
-            <BasicCheck
-              v-model="tag.checked"
-              :label="tag.label"
-              @change="(e) => onChangeSelectingTag(e, tag)"
-            />
-          </div>
-        </div>
-
-        <div class="c-container__search__form__head u-mgt-3">色の系統</div>
-        <div class="c-container__search__form__colors u-mgt-1">
-          <BasicSelect v-model="selectingColor" :options="colorOptions" />
-        </div>
-        <div class="c-container__search__form__button u-mgt-3">
-          <BasicButton label="検索" @click="onSearchColor" />
-        </div>
-      </div>
-      <div class="c-container__search__result u-mgt-2">
-        <ColorList :colors="suggestColorList" />
-      </div>
-    </div>
-    <div class="c-container__input u-mgt-4">
-      <div class="c-container__head">基準色</div>
-      <div class="c-container__input__color u-mgt-1">
+  <div class="c-color_companion">
+    <div class="c-color_companion__input">
+      <div class="c-color_companion__head">基準色</div>
+      <div class="c-color_companion__input__color u-mgt-1">
         <InputColor v-model:color="baseColor" />
       </div>
     </div>
-    <div class="c-container__provides u-mgt-4">
-      <div v-for="provide in provides" class="c-container__provides__provide">
-        <div class="c-container__provides__provide__label">
-          <div class="c-container__provides__provide__label__text">
+    <div class="c-color_companion__provides u-mgt-4">
+      <div
+        v-for="provide in provides"
+        class="c-color_companion__provides__provide"
+      >
+        <div class="c-color_companion__provides__provide__label">
+          <div class="c-color_companion__provides__provide__label__text">
             {{ provide.label }}
           </div>
           <DescriptionIcon icon="info" :description="provide.description" />
@@ -112,15 +79,18 @@ const { schemeList } = useColorScehme(baseColor);
         />
       </div>
     </div>
-    <div class="c-container__schemes u-mgt-4">
-      <div v-for="scheme in schemeList" class="c-container__schemes__scheme">
-        <div class="c-container__schemes__scheme__label">
-          <div class="c-container__schemes__scheme__label__text">
+    <div class="c-color_companion__schemes u-mgt-4">
+      <div
+        v-for="scheme in schemeList"
+        class="c-color_companion__schemes__scheme"
+      >
+        <div class="c-color_companion__schemes__scheme__label">
+          <div class="c-color_companion__schemes__scheme__label__text">
             {{ scheme.label }}
           </div>
           <DescriptionIcon icon="info" :description="scheme.description" />
         </div>
-        <div class="c-container__schemes__scheme__colors u-mgt-2">
+        <div class="c-color_companion__schemes__scheme__colors u-mgt-2">
           <ColorBalance
             :balances="[
               { color: baseColor, rate: 60 },
@@ -130,7 +100,7 @@ const { schemeList } = useColorScehme(baseColor);
           />
           <ColorList
             :colors="[baseColor, scheme.accent, scheme.sub]"
-            class="c-container__schemes__scheme__colors__color_list"
+            class="c-color_companion__schemes__scheme__colors__color_list"
           />
         </div>
       </div>
@@ -139,33 +109,12 @@ const { schemeList } = useColorScehme(baseColor);
 </template>
 
 <style scoped lang="scss">
-.c-container {
+.c-color_companion {
   &__head {
     font-weight: bold;
     font-size: 1.6rem;
     font-family: "MS Gothic", "Hiragino Sans";
     color: #555;
-  }
-  &__search {
-    &__form {
-      &__head {
-        font-weight: bold;
-        font-size: 1.2rem;
-        font-family: "MS Gothic", "Hiragino Sans";
-        color: #555;
-      }
-      &__tags {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0 1.6rem;
-      }
-      &__colors {
-        width: 10rem;
-      }
-      &__button {
-        width: 10rem;
-      }
-    }
   }
   &__input {
     position: sticky;

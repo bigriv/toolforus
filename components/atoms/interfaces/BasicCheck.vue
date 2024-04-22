@@ -58,8 +58,9 @@ label {
     transform: translate(-75%, -75%);
     border-bottom: 0rem solid black;
     border-right: 0rem solid black;
+    opacity: 0;
     rotate: 45deg;
-    transition: all 0.2s ease;
+    transition: all 0.2s ease-in-out;
   }
   &:hover {
     background-color: #eee;
@@ -72,6 +73,7 @@ label {
   }
   &:has(input[type="checkbox"]:checked) {
     &::after {
+      opacity: 1;
       border-bottom: 0.2rem solid black;
       border-right: 0.2rem solid black;
     }

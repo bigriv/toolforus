@@ -31,6 +31,10 @@ const contents = [
     path: "/tools/designs/colorcompanion",
   },
   {
+    title: "色検索",
+    path: "/tools/designs/colorsearcher",
+  },
+  {
     title: "簡易画像編集",
     path: "/tools/designs/iie",
   },

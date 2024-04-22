@@ -65,9 +65,9 @@
 // margin
 @for $i from 1 through 10 {
   .u-mgt-#{$i} {
-    margin-top: #{$i * 0.4rem};
+    margin-top: #{$i * 0.4rem} !important;
   }
   .u-mgl-#{$i} {
-    margin-left: #{$i * 0.4rem};
+    margin-left: #{$i * 0.4rem} !important;
   }
 }

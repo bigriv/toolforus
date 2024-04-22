@@ -1,4 +1,4 @@
-import { TOUColorTone } from "@/types/common/color/tone";
+import { TOUColorTone, TOU_TONE_DEFINE } from "@/types/common/color/tone";
 
 export class TOUColor {
   static readonly CODE_BLACK = "#000000";
@@ -99,10 +99,26 @@ export class TOUColor {
    * RGB値からHSV値に変換⇒H値に±2した値を取得⇒RGB値に戻す
    * @returns 類似色のリスト
    */
-  getSimilarColor(): TOUColor[] {
+  getSimilarColors(): TOUColor[] {
     const hsb = this.hsb;
     const shiftedMinus = hsb.getShiftHue(-2);
     const shiftedPlus = hsb.getShiftHue(2);
+
+    return [
+      new TOUColor(shiftedMinus.getCode(), this.alpha),
+      new TOUColor(shiftedPlus.getCode(), this.alpha),
+    ];
+  }
+
+  /**
+   * 隣接色を取得する
+   * RGB値からHSV値に変換⇒H値に±1した値を取得⇒RGB値に戻す
+   * @returns 隣接色のリスト
+   */
+  getNeighboringColors(): TOUColor[] {
+    const hsb = this.hsb;
+    const shiftedMinus = hsb.getShiftHue(-1);
+    const shiftedPlus = hsb.getShiftHue(1);
 
     return [
       new TOUColor(shiftedMinus.getCode(), this.alpha),
@@ -139,6 +155,13 @@ export class TOUColor {
       TOURGBColor.numberToCode(Number(r), Number(g), Number(b)),
       Number(opacity)
     );
+  }
+
+  static rgbToInstance(red: number, green: number, blue: number) {
+    return new TOUColor(TOURGBColor.numberToCode(red, green, blue));
+  }
+  static hsbToInstance(hue: number, saturation: number, brightness: number) {
+    return new TOUColor(TOUHSBColor.numberToCode(hue, saturation, brightness));
   }
 }
 
@@ -389,78 +412,12 @@ export class TOUHSBColor {
    */
   getChangedTone(tone: TOUColorTone): TOUHSBColor {
     const changedColor = new TOUHSBColor(this.getCode());
-    let newSaturation = undefined;
-    let newBrightness = undefined;
-    switch (tone) {
-      case TOUColorTone.VIVID:
-        newSaturation = 100;
-        newBrightness = 100;
-        break;
-      case TOUColorTone.BRIGHT:
-        newSaturation = 75;
-        newBrightness = 100;
-        break;
-      case TOUColorTone.STRONG:
-        newSaturation = 75;
-        newBrightness = 80;
-        break;
-      case TOUColorTone.DEEP:
-        newSaturation = 75;
-        newBrightness = 60;
-        break;
-      case TOUColorTone.LIGHT:
-        newSaturation = 50;
-        newBrightness = 100;
-        break;
-      case TOUColorTone.SOFT:
-        newSaturation = 50;
-        newBrightness = 80;
-        break;
-      case TOUColorTone.DULL:
-        newSaturation = 50;
-        newBrightness = 60;
-        break;
-      case TOUColorTone.DARK:
-        newSaturation = 50;
-        newBrightness = 40;
-        break;
-      case TOUColorTone.PALE:
-        newSaturation = 30;
-        newBrightness = 100;
-        break;
-      case TOUColorTone.LIGHT_GRAYISH:
-        newSaturation = 30;
-        newBrightness = 80;
-        break;
-      case TOUColorTone.GRAYISH:
-        newSaturation = 30;
-        newBrightness = 60;
-        break;
-      case TOUColorTone.DARK_GRAYISH:
-        newSaturation = 30;
-        newBrightness = 40;
-        break;
-      case TOUColorTone.VERY_PALE:
-        newSaturation = 10;
-        newBrightness = 100;
-        break;
-      case TOUColorTone.PALE_GRAYISH:
-        newSaturation = 10;
-        newBrightness = 80;
-        break;
-      case TOUColorTone.MIDDLE_GRAYISH:
-        newSaturation = 10;
-        newBrightness = 60;
-        break;
-      case TOUColorTone.VERY_GRAYISH:
-        newSaturation = 10;
-        newBrightness = 40;
-        break;
-      case TOUColorTone.VERY_DARK:
-        newSaturation = 10;
-        newBrightness = 30;
-        break;
+    if (!TOU_TONE_DEFINE[tone]) {
+      return changedColor;
     }
+
+    const newSaturation = TOU_TONE_DEFINE[tone].base.saturation;
+    const newBrightness = TOU_TONE_DEFINE[tone].base.brightness;
 
     if (newSaturation === undefined || newBrightness === undefined) {
       return changedColor;
@@ -469,6 +426,44 @@ export class TOUHSBColor {
     changedColor.setSaturation(newSaturation / 100);
     changedColor.setBrightness(newBrightness / 100);
     return changedColor;
+  }
+
+  getTone(): TOUColorTone | undefined {
+    if (this.saturation <= 5) {
+      // 無彩色
+      if (this.brightness >= 80) {
+        return TOUColorTone.NON_COLORED_BRIGHT;
+      } else if (this.brightness >= 60) {
+        return TOUColorTone.NON_COLORED_PALE;
+      } else if (this.brightness >= 40) {
+        return TOUColorTone.NON_COLORED_GRAISH;
+      } else if (this.brightness >= 20) {
+        return TOUColorTone.NON_COLORED_DULL;
+      } else {
+        return TOUColorTone.NON_COLORED_DARK;
+      }
+    }
+
+    // 有彩色
+    for (const key of Object.keys(TOU_TONE_DEFINE)) {
+      const base = TOU_TONE_DEFINE[key].base;
+      const min = TOU_TONE_DEFINE[key].min;
+      if (this.saturation > base.saturation / 100) {
+        continue;
+      }
+      if (this.brightness > base.brightness / 100) {
+        continue;
+      }
+      if (this.saturation < min.saturation / 100) {
+        continue;
+      }
+      if (this.brightness < min.brightness / 100) {
+        continue;
+      }
+      return key as TOUColorTone;
+    }
+
+    return undefined;
   }
 
   /**

@@ -61,3 +61,13 @@
   filter: invert(50%) sepia(0%) saturate(11%) hue-rotate(143deg)
     brightness(101%) contrast(93%);
 }
+
+// margin
+@for $i from 1 through 10 {
+  .u-mgt-#{$i} {
+    margin-top: #{$i * 0.4rem};
+  }
+  .u-mgl-#{$i} {
+    margin-left: #{$i * 0.4rem};
+  }
+}

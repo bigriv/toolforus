@@ -1,0 +1,61 @@
+{
+  "VIVID": ["VIVID", "ENERGY"],
+  "BRIGHT": ["VIVID", "ENERGY", "BRIGHT", "FRIENDLY", "CASUAL"],
+  "STRONG": ["VIVID", "ENERGY", "POWERFUL", "CASUAL"],
+  "DEEP": ["DARK", "HEAVY", "STABLE", "DEEP", "JAPANESE"],
+  "LIGHT": ["FRIENDLY", "CLEAR", "FRESH", "LOVELY", "CASUAL"],
+  "SOFT": ["SOFT", "CALMNESS", "ELEGANCE", "CASUAL"],
+  "DULL": [
+    "DARK",
+    "STABLE",
+    "CALMNESS",
+    "BITTER",
+    "MATURE",
+    "ELEGANCE",
+    "DULL",
+    "NATURAL"
+  ],
+  "DARK": ["DARK", "HEAVY", "STABLE", "MATURE", "CLASSIC", "LUXURY", "NATURAL"],
+  "PALE": ["WEAK", "CLEAR", "FRESH", "LOVELY", "CALMNESS", "CASUAL"],
+  "LIGHT_GRAYISH": [
+    "BRIGHT",
+    "STABLE",
+    "CALMNESS",
+    "BITTER",
+    "ELEGANCE",
+    "DULL"
+  ],
+  "GRAYISH": ["SIMPLE", "STABLE", "ELEGANCE", "NATURAL", "RETRO", "MODERN"],
+  "DARK_GRAYISH": [
+    "SIMPLE",
+    "DARK",
+    "HEAVY",
+    "STABLE",
+    "CLASSIC",
+    "ELEGANCE",
+    "LUXURY",
+    "FORMAL"
+  ],
+  "VERY_PALE": ["WEAK", "CLEAR", "SOFT", "CALMNESS"],
+  "PALE_GRAYISH": [
+    "BRIGHT",
+    "WEAK",
+    "STABLE",
+    "SOFT",
+    "MATURE",
+    "ELEGANCE",
+    "FORMAL",
+    "BASIC"
+  ],
+  "MIDDLE_GRAYISH": ["SIMPLE", "BRIGHT", "STABLE", "CALMNESS", "MODERN"],
+  "VERY_GRAYISH": [
+    "SIMPLE",
+    "HEAVY",
+    "STABLE",
+    "BITTER",
+    "MATURE",
+    "ELEGANCE",
+    "LUXURY"
+  ],
+  "VERY_DARK": ["SIMPLE", "DARK", "POWERFUL", "DEEP", "BITTER", "LUXURY"]
+}

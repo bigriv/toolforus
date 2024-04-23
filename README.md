@@ -23,6 +23,8 @@
   - npm install --save-dev vitest
   - npm install --save--dev @nuxt/test-utils
   - npm install --save--dev happy-dom
+- google font
+  - npm install -D @nuxtjs/google-fonts
 
 ## build
 

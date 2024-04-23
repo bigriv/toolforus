@@ -2,7 +2,7 @@ import { defineNuxtConfig } from "nuxt/config";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: ["@nuxt/test-utils/module"],
+  modules: ["@nuxtjs/google-fonts", "@nuxt/test-utils/module"],
   devtools: { enabled: true },
   ssr: false,
   dir: {
@@ -23,5 +23,10 @@ export default defineNuxtConfig({
       host: "",
     },
   },
-  css: ["@/assets/styles/util.scss"],
+  css: ["@/assets/styles/animation.css", "@/assets/styles/util.scss"],
+  googleFonts: {
+    families: {
+      "Klee+One": true,
+    },
+  },
 });

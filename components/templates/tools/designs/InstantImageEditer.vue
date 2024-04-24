@@ -202,21 +202,12 @@ onUnmounted(() => {
           label="エクスポート"
           @click="onOpenExportModal"
         />
-        <div
-          v-for="ratio in canvasRatioList"
-          :key="ratio.value"
-          class="c-container__toolbar__menu__radio"
-        >
-          <input
-            v-model="currentCanvasRatio"
-            type="radio"
-            :id="`canvas_ratio__${ratio.value}`"
-            :value="ratio.value"
-            name="canvas_ratio"
-            @change="onChangeCanvasRatio"
-          />
-          <label :for="`canvas_ratio__${ratio.value}`">{{ ratio.label }}</label>
-        </div>
+        <ToolRadioButtons
+          v-model:selected="currentCanvasRatio"
+          name="canvas_ratio"
+          :list="canvasRatioList"
+          @change="onChangeCanvasRatio"
+        />
         <template v-if="currentCanvasRatio === 'custom'">
           <div class="c-container__toolbar__menu__input">
             <div class="c-container__toolbar__menu__input__label">Width</div>
@@ -502,39 +493,6 @@ onUnmounted(() => {
       }
       &__text {
         width: 16rem;
-      }
-      &__radio {
-        position: relative;
-        input[type="radio"] {
-          appearance: none;
-          display: none;
-          width: 2.4rem;
-          height: 100%;
-          + label {
-            display: block;
-            width: 2.4rem;
-            height: 100%;
-            background-color: white;
-            border: 0.1rem solid black;
-            font-size: 0.8rem;
-            font-family: monospace;
-            align-content: center;
-            text-align: center;
-            cursor: pointer;
-            img {
-              position: absolute;
-              top: 50%;
-              left: 50%;
-              transform: translate(-50%, -50%);
-            }
-            &:hover {
-              background-color: #eee;
-            }
-          }
-          &:checked + label {
-            background-color: #ffaaaa;
-          }
-        }
       }
       &__modal_wrap {
         position: relative;

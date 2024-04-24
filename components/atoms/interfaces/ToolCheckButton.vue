@@ -61,7 +61,7 @@ const modelValue = computed({
     height: 100%;
   }
   &:has(input[type="checkbox"]:checked) {
-    background-color: #ffaaaa;
+    background-color: #9999ff;
   }
   &__label {
     position: absolute;

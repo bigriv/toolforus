@@ -54,7 +54,7 @@ const onClick = () => {
   position: relative;
   display: block;
   width: 2.4rem;
-  height: 100%;
+  height: 2rem;
   background: white;
   border: 0.1rem solid black;
   cursor: pointer;

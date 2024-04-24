@@ -22,6 +22,10 @@ const props = defineProps({
     type: String,
     default: undefined,
   },
+  readonly: {
+    type: Boolean,
+    default: false
+  }
 });
 
 const emits = defineEmits([
@@ -67,6 +71,7 @@ const onKeydown = (event: Event) => {
     type="text"
     :maxlength="props.maxlength"
     :placeholder="props.placeholder"
+    :readonly="props.readonly"
     @focus="onFocus"
     @blur="onBlur"
     @input="onInput"
@@ -77,6 +82,7 @@ const onKeydown = (event: Event) => {
     v-else-if="props.mode === 'number'"
     v-model="num"
     type="text"
+    :readonly="props.readonly"
     @focus="onFocus"
     @blur="onBlur"
     @input="onInput"

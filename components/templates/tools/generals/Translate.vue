@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import BasicButton from "~/components/atoms/interfaces/BasicButton.vue";
+import BasicButton from "@/components/atoms/interfaces/BasicButton.vue";
+import BasicSelect from "@/components/atoms/interfaces/BasicSelect.vue";
+import { useCallApi } from "@/composables/common/call";
 
 const LANGUAGES: Array<{ label: string; value: string }> = [
   { label: "日本語", value: "ja" },
@@ -11,20 +13,37 @@ const LANGUAGES: Array<{ label: string; value: string }> = [
 const apiPath =
   "https://script.google.com/macros/s/AKfycbxZejSUcrzjj__i1IsAZnyKRuGeUPdOg6TI9daLQV7FvZ1fPw_Gb8xtVO7vfwH2dPIk/exec";
 
+const { callApi } = useCallApi();
+
 const beforeText = ref("");
 const afterText = ref("");
-const befroreLanguage = ref("ja");
-const afterLanguage = ref("en");
+const befroreLanguage = ref(LANGUAGES[0].value);
+const afterLanguage = ref(LANGUAGES[1].value);
 
 const onTranslate = async () => {
-  fetch(
-    `${apiPath}?text=${beforeText.value}&source=${befroreLanguage.value}&target=${afterLanguage.value}`
-  ).then(async (json) => {
-    const response = await json.json();
-    if (response.code === 200) {
-      console.log(response.text);
-      afterText.value = response.text;
-    }
+  afterText.value = "翻訳中...";
+  callApi({
+    method: "GET",
+    path: apiPath,
+    params: {
+      text: beforeText.value,
+      source: befroreLanguage.value,
+      target: afterLanguage.value,
+    },
+    sucessFunc: (response: any) => {
+      if (!response.data) {
+        afterText.value = "翻訳に失敗しました。";
+        return;
+      }
+      if (response.data.code !== 200) {
+        afterText.value = "翻訳に失敗しました。";
+        return;
+      }
+      afterText.value = response.data.text;
+    },
+    failFunc: (response: any) => {
+      console.error("To call traslate api failed.", response);
+    },
   });
 };
 </script>
@@ -32,17 +51,9 @@ const onTranslate = async () => {
 <template>
   <div class="c-translate">
     <div class="c-translate__language">
-      <select v-model="befroreLanguage">
-        <option v-for="lang in LANGUAGES" :value="lang.value">
-          {{ lang.label }}
-        </option>
-      </select>
+      <BasicSelect v-model="befroreLanguage" :options="LANGUAGES" />
       <div class="c-translate__language__allow">⇒</div>
-      <select v-model="afterLanguage">
-        <option v-for="lang in LANGUAGES" :value="lang.value">
-          {{ lang.label }}
-        </option>
-      </select>
+      <BasicSelect v-model="afterLanguage" :options="LANGUAGES" />
     </div>
     <div class="c-translate__text">
       <textarea v-model="beforeText" />

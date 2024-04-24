@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 import StopWatch from "@/components/templates/tools/generals/StopWatch.vue";
+import { useTOUHead } from "@/composables/common/head";
 import { TOUColor } from "@/types/common/color/color";
 import { TOUFont } from "@/types/common/css/font";
-import { useTOUHead } from "@/composables/common/head";
 
 useTOUHead({
   title: "ストップウォッチ",
@@ -16,15 +16,14 @@ const font = ref(
   new TOUFont({
     size: 1,
     weight: "normal",
-    family: "Meiryo",
+    family: "メイリオ",
     color: new TOUColor(TOUColor.CODE_BLACK),
   })
 );
-const buttonPosition = ref("right");
+const position: Ref<"left" | "center" | "right"> = ref("left");
 
 const loadParams = () => {
   const parameter = route.query;
-  console.log(parameter);
   if (!parameter) {
     return;
   }
@@ -58,8 +57,11 @@ const loadParams = () => {
   if (parameter.fontFamily) {
     font.value.family = parameter.fontFamily as string;
   }
-  if (parameter.buttonPosition) {
-    buttonPosition.value = parameter.buttonPosition as string;
+  if (
+    parameter.position &&
+    ["left", "center", "right"].includes(parameter.position as string)
+  ) {
+    position.value = parameter.position as "left" | "center" | "right";
   }
 };
 
@@ -69,5 +71,5 @@ onMounted(() => {
 </script>
 
 <template>
-  <StopWatch :bgColor="background" :font="font" :button="buttonPosition" />
+  <StopWatch :bgColor="background" :font="font" :position="position" />
 </template>

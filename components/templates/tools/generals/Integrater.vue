@@ -2,6 +2,7 @@
 import ToolDataList from "@/components/molecules/interfaces/ToolDataList.vue";
 import ToolButton from "@/components/atoms/interfaces/ToolButton.vue";
 import ToggleButton from "@/components/atoms/interfaces/ToggleButton.vue";
+import BasicSelect from "@/components/atoms/interfaces/BasicSelect.vue";
 import IntegraterCustom from "@/components/templates/tools/generals/integrater/IntegraterCustom.vue";
 import IntegraterView from "@/components/templates/tools/generals/integrater/IntegraterView.vue";
 import { TOUPosition } from "@/types/common/position";
@@ -16,31 +17,31 @@ const COL_NUM = 16;
 const ROW_NUM = 9;
 const COMPONENT_DEFINES = [
   {
-    type: TOU_COMPONENT_TYPE.BASIC_NOTE,
+    value: TOU_COMPONENT_TYPE.BASIC_NOTE,
     label: "メモ帳",
   },
   {
-    type: TOU_COMPONENT_TYPE.FREEHAND_NOTE,
+    value: TOU_COMPONENT_TYPE.FREEHAND_NOTE,
     label: "手書きメモ",
   },
   {
-    type: TOU_COMPONENT_TYPE.IDEA_MAP,
+    value: TOU_COMPONENT_TYPE.IDEA_MAP,
     label: "連想図",
   },
   {
-    type: TOU_COMPONENT_TYPE.STOP_WATCH,
+    value: TOU_COMPONENT_TYPE.STOP_WATCH,
     label: "ストップウォッチ",
   },
   {
-    type: TOU_COMPONENT_TYPE.TRANSLATE,
+    value: TOU_COMPONENT_TYPE.TRANSLATE,
     label: "翻訳機",
   },
   {
-    type: TOU_COMPONENT_TYPE.COLOR_COMPANION,
+    value: TOU_COMPONENT_TYPE.COLOR_COMPANION,
     label: "カラーコンパニオン",
   },
   {
-    type: TOU_COMPONENT_TYPE.INSTANT_IMAGE_EDITER,
+    value: TOU_COMPONENT_TYPE.INSTANT_IMAGE_EDITER,
     label: "簡易画像編集",
   },
 ];
@@ -48,7 +49,7 @@ const COMPONENT_DEFINES = [
 const integraterList: Ref<{ [key: string]: TOUIntegrater }> = ref({});
 const integrater: Ref<TOUIntegrater> = ref(new TOUIntegrater());
 const integraterName: Ref<string> = ref(DEFAULT_INTEGRATER_NAME);
-const selectingComponent = ref(COMPONENT_DEFINES[0].type);
+const selectingComponent = ref(COMPONENT_DEFINES[0].value);
 const customising = ref(true);
 
 const save = () => {
@@ -122,15 +123,10 @@ onBeforeUnmount(() => {
     <div v-if="customising" class="c-integrater__toolbar">
       <div class="c-integrater__toolbar__menu">
         <div class="c-integrater__toolbar__select_components">
-          <select v-model="selectingComponent">
-            <option
-              v-for="component in COMPONENT_DEFINES"
-              :value="component.type"
-              :key="component.type"
-            >
-              {{ component.label }}
-            </option>
-          </select>
+          <BasicSelect
+            v-model="selectingComponent"
+            :options="COMPONENT_DEFINES"
+          />
         </div>
         <div>
           <ToolButton
@@ -176,19 +172,9 @@ onBeforeUnmount(() => {
     &__menu {
       display: flex;
       height: 2rem;
-      &__button {
-        width: 4rem;
-      }
     }
     &__select_components {
-      select {
-        width: 10rem;
-        height: 100%;
-        cursor: pointer;
-        &:focus {
-          outline: 0;
-        }
-      }
+      width: 10rem;
     }
   }
   &__canvas {

@@ -1,5 +1,14 @@
 <script setup lang="ts">
-import { computed, onUnmounted, reactive } from "vue";
+import { computed, onUnmounted, reactive, type PropType } from "vue";
+import BasicSelect from "@/components/atoms/interfaces/BasicSelect.vue";
+import ToolButton from "@/components/atoms/interfaces/ToolButton.vue";
+import BasicButton from "@/components/atoms/interfaces/BasicButton.vue";
+import InputText from "@/components/atoms/interfaces/InputText.vue";
+import ToolRadioButtons from "@/components/atoms/interfaces/ToolRadioButtons.vue";
+import BasicBalloon from "@/components/atoms/BasicBalloon.vue";
+import ToolInputNumber from "@/components/molecules/interfaces/ToolInputNumber.vue";
+import InputColorToolButton from "@/components/organisms/interfaces/InputColorToolButton.vue";
+import { useStopwatchCustom } from "@/composables/tools/designs/generals/stopwatch/custom";
 import { TOUColor } from "@/types/common/color/color";
 import { TOUFont } from "@/types/common/css/font";
 
@@ -12,12 +21,29 @@ const props = defineProps({
     type: TOUFont,
     default: new TOUFont({
       size: 1,
+      color: new TOUColor(TOUColor.CODE_BLACK),
+      family: "Arial",
+      weight: "normal",
     }),
   },
-  button: {
-    type: String,
-    default: "right",
+  position: {
+    type: String as PropType<"left" | "center" | "right">,
+    default: "left",
   },
+});
+
+const {
+  fontFamilyList,
+  fontWeightList,
+  positionList,
+  url,
+  form,
+  onCreateURL,
+  onCopyURL,
+} = useStopwatchCustom({
+  bgColor: props.bgColor,
+  font: props.font,
+  position: props.position,
 });
 
 const timmer: {
@@ -49,14 +75,8 @@ const time = computed(() => {
   ].join(":");
 });
 
-const backgroundStyle = computed(() => `background: ${props.bgColor.getRGBA()}`);
-const fontStyle = computed(() => props.font.getStyle());
-const buttonPosition = computed(() => {
-  if (!["right", "left", "up", "down"].includes(props.button)) {
-    return "right";
-  }
-  return props.button;
-});
+const backgroundStyle = computed(() => `background: ${form.bgColor.getRGBA()}`);
+const fontStyle = computed(() => form.font.getStyle());
 
 let stopInterval = () => {};
 const superInterval = (func: () => void, interval: number) => {
@@ -97,105 +117,136 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="c-contents" :style="[backgroundStyle, fontStyle]">
-    <div :class="`c-button_position--${buttonPosition}`">
-      <div class="c-contents__time">
-        <span>{{ time }}</span>
+  <div class="c-stopwatch">
+    <div class="c-stopwatch__toolbar">
+      <div class="c-stopwatch__toolbar__menu">
+        <InputColorToolButton
+          v-model:color="form.bgColor"
+          icon="/commons/icons/colors.svg"
+          label="背景色"
+        />
+        <InputColorToolButton
+          v-model:color="form.font.color"
+          icon="/commons/icons/text.svg"
+          label="文字色"
+        />
+        <ToolInputNumber
+          v-model="form.font.size"
+          :max="10"
+          :min="0.1"
+          :step="0.1"
+          icon="/commons/icons/font_size.svg"
+          label="フォントサイズ"
+        />
+        <div class="c-stopwatch__toolbar__menu__font_family">
+          <BasicSelect v-model="form.font.family" :options="fontFamilyList" />
+        </div>
+        <ToolRadioButtons
+          v-model:selected="form.font.weight"
+          :list="fontWeightList"
+        />
+        <ToolRadioButtons
+          v-model:selected="form.position"
+          :list="positionList"
+        />
       </div>
-      <div class="c-contents__buttons">
-        <button
+    </div>
+    <div class="c-stopwatch__toolbar">
+      <div class="c-stopwatch__toolbar__menu">
+        <div>
+          <ToolButton
+            icon="/commons/icons/link.svg"
+            label="共有できるリンクを生成"
+            @click="onCreateURL"
+          />
+        </div>
+        <div class="c-stopwatch__toolbar__menu__url">
+          <InputText v-model:text="url" :readonly="true" />
+        </div>
+        <div>
+          <BasicBalloon content="コピーしました" timming="click">
+            <ToolButton
+              icon="/commons/icons/copy.svg"
+              label="リンクをコピー"
+              @click="onCopyURL"
+            />
+          </BasicBalloon>
+        </div>
+      </div>
+      <div class="c-stopwatch__toolbar__menu__buttons">
+        <BasicButton
           v-if="timmer.isStop"
-          class="c-contents__buttons__button c-contents__buttons__button--start"
+          label="スタート"
+          :bgColor="new TOUColor('#00ff7f')"
+          class="c-stopwatch__toolbar__menu__buttons__button"
           @click="onStart"
-        >
-          スタート
-        </button>
-        <button
+        />
+        <BasicButton
           v-else
-          class="c-contents__buttons__button c-contents__buttons__button--stop"
+          label="ストップ"
+          :bgColor="new TOUColor('#ff0000')"
+          class="c-stopwatch__toolbar__menu__buttons__button"
           @click="onStop"
-        >
-          ストップ
-        </button>
-        <button
+        />
+        <BasicButton
           :disabled="!timmer.isStop"
-          class="c-contents__buttons__button c-contents__buttons__button--reset"
+          label="リセット"
+          :bgColor="new TOUColor('#ffff00')"
+          class="c-stopwatch__toolbar__menu__buttons__button"
           @click="onReset"
-        >
-          リセット
-        </button>
+        />
+      </div>
+    </div>
+    <div
+      class="c-stopwatch__contents u-mgt-4"
+      :style="[backgroundStyle, fontStyle]"
+    >
+      <div
+        class="c-stopwatch__contents__time"
+        :style="{ 'text-align': form.position }"
+      >
+        <span>{{ time }}</span>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
-.c-contents {
-  &__time {
-    align-self: center;
-    padding: 0.1rem;
-    > span {
-      letter-spacing: 0.1em;
-    }
-  }
-  &__buttons {
+.c-stopwatch {
+  &__toolbar {
     display: flex;
-    &__button {
-      cursor: pointer;
-      width: 8rem;
-      height: 2.4rem;
-      &:hover {
-        opacity: 0.8;
-      }
-      &:active {
-        opacity: 1;
-      }
-      &:disabled {
-        background-color: lightgray;
-        cursor: not-allowed;
-        &:hover {
-          opacity: 1;
-        }
-        &:active {
-          opacity: 1;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    width: 100%;
+    background-color: white;
+    &__menu {
+      display: flex;
+      &__buttons {
+        display: flex;
+        &__button {
+          cursor: pointer;
+          width: 6rem;
+          height: 2rem;
         }
       }
-      &--start {
-        background-color: springgreen;
+      &__font_family {
+        width: 13rem;
       }
-      &--stop {
-        background-color: red;
-      }
-      &--reset {
-        background-color: yellow;
+      &__url {
+        width: 28.6rem;
       }
     }
   }
-}
-.c-button_position {
-  &--right {
+  &__contents {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-  }
-  &--left {
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: space-between;
-    align-items: center;
-  }
-  &--up {
-    display: flex;
-    flex-direction: column-reverse;
-    align-items: center;
-    justify-content: flex-start;
-  }
-  &--down {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
+    &__time {
+      align-self: center;
+      padding: 0.1rem;
+      width: 100%;
+      i > span {
+        letter-spacing: 0.1em;
+      }
+    }
   }
 }
 </style>

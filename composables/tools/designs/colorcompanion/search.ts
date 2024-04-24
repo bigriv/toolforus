@@ -43,27 +43,26 @@ export const useColorCompanionSearch = () => {
   ]);
 
   type ColorOption = {
-    id: string;
-    hue: number;
+    value: number;
     label: string;
   };
   const colorOptions: ColorOption[] = [
-    { id: "h-0", hue: 0, label: "赤" },
-    { id: "h-30", hue: 30, label: "橙" },
-    { id: "h-60", hue: 60, label: "黄" },
-    { id: "h-90", hue: 90, label: "黄緑" },
-    { id: "h-120", hue: 120, label: "緑" },
-    // { id: "h-150", hue: 150, label: "緑青" }, 直感的な色ではないので非表示
-    { id: "h-180", hue: 180, label: "シアン" },
-    // { id: "h-210", hue: 210, label: "青緑" }, 直感的な色ではないので非表示
-    { id: "h-240", hue: 240, label: "青" },
-    { id: "h-270", hue: 270, label: "青紫" },
-    { id: "h-300", hue: 300, label: "ピンク" },
-    { id: "h-330", hue: 330, label: "赤紫" },
+    { value: 0, label: "赤" },
+    { value: 30, label: "橙" },
+    { value: 60, label: "黄" },
+    { value: 90, label: "黄緑" },
+    { value: 120, label: "緑" },
+    // { value: 150, label: "緑青" }, 直感的な色ではないので非表示
+    { value: 180, label: "シアン" },
+    // { value: 210, label: "青緑" }, 直感的な色ではないので非表示
+    { value: 240, label: "青" },
+    { value: 270, label: "青紫" },
+    { value: 300, label: "ピンク" },
+    { value: 330, label: "赤紫" },
   ];
 
   const selectingTag: Ref<ColorTagSelection[]> = ref([]);
-  const selectingColor: Ref<ColorOption> = ref(colorOptions[0]);
+  const selectingColor: Ref<number> = ref(colorOptions[0].value);
   const suggestColorList: Ref<TOUColor[]> = ref([]);
   let toneDefine: { [key: string]: TOUColorTone[] } | undefined = undefined;
 
@@ -114,9 +113,8 @@ export const useColorCompanionSearch = () => {
       toneList.push(key as TOUColorTone);
     }
 
-    console.log(selectingTag.value, toneList);
     const baseColor = TOUHSBColor.numberToInstance(
-      selectingColor.value.hue,
+      selectingColor.value,
       1,
       0.5
     );
@@ -166,6 +164,6 @@ export const useColorCompanionSearch = () => {
     suggestColorList,
     onSearchColor,
     onChangeSelectingTag,
-    isSearching: isCalling
+    isSearching: isCalling,
   };
 };

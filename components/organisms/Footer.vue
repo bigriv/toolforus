@@ -29,7 +29,7 @@ const links = [
 <style scoped lang="scss">
 .c-footer {
   width: 100%;
-  height: 120px;
+  height: 8rem;
   padding: 2% 5%;
   display: flex;
   background: #eee;

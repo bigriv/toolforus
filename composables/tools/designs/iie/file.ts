@@ -36,7 +36,7 @@ export const useIieFile = (canvas: ComputedRef<fabric.Canvas>) => {
   };
   const importFile = (files: FileList) => {
     const imageFiles = Array.from(files).filter((file) =>
-      /.(jpeg|png|bmp|tiff|gif)$/.test(file.name)
+      /.(jpeg|png|bmp|tiff|gif)$/i.test(file.name)
     );
     if (imageFiles.length <= 0) {
       return;

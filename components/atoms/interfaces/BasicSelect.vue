@@ -1,15 +1,15 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="T">
 import { IdUtils } from "@/types/common/id";
 
 const id = IdUtils.generateUuid();
 
 type SelectOption = {
-  id: string;
   label: string;
+  value: T;
 };
 const props = withDefaults(
   defineProps<{
-    modelValue: SelectOption;
+    modelValue: T;
     options: SelectOption[];
     disabled?: boolean;
   }>(),
@@ -29,8 +29,8 @@ const modelValue = computed({
   <select v-model="modelValue">
     <option
       v-for="option in options"
-      :key="`${id}_${option.id}`"
-      :value="option"
+      :key="`${id}_${option.value}`"
+      :value="option.value"
     >
       {{ option.label }}
     </option>

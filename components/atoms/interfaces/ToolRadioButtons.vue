@@ -8,12 +8,12 @@ const porps = defineProps({
   },
   name: {
     type: String,
-    default: "tool_radio_" + IdUtils.generateUuid(),
+    default: "tool_radio",
   },
   list: {
     type: Array<{
       value: string;
-      icon: string;
+      icon?: string;
       label: string;
     }>,
     required: true,
@@ -21,6 +21,7 @@ const porps = defineProps({
 });
 const emits = defineEmits(["update:selected", "change"]);
 
+const name = computed(() => porps.name + "_" + IdUtils.generateUuid());
 const selected = computed({
   get: () => porps.selected,
   set: (newValue) => emits("update:selected", newValue),
@@ -49,9 +50,10 @@ const hovering: Ref<Number | undefined> = ref();
       @change="onChange"
     />
     <label :for="`${name}__${tool.value}`">
-      <img :src="tool.icon" />
+      <img v-if="tool.icon" :src="tool.icon" />
+      <span v-else>{{ tool.label }}</span>
     </label>
-    <Transition v-if="tool.label">
+    <Transition v-if="tool.icon">
       <span v-show="hovering === index" class="c-tool_radio_button__label">
         {{ tool.label }}
       </span>
@@ -80,12 +82,22 @@ const hovering: Ref<Number | undefined> = ref();
         left: 50%;
         transform: translate(-50%, -50%);
       }
+      span {
+        position: absolute;
+        width: 100%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        font-size: 0.8rem;
+        font-family: monospace;
+      }
       &:hover {
         background-color: #eee;
       }
     }
     &:checked + label {
-      background-color: #ffaaaa;
+      background-color: #9999ff;
     }
   }
   &__label {

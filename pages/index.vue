@@ -16,7 +16,7 @@ const contents = [
     contents: [
       {
         title: "ストップウォッチ",
-        path: "/tools/generals/stopwatch/custom",
+        path: "/tools/generals/stopwatch",
         description: "時間を計りましょう。",
       },
       {

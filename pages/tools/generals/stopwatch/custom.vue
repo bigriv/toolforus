@@ -5,6 +5,12 @@ import InputColorModalWithButton from "@/components/organisms/interfaces/InputCo
 import StopWatch from "@/components/templates/tools/generals/StopWatch.vue";
 import { TOUColor } from "@/types/common/color/color";
 import { TOUFont } from "@/types/common/css/font";
+import { useTOUHead } from "@/composables/common/head";
+
+useTOUHead({
+  title: "ストップウォッチ",
+  description: "時間を計りましょう。",
+});
 
 const url = ref("");
 const form = reactive({

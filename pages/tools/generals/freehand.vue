@@ -1,5 +1,11 @@
 <script setup lang="ts">
 import FreehandNote from "@/components/templates/tools/generals/FreehandNote.vue";
+import { useTOUHead } from "@/composables/common/head";
+
+useTOUHead({
+  title: "手書きメモ",
+  description: "手書きでメモしましょう。",
+});
 </script>
 
 <template>

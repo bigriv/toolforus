@@ -2,6 +2,12 @@
 import ColorCompanion from "@/components/templates/tools/designs/ColorCompanion.vue";
 import ColorSearcher from "@/components/templates/tools/designs/ColorSearcher.vue";
 import MoveTop from "@/components/atoms/interfaces/MoveTop.vue";
+import { useTOUHead } from "@/composables/common/head";
+
+useTOUHead({
+  title: "カラーコンパニオン",
+  description: "良い色の組み合わせを見つけてみましょう。",
+});
 
 const isShowSearch = ref(false);
 </script>

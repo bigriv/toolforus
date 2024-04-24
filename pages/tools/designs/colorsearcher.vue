@@ -2,6 +2,12 @@
 import ColorSearcher from "@/components/templates/tools/designs/ColorSearcher.vue";
 import ColorCompanion from "@/components/templates/tools/designs/ColorCompanion.vue";
 import MoveTop from "@/components/atoms/interfaces/MoveTop.vue";
+import { useTOUHead } from "@/composables/common/head";
+
+useTOUHead({
+  title: "色検索",
+  description: "イメージから色を検索してみましょう。",
+});
 
 const isShowScheme = ref(false);
 </script>

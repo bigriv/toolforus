@@ -2,6 +2,13 @@
 import LinkCardList from "@/components/atoms/lists/LinkCardList.vue";
 import BasicButton from "@/components/atoms/interfaces/BasicButton.vue";
 import IntroductionTree from "@/components/templates/IntroductionTree.vue";
+import { useTOUHead } from "@/composables/common/head";
+
+useTOUHead({
+  title: "トップ",
+  description:
+    "会員登録不要、無料で利用。汎用ツールから色の検索まで多種多様なツールを用意。複数のツールをひとつの画面にカスタマイズ",
+});
 
 const contents = [
   {
@@ -20,7 +27,7 @@ const contents = [
       {
         title: "手書きメモ",
         path: "/tools/generals/freehand",
-        description: "手書き用でメモしましょう。",
+        description: "手書きでメモしましょう。",
       },
       {
         title: "翻訳機",

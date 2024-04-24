@@ -1,5 +1,11 @@
 <script setup lang="ts">
 import Integrater from "@/components/templates/tools/generals/Integrater.vue";
+import { useTOUHead } from "@/composables/common/head";
+
+useTOUHead({
+  title: "統合",
+  description: "全てのツールを一画面で管理しましょう。保存可能。",
+});
 </script>
 
 <template>

@@ -143,10 +143,12 @@ onUnmounted(() => {
         </div>
         <ToolRadioButtons
           v-model:selected="form.font.weight"
+          label="文字の太さ"
           :list="fontWeightList"
         />
         <ToolRadioButtons
           v-model:selected="form.position"
+          label="文字の位置"
           :list="positionList"
         />
       </div>
@@ -168,6 +170,7 @@ onUnmounted(() => {
             <ToolButton
               icon="/commons/icons/copy.svg"
               label="リンクをコピー"
+              :disabled="!url"
               @click="onCopyURL"
             />
           </BasicBalloon>

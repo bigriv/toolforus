@@ -114,7 +114,7 @@ const onKeypress = (event: Event) => {
     background-color: white;
     color: black;
     border: 0.1rem solid black;
-    font-size: 1rem;
+    font-size: 0.8rem;
     white-space: pre;
     z-index: 1;
     transform: translateY(-50%);

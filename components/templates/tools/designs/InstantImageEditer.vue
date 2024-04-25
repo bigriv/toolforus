@@ -205,6 +205,7 @@ onUnmounted(() => {
         <ToolRadioButtons
           v-model:selected="currentCanvasRatio"
           name="canvas_ratio"
+          label="比率"
           :list="canvasRatioList"
           @change="onChangeCanvasRatio"
         />
@@ -379,6 +380,7 @@ onUnmounted(() => {
             <ToolRadioButtons
               v-model:selected="currentShape"
               name="shape"
+              label="図形"
               :list="shpaeList"
             />
           </template>

@@ -25,7 +25,7 @@ const props = defineProps({
       'animation-delay': props.depth * 0.5 + 's',
     }"
   >
-    {{ props.introduction.name }}
+    <span>{{ props.introduction.name }}</span>
   </div>
   <Introduction
     v-for="child in props.introduction.children"
@@ -40,11 +40,16 @@ const props = defineProps({
   border: 0.1rem solid #888;
   border-radius: 50%;
   background: white;
-  align-content: center;
-  text-align: center;
   font-family: "Klee One", sans-serif;
   box-shadow: 0.1rem 0.1rem 0.2rem black;
   animation: UnblurFadein 1s ease-out;
   animation-fill-mode: backwards;
+  span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    white-space: pre;
+  }
 }
 </style>

@@ -2,31 +2,17 @@
 import { ref } from "vue";
 import BasicButton from "@/components/atoms/interfaces/BasicButton.vue";
 import CopyIcon from "@/components/molecules/icons/CopyIcon.vue";
-import InputText from "~/components/atoms/interfaces/InputText.vue";
+import LoadingIcon from "@/components/molecules/icons/LoadingIcon.vue";
+import InputText from "@/components/atoms/interfaces/InputText.vue";
+import { useCallApi } from "@/composables/common/call";
+
+const { callApi, isCalling } = useCallApi();
 
 const input = ref("");
 const mainWord = ref("");
-const outputList = ref<{ word: string; description: string }[]>([]);
-const fetch = () => {
-  outputList.value = [
-    {
-      word: "ジャパン",
-      description: "日本の英語表記「Japan」のカタカナ読み。",
-    },
-    {
-      word: "ジャパン",
-      description: "日本の英語表記「Japan」のカタカナ読み。",
-    },
-    {
-      word: "日の昇る国",
-      description:
-        "飛鳥時代、聖徳太子が清の国に小野妹子を遣隋使として送った際、持たせた文書に記されていた日本の表記。",
-    },
-  ];
-};
+const outputList = ref<string[]>([]);
 
-const onSearch = () => {
-  alert("keydown enter");
+const onSearch = async () => {
   if (!input.value) {
     outputList.value = [];
   }
@@ -34,7 +20,26 @@ const onSearch = () => {
     return;
   }
   mainWord.value = input.value;
-  fetch();
+  await callApi({
+    method: "POST",
+    path: "https://asia-northeast1-creatriver-59a53.cloudfunctions.net/thesaurus-api",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    params: {
+      text: mainWord.value,
+    },
+    sucessFunc: (response: any) => {
+      console.log(response.data);
+      if (!Array.isArray(response.data)) {
+        return;
+      }
+      outputList.value = response.data;
+    },
+    failFunc: (response: any) => {
+      console.log(response);
+    },
+  });
 };
 </script>
 
@@ -51,19 +56,19 @@ const onSearch = () => {
     </div>
     <div v-if="mainWord" class="u-mgt-4">
       <p>「{{ mainWord }}」の類語</p>
+      <div v-show="isCalling" class="c-thesaurus__loading">
+        <LoadingIcon />
+      </div>
       <dl
         class="c-thesaurus__result u-mgt-3"
         v-for="output in outputList"
-        :key="output.word"
+        :key="output"
       >
         <dd class="c-thesaurus__result__word">
-          {{ output.word }}
+          {{ output }}
           <div class="c-thesaurus__result__word__copy">
-            <CopyIcon :content="output.word" />
+            <CopyIcon :content="output" />
           </div>
-        </dd>
-        <dd class="c-thesaurus__result__description">
-          {{ output.description }}
         </dd>
       </dl>
     </div>
@@ -96,6 +101,10 @@ const onSearch = () => {
       align-self: center;
       cursor: pointer;
     }
+  }
+  &__loading {
+    width: 2rem;
+    aspect-ratio: 1;
   }
   &__result {
     &__word {

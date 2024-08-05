@@ -37,10 +37,6 @@ const COMPONENT_DEFINES = [
     label: "翻訳機",
   },
   {
-    value: TOU_COMPONENT_TYPE.THESAURUS,
-    label: "類語ゲッター",
-  },
-  {
     value: TOU_COMPONENT_TYPE.COLOR_COMPANION,
     label: "カラーコンパニオン",
   },

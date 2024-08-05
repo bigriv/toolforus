@@ -6,6 +6,7 @@ export const useCallApi = () => {
   const callApi = async (args: {
     method: "GET" | "POST";
     path: string;
+    headers?: { [key: string]: string };
     params?: { [key: string]: any };
     sucessFunc: Function;
     failFunc?: Function;
@@ -24,12 +25,14 @@ export const useCallApi = () => {
 
   const callGetApi = async (args: {
     path: string;
+    headers?: { [key: string]: string };
     params?: { [key: string]: any };
     sucessFunc: Function;
     failFunc?: Function;
   }) => {
     await axios
       .get(args.path, {
+        headers: args.headers,
         params: args.params,
       })
       .then((response) => {
@@ -44,12 +47,13 @@ export const useCallApi = () => {
 
   const callPostApi = async (args: {
     path: string;
+    headers?: { [key: string]: string };
     params?: { [key: string]: any };
     sucessFunc: Function;
     failFunc?: Function;
   }) => {
     await axios
-      .post(args.path, args.params)
+      .post(args.path, args.params, { headers: args.headers })
       .then((response) => {
         // 取得成功時
         args.sucessFunc(response);

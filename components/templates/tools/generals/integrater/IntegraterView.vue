@@ -3,6 +3,7 @@ import BasicNote from "@/components/templates/tools/generals/BasicNote.vue";
 import FreehandNote from "@/components/templates/tools/generals/FreehandNote.vue";
 import IdeaMap from "@/components/templates/tools/generals/IdeaMap.vue";
 import Translate from "@/components/templates/tools/generals/Translate.vue";
+import Thesaurus from "@/components/templates/tools/generals/Thesaurus.vue";
 import StopWatch from "@/components/templates/tools/generals/StopWatch.vue";
 import ColorCompanion from "@/components/templates/tools/designs/ColorCompanion.vue";
 import InstantImageEditer from "@/components/templates/tools/designs/InstantImageEditer.vue";
@@ -64,6 +65,9 @@ const ROW_NUM = computed(() => props.row);
           />
           <Translate
             v-else-if="content.type === TOU_COMPONENT_TYPE.TRANSLATE"
+          />
+          <Thesaurus
+            v-else-if="content.type === TOU_COMPONENT_TYPE.THESAURUS"
           />
           <ColorCompanion
             v-else-if="content.type === TOU_COMPONENT_TYPE.COLOR_COMPANION"

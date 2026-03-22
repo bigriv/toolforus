@@ -21,6 +21,8 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       host: "",
+      supabaseUrl: "",
+      supabaseAnonKey: "",
     },
   },
   css: ["@/assets/styles/animation.css", "@/assets/styles/util.scss"],

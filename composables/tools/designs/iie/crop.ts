@@ -1,32 +1,25 @@
 import { fabric } from "fabric";
 
-export const useIieCrop = (canvas: ComputedRef<fabric.Canvas>) => {
+export const useIieCrop = (canvas: Ref<fabric.Canvas | undefined>) => {
   const cropping: Ref<{
     target: fabric.Object | undefined;
-    clipPath: {
-      backup: fabric.Object | undefined;
-    };
+    clipPath: { backup: fabric.Object | undefined };
   }> = ref({
     target: undefined,
-    clipPath: {
-      backup: undefined,
-    },
+    clipPath: { backup: undefined },
   });
 
   const onCropStart = () => {
+    if (!canvas.value) return;
     const object = canvas.value.getActiveObject();
-    if (!object) {
-      return;
-    }
+    if (!object) return;
     cropping.value.target = object;
     cropping.value.clipPath.backup = cropping.value.target.clipPath;
     cropping.value.target.clipPath = undefined;
 
-    // キャンバス内のオブジェクトの選択を解除し、選択不可にする
     canvas.value.discardActiveObject();
-    canvas.value.getObjects().forEach((object) => (object.selectable = false));
+    canvas.value.getObjects().forEach((o) => (o.selectable = false));
 
-    // トリミング用の枠を生成
     const cropFrame = new fabric.Rect({
       name: "crop_frame",
       top: cropping.value.target.top,
@@ -45,26 +38,19 @@ export const useIieCrop = (canvas: ComputedRef<fabric.Canvas>) => {
     canvas.value.add(cropFrame);
     canvas.value.setActiveObject(cropFrame);
   };
+
   const onCropCancel = () => {
-    if (!cropping.value.target) {
-      endCrop();
-      return;
-    }
+    if (!cropping.value.target) { endCrop(); return; }
     cropping.value.target.clipPath = cropping.value.clipPath.backup;
     endCrop();
   };
+
   const onCropSubmit = () => {
-    if (!cropping.value.target) {
-      endCrop();
-      return;
-    }
+    if (!canvas.value || !cropping.value.target) { endCrop(); return; }
     const cropFrame = canvas.value
       .getObjects()
-      .find((object) => object.name === "crop_frame");
-    if (!cropFrame) {
-      endCrop();
-      return;
-    }
+      .find((o) => o.name === "crop_frame");
+    if (!cropFrame) { endCrop(); return; }
 
     const parent = {
       width: cropping.value.target.width ?? 0,
@@ -88,28 +74,20 @@ export const useIieCrop = (canvas: ComputedRef<fabric.Canvas>) => {
       width: (child.width * child.scaleX) / parent.scaleX,
       height: (child.height * child.scaleY) / parent.scaleY,
     });
-
-    cropping.value.target.set({
-      clipPath: crop,
-    });
+    cropping.value.target.set({ clipPath: crop });
     endCrop();
   };
+
   const endCrop = () => {
+    if (!canvas.value) return;
     cropping.value.target = undefined;
     cropping.value.clipPath.backup = undefined;
     const cropFrame = canvas.value
       .getObjects()
-      .find((object) => object.name === "crop_frame");
-    if (cropFrame) {
-      canvas.value.remove(cropFrame);
-    }
-    canvas.value.getObjects().forEach((object) => (object.selectable = true));
+      .find((o) => o.name === "crop_frame");
+    if (cropFrame) canvas.value.remove(cropFrame);
+    canvas.value.getObjects().forEach((o) => (o.selectable = true));
   };
 
-  return {
-    cropping,
-    onCropStart,
-    onCropCancel,
-    onCropSubmit,
-  };
+  return { cropping, onCropStart, onCropCancel, onCropSubmit };
 };

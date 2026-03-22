@@ -5,7 +5,7 @@ import IdeaMap from "@/components/templates/tools/generals/IdeaMap.vue";
 import Translate from "@/components/templates/tools/generals/Translate.vue";
 import StopWatch from "@/components/templates/tools/generals/StopWatch.vue";
 import ColorCompanion from "@/components/templates/tools/designs/ColorCompanion.vue";
-import InstantImageEditer from "@/components/templates/tools/designs/InstantImageEditer.vue";
+import InstantImageEditor from "@/components/templates/tools/designs/InstantImageEditor.vue";
 import { TOU_COMPONENT_TYPE } from "@/types/tools/generals/integrater/component";
 import type { TOUIntegrater } from "@/types/tools/generals/integrater/integrater";
 
@@ -68,7 +68,7 @@ const ROW_NUM = computed(() => props.row);
           <ColorCompanion
             v-else-if="content.type === TOU_COMPONENT_TYPE.COLOR_COMPANION"
           />
-          <InstantImageEditer
+          <InstantImageEditor
             v-else-if="content.type === TOU_COMPONENT_TYPE.INSTANT_IMAGE_EDITER"
           />
         </div>

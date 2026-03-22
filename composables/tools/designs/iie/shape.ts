@@ -1,25 +1,13 @@
 import { fabric } from "fabric";
 import { TOUColor } from "@/types/common/color/color";
 
-export const useIieShape = (canvas: ComputedRef<fabric.Canvas>) => {
-  const shpaeList = [
-    {
-      value: "circle",
-      icon: "/commons/icons/circle.svg",
-      label: "円",
-    },
-    {
-      value: "triangle",
-      icon: "/commons/icons/triangle.svg",
-      label: "三角",
-    },
-    {
-      value: "square",
-      icon: "/commons/icons/square.svg",
-      label: "四角",
-    },
+export const useIieShape = (canvas: Ref<fabric.Canvas | undefined>) => {
+  const shapeList = [
+    { value: "circle", icon: "/commons/icons/circle.svg", label: "円" },
+    { value: "triangle", icon: "/commons/icons/triangle.svg", label: "三角" },
+    { value: "square", icon: "/commons/icons/square.svg", label: "四角" },
   ];
-  const currentShape = ref(shpaeList[0].value);
+  const currentShape = ref(shapeList[0].value);
 
   const shapeSetting = reactive({
     backup: {
@@ -34,14 +22,13 @@ export const useIieShape = (canvas: ComputedRef<fabric.Canvas>) => {
   watch(
     () => shapeSetting,
     () => {
+      if (!canvas.value) return;
       const activeShapes = canvas.value
         .getActiveObjects()
         .filter((object) => isShape(object));
-      if (activeShapes.length !== 1) {
-        return;
-      }
-      const shpae = activeShapes[0] as fabric.Object;
-      shpae.set({
+      if (activeShapes.length !== 1) return;
+      const shape = activeShapes[0] as fabric.Object;
+      shape.set({
         fill: shapeSetting.fill.getRGBA(),
         stroke: shapeSetting.border.getRGBA(),
         strokeWidth: shapeSetting.borderWidth,
@@ -58,6 +45,7 @@ export const useIieShape = (canvas: ComputedRef<fabric.Canvas>) => {
       object instanceof fabric.Triangle
     );
   };
+
   const resetShapeSetting = () => {
     shapeSetting.fill = new TOUColor(TOUColor.CODE_LIGHT_GRAY);
     shapeSetting.border = new TOUColor(TOUColor.CODE_BLACK);
@@ -66,13 +54,11 @@ export const useIieShape = (canvas: ComputedRef<fabric.Canvas>) => {
 
   const reflectShapeSetting = () => {
     resetShapeSetting();
+    if (!canvas.value) return;
     const activeShapes = canvas.value
       .getActiveObjects()
       .filter((object) => isShape(object));
-    if (activeShapes.length !== 1) {
-      // 図形が一つも選択状態になっていないか複数選択されている場合は何もしない
-      return;
-    }
+    if (activeShapes.length !== 1) return;
     const shape = activeShapes[0] as fabric.Object;
     shapeSetting.fill =
       TOUColor.rgbaToInstance(shape.fill as string) ??
@@ -84,69 +70,47 @@ export const useIieShape = (canvas: ComputedRef<fabric.Canvas>) => {
   };
 
   const generateShape = (
-    start: {
-      x: number;
-      y: number;
-    },
-    end: {
-      x: number;
-      y: number;
-    }
+    start: { x: number; y: number },
+    end: { x: number; y: number }
   ): fabric.Object | undefined => {
     const width = end.x - start.x;
     const height = end.y - start.y;
-    if (width <= 0 || height <= 0) {
-      return undefined;
-    }
+    if (width <= 0 || height <= 0) return undefined;
     const defaultFill = TOUColor.CODE_LIGHT_GRAY;
     const defaultStroke = TOUColor.CODE_BLACK;
     switch (currentShape.value) {
       case "circle":
         return new fabric.Ellipse({
-          left: start.x,
-          top: start.y,
-          rx: width / 2,
-          ry: height / 2,
-          fill: defaultFill,
-          opacity: 1,
-          angle: 0,
-          stroke: defaultStroke,
-          strokeWidth: 1,
+          left: start.x, top: start.y,
+          rx: width / 2, ry: height / 2,
+          fill: defaultFill, opacity: 1, angle: 0,
+          stroke: defaultStroke, strokeWidth: 1,
         });
       case "square":
         return new fabric.Rect({
-          left: start.x,
-          top: start.y,
-          width: width,
-          height: height,
-          fill: defaultFill,
-          opacity: 1,
-          stroke: defaultStroke,
-          strokeWidth: 1,
+          left: start.x, top: start.y,
+          width, height,
+          fill: defaultFill, opacity: 1,
+          stroke: defaultStroke, strokeWidth: 1,
         });
       case "triangle":
         return new fabric.Triangle({
-          left: start.x,
-          top: start.y,
-          width: width,
-          height: height,
-          fill: defaultFill,
-          opacity: 1,
-          stroke: defaultStroke,
-          strokeWidth: 1,
+          left: start.x, top: start.y,
+          width, height,
+          fill: defaultFill, opacity: 1,
+          stroke: defaultStroke, strokeWidth: 1,
         });
     }
     return undefined;
   };
+
   const backupShapeSetting = () => {
-    const activeShpaes = canvas.value
+    if (!canvas.value) return;
+    const activeShapes = canvas.value
       .getActiveObjects()
       .filter((object) => isShape(object));
-    if (activeShpaes.length !== 1) {
-      return;
-    }
-    const shape = activeShpaes[0] as fabric.Object;
-
+    if (activeShapes.length !== 1) return;
+    const shape = activeShapes[0] as fabric.Object;
     shapeSetting.backup.fill =
       TOUColor.rgbaToInstance(shape.fill as string) ??
       new TOUColor(TOUColor.CODE_BLACK);
@@ -154,12 +118,14 @@ export const useIieShape = (canvas: ComputedRef<fabric.Canvas>) => {
       TOUColor.rgbaToInstance(shape.stroke as string) ??
       new TOUColor(TOUColor.CODE_BLACK);
   };
+
   const rollbackShapeSetting = () => {
     shapeSetting.fill = shapeSetting.backup.fill;
     shapeSetting.border = shapeSetting.backup.border;
   };
+
   return {
-    shpaeList,
+    shapeList,
     shapeSetting,
     currentShape,
     isShape,

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import InstantImageEditer from "@/components/templates/tools/designs/InstantImageEditer.vue";
+import InstantImageEditor from "@/components/templates/tools/designs/InstantImageEditor.vue";
 import { useTOUHead } from "@/composables/common/head";
 
 useTOUHead({
@@ -10,7 +10,7 @@ useTOUHead({
 
 <template>
   <div class="c-iie">
-    <InstantImageEditer />
+    <InstantImageEditor />
   </div>
 </template>
 

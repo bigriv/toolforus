@@ -103,5 +103,26 @@ toolforus/
 |---|---|
 | `NUXT_PUBLIC_HOST` | 本番ホストURL |
 | `NUXT_PUBLIC_DOMAIN` | 本番ドメイン |
+| `NUXT_PUBLIC_SUPABASE_URL` | Supabase プロジェクト URL（背景透過機能） |
+| `NUXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anon キー（公開用、ブラウザから使用可） |
+
+## Supabase Edge Function（背景透過）
+
+`supabase/functions/remove-background/` に remove.bg へのプロキシ関数を配置。
+remove.bg の APIキーはSupabase Secrets で管理し、フロントには露出しない。
+
+### デプロイ手順
+
+```bash
+# 初回のみ
+supabase init
+supabase link --project-ref <your-project-ref>
+
+# APIキーをSecretに登録
+supabase secrets set REMOVE_BG_API_KEY=<your-remove-bg-api-key>
+
+# Functionをデプロイ
+supabase functions deploy remove-background
+```
 
 ランタイムコンフィグで `useRuntimeConfig().public.host` としてアクセス可能。

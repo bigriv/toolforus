@@ -30,23 +30,45 @@ const emits = defineEmits([
   "submit",
 ]);
 
+const buttonRef = ref<HTMLElement>();
+const modalRef = ref<InstanceType<typeof InputColorModal>>();
 const isShowModal = ref(false);
+const modalStyle = ref<Record<string, string>>({});
+
+const clamp = (val: number, min: number, max: number) => Math.min(Math.max(val, min), max);
+
 const color = computed({
   get: () => props.color,
   set: (newValue) => emits("update:color", newValue),
 });
 
-watch(
-  () => isShowModal.value,
-  () => {
-    if (isShowModal.value) {
-      emits("open");
-    } else {
-      emits("close");
-    }
-  }
-);
-const onSubmitnColor = (newColor: TOUColor) => {
+watch(isShowModal, (val) => {
+  emits(val ? "open" : "close");
+});
+
+const openModal = async () => {
+  if (!buttonRef.value) return;
+  const rect = buttonRef.value.getBoundingClientRect();
+
+  // 一旦非表示で描画してサイズを計測
+  modalStyle.value = { top: "0px", left: "0px", visibility: "hidden" };
+  isShowModal.value = true;
+  await nextTick();
+
+  const el = modalRef.value?.$el as HTMLElement | undefined;
+  const mw = el?.offsetWidth ?? 220;
+  const mh = el?.offsetHeight ?? 320;
+  const margin = 8;
+
+  const rawLeft = (window.innerWidth - rect.right) >= mw ? rect.right : rect.left - mw;
+  const rawTop = (window.innerHeight - rect.top) >= mh ? rect.top : rect.bottom - mh;
+  const left = clamp(rawLeft, margin, window.innerWidth - mw - margin);
+  const top = clamp(rawTop, margin, window.innerHeight - mh - margin);
+
+  modalStyle.value = { top: `${top}px`, left: `${left}px` };
+};
+
+const onSubmitColor = (newColor: TOUColor) => {
   color.value = newColor;
   emits("submit");
 };
@@ -57,6 +79,7 @@ const onCancel = () => {
 
 <template>
   <div
+    ref="buttonRef"
     class="c-input_color_tool_button"
     :style="{
       '--color': color.code,
@@ -66,16 +89,19 @@ const onCancel = () => {
     <ToolButton
       :icon="props.icon"
       :label="props.label"
-      @click="isShowModal = true"
+      @click="openModal"
     />
-    <InputColorModal
-      v-model:isShowModal="isShowModal"
-      :color="color"
-      :inputOpacity="props.inputAlpha"
-      class="c-input_color_tool_button__modal"
-      @submit="onSubmitnColor"
-      @cancel="onCancel"
-    />
+    <Teleport to="body">
+      <InputColorModal
+        ref="modalRef"
+        v-model:isShowModal="isShowModal"
+        :color="color"
+        :inputOpacity="props.inputAlpha"
+        :style="modalStyle"
+        @submit="onSubmitColor"
+        @cancel="onCancel"
+      />
+    </Teleport>
   </div>
 </template>
 
@@ -92,11 +118,6 @@ const onCancel = () => {
     opacity: var(--opacity);
     width: 1em;
     height: 0.2rem;
-  }
-  &__modal {
-    position: absolute;
-    top: 0;
-    left: 2.4rem;
   }
 }
 </style>

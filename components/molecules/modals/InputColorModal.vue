@@ -81,8 +81,8 @@ const onSubmit = () => {
 
 <style scoped lang="scss">
 .c-input_color_modal {
-  position: absolute;
-  z-index: 10;
+  position: fixed;
+  z-index: 9999;
   box-shadow: 0rem 0rem 0.8rem #aaa;
   &__inner {
     background-color: #ffffff;

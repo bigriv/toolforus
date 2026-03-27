@@ -41,9 +41,9 @@ const contents = [
           "単語の連想を広げて新しいアイデアを出しましょう。保存可能。",
       },
       {
-        title: "統合",
+        title: "一般統合",
         path: "/tools/generals/integrater",
-        description: "全てのツールを一画面で管理しましょう。保存可能。",
+        description: "一般ツールを一画面で管理しましょう。保存可能。",
       },
     ],
   },
@@ -59,11 +59,6 @@ const contents = [
         title: "色検索",
         path: "/tools/designs/colorsearcher",
         description: "イメージから色を検索してみましょう。",
-      },
-      {
-        title: "簡易画像編集",
-        path: "/tools/designs/iie",
-        description: "簡単な画像編集をやってみましょう。",
       },
     ],
   },

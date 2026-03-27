@@ -40,10 +40,6 @@ const COMPONENT_DEFINES = [
     value: TOU_COMPONENT_TYPE.COLOR_COMPANION,
     label: "カラーコンパニオン",
   },
-  {
-    value: TOU_COMPONENT_TYPE.INSTANT_IMAGE_EDITER,
-    label: "簡易画像編集",
-  },
 ];
 
 const integraterList: Ref<{ [key: string]: TOUIntegrater }> = ref({});

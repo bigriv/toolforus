@@ -5,7 +5,6 @@ import IdeaMap from "@/components/templates/tools/generals/IdeaMap.vue";
 import Translate from "@/components/templates/tools/generals/Translate.vue";
 import StopWatch from "@/components/templates/tools/generals/StopWatch.vue";
 import ColorCompanion from "@/components/templates/tools/designs/ColorCompanion.vue";
-import InstantImageEditor from "@/components/templates/tools/designs/InstantImageEditor.vue";
 import { TOUPosition } from "@/types/common/position";
 import {
   TOU_COMPONENT_TYPE,
@@ -329,9 +328,6 @@ const onRelease = () => {
           />
           <ColorCompanion
             v-else-if="content.type === TOU_COMPONENT_TYPE.COLOR_COMPANION"
-          />
-          <InstantImageEditor
-            v-else-if="content.type === TOU_COMPONENT_TYPE.INSTANT_IMAGE_EDITER"
           />
         </div>
         <div

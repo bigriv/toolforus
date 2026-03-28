@@ -60,6 +60,33 @@ const contents = [
         path: "/tools/designs/colorsearcher",
         description: "イメージから色を検索してみましょう。",
       },
+      {
+        title: "ペイント",
+        path: "/tools/designs/paint",
+        description: "ブラシで自由に描けるペイントツールです。",
+      },
+      {
+        title: "図形描画",
+        path: "/tools/designs/shape-drawing",
+        description: "さまざまな図形を描画できるツールです。",
+      },
+      {
+        title: "画像加工",
+        path: "/tools/designs/image-processing",
+        description:
+          "画像のフィルター調整やトリミング、背景透過などができるツールです。",
+      },
+      {
+        title: "ワードアート",
+        path: "/tools/designs/word-art",
+        description: "テキストをデザインして装飾できるワードアートツールです。",
+      },
+      {
+        title: "デザイン統合",
+        path: "/tools/designs/integrater",
+        description:
+          "ペイント・図形描画・画像加工・ワードアートを一画面で組み合わせられます。",
+      },
     ],
   },
 ];

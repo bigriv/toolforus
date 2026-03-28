@@ -113,7 +113,7 @@ export class TOUFreehandNoteDraw extends TOUFreehandNoteOperation {
     };
   }
 
-  static build(object: any): TOUFreehandNoteDraw | undefined {
+  static override build(object: any): TOUFreehandNoteDraw | undefined {
     if (!object || object.name !== "draw") {
       return undefined;
     }

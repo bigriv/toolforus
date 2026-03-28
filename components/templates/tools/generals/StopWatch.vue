@@ -8,7 +8,7 @@ import ToolRadioButtons from "@/components/atoms/interfaces/ToolRadioButtons.vue
 import BasicBalloon from "@/components/atoms/BasicBalloon.vue";
 import ToolInputNumber from "@/components/molecules/interfaces/ToolInputNumber.vue";
 import InputColorToolButton from "@/components/organisms/interfaces/InputColorToolButton.vue";
-import { useStopwatchCustom } from "@/composables/tools/designs/generals/stopwatch/custom";
+import { useStopwatchCustom } from "@/composables/tools/generals/stopwatch/custom";
 import { TOUColor } from "@/types/common/color/color";
 import { TOUFont } from "@/types/common/css/font";
 

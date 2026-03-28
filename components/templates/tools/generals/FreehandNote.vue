@@ -12,7 +12,7 @@ import {
   TOUFreehandNoteClear,
   TOUFreehandNoteDraw,
 } from "@/types/tools/generals/freehand/operation";
-import { useFreehandNoteSave } from "@/composables/tools/designs/generals/freehand/save";
+import { useFreehandNoteSave } from "@/composables/tools/generals/freehand/save";
 
 const note = ref(new TOUFreehandNote());
 

@@ -97,12 +97,29 @@ NUXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
 
 ### ローカルでの動作確認
 
-Edge Function をローカルで実行する場合は、`supabase/.env.local` を作成してAPIキーを設定してください。
+ローカルで Supabase エミュレータを使って Edge Function を実行できます。
+
+**1. `supabase/.env.local` にAPIキーを設定**
 
 ```env
 REMOVE_BG_API_KEY=your_remove_bg_api_key
 ```
 
+**2. Edge Function をローカル起動**
+
 ```bash
 npm run functions:dev
 ```
+
+`http://localhost:54321/functions/v1/remove-background` でエンドポイントが立ち上がります。
+
+**3. フロントエンドからローカルエミュレータを向ける**
+
+`.env.local` の Supabase URL をローカルエミュレータのURLに変更します。
+
+```env
+NUXT_PUBLIC_SUPABASE_URL=http://localhost:54321
+NUXT_PUBLIC_SUPABASE_ANON_KEY=your_local_anon_key
+```
+
+ローカルの anon キーは `supabase start` 実行後に表示される `anon key` を使用してください。

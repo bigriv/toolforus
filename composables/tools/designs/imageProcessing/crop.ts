@@ -1,6 +1,6 @@
 import { fabric } from "fabric";
 
-export const useIieCrop = (canvas: Ref<fabric.Canvas | undefined>) => {
+export const useCrop = (canvas: Ref<fabric.Canvas | undefined>) => {
   const cropping: Ref<{
     target: fabric.Object | undefined;
     clipPath: { backup: fabric.Object | undefined };
@@ -9,6 +9,11 @@ export const useIieCrop = (canvas: Ref<fabric.Canvas | undefined>) => {
     clipPath: { backup: undefined },
   });
 
+  /**
+   * クロップモードを開始する。
+   * アクティブオブジェクトを target に保存し、クロップ枠（crop_frame）をキャンバスに追加する。
+   * クロップ中は他のオブジェクトを選択不可にする。
+   */
   const onCropStart = () => {
     if (!canvas.value) return;
     const object = canvas.value.getActiveObject();
@@ -39,12 +44,17 @@ export const useIieCrop = (canvas: Ref<fabric.Canvas | undefined>) => {
     canvas.value.setActiveObject(cropFrame);
   };
 
+  /** クロップをキャンセルし、元の clipPath を復元してクロップモードを終了する */
   const onCropCancel = () => {
     if (!cropping.value.target) { endCrop(); return; }
     cropping.value.target.clipPath = cropping.value.clipPath.backup;
     endCrop();
   };
 
+  /**
+   * クロップ枠の位置・サイズをもとに clipPath を計算してターゲットに適用する。
+   * clipPath の座標はターゲットのローカル座標系で指定する必要がある。
+   */
   const onCropSubmit = () => {
     if (!canvas.value || !cropping.value.target) { endCrop(); return; }
     const cropFrame = canvas.value
@@ -78,6 +88,10 @@ export const useIieCrop = (canvas: Ref<fabric.Canvas | undefined>) => {
     endCrop();
   };
 
+  /**
+   * クロップモードを終了する内部関数。
+   * target・バックアップをクリアし、crop_frame を削除して全オブジェクトを再選択可能にする。
+   */
   const endCrop = () => {
     if (!canvas.value) return;
     cropping.value.target = undefined;

@@ -1,6 +1,6 @@
 import { fabric } from "fabric";
 
-export const useIieFile = (canvas: Ref<fabric.Canvas | undefined>) => {
+export const useEditorFile = (canvas: Ref<fabric.Canvas | undefined>) => {
   const extensionList = ["png", "jpeg"];
   const exportFile = ref({
     isShowModal: false,
@@ -8,11 +8,13 @@ export const useIieFile = (canvas: Ref<fabric.Canvas | undefined>) => {
     extension: extensionList[0],
   });
 
+  /** エクスポートダイアログの入力値をデフォルトに戻す */
   const resetExportFile = () => {
     exportFile.value.name = "image";
     exportFile.value.extension = extensionList[0];
   };
 
+  /** FileReader の load イベントを受け取り、読み込んだ画像をキャンバスに追加する */
   const loadFile = (event: Event) => {
     if (!canvas.value) return;
     const imageData = (event.target as FileReader).result;
@@ -28,6 +30,7 @@ export const useIieFile = (canvas: Ref<fabric.Canvas | undefined>) => {
     );
   };
 
+  /** FileList から画像ファイルを抽出し、FileReader で読み込んでキャンバスに追加する */
   const importFile = (files: FileList) => {
     const imageFiles = Array.from(files).filter((file) =>
       /\.(jpeg|png|bmp|tiff|gif)$/i.test(file.name)
@@ -40,17 +43,20 @@ export const useIieFile = (canvas: Ref<fabric.Canvas | undefined>) => {
     }
   };
 
+  /** エクスポートモーダルを開き、入力値をリセットする */
   const onOpenExportModal = () => {
     exportFile.value.isShowModal = true;
     resetExportFile();
   };
 
+  /** ファイル input の change イベントから画像をインポートする */
   const onImport = (event: Event) => {
     const files = (event.target as HTMLInputElement)?.files;
     if (!files) return;
     importFile(files);
   };
 
+  /** キャンバスを dataURL に変換してファイルとしてダウンロードする */
   const onExport = () => {
     if (!canvas.value) return;
     const dataURL = canvas.value.toDataURL({
@@ -65,6 +71,7 @@ export const useIieFile = (canvas: Ref<fabric.Canvas | undefined>) => {
     link.click();
   };
 
+  /** ドラッグ&ドロップイベントから画像をインポートする */
   const onDropFile = (event: DragEvent) => {
     if (!event?.dataTransfer) return;
     importFile(event.dataTransfer.files);

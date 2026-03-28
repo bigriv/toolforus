@@ -1,8 +1,9 @@
 import { fabric } from "fabric";
 import { TOUColor } from "@/types/common/color/color";
 
-export const useIieText = (canvas: Ref<fabric.Canvas | undefined>) => {
+export const useText = (canvas: Ref<fabric.Canvas | undefined>) => {
   const textSetting = reactive({
+    /** カラーピッカーキャンセル時に戻すためのバックアップ値 */
     backup: {
       color: new TOUColor(TOUColor.CODE_BLACK),
       stroke: new TOUColor(TOUColor.CODE_BLACK),
@@ -14,6 +15,7 @@ export const useIieText = (canvas: Ref<fabric.Canvas | undefined>) => {
     strokeWidth: 0,
   });
 
+  // サイズ・色・ストロークが変わるたびにアクティブなテキストオブジェクトへ即時反映する
   watch(
     () => [textSetting.size, textSetting.color, textSetting.stroke, textSetting.strokeWidth],
     () => {
@@ -34,6 +36,7 @@ export const useIieText = (canvas: Ref<fabric.Canvas | undefined>) => {
     { deep: true }
   );
 
+  /** フォント設定をデフォルト値にリセットする（空白テキストはプレースホルダーに戻す） */
   const resetTextSetting = () => {
     textSetting.text = /^\s*$/.test(textSetting.text) ? "テキスト" : textSetting.text;
     textSetting.size = 20;
@@ -42,6 +45,7 @@ export const useIieText = (canvas: Ref<fabric.Canvas | undefined>) => {
     textSetting.strokeWidth = 0;
   };
 
+  /** アクティブなテキストオブジェクトの現在値をフォント設定に反映する（選択変更後に呼ぶ） */
   const reflectTextSetting = () => {
     resetTextSetting();
     if (!canvas.value) return;
@@ -61,6 +65,7 @@ export const useIieText = (canvas: Ref<fabric.Canvas | undefined>) => {
     textSetting.strokeWidth = text.strokeWidth ?? 0;
   };
 
+  /** フォント設定の現在値でテキストオブジェクトを生成して返す */
   const generateTextObject = (position: { x: number; y: number }): fabric.Text => {
     return new fabric.Text(textSetting.text, {
       top: position.y,
@@ -72,6 +77,7 @@ export const useIieText = (canvas: Ref<fabric.Canvas | undefined>) => {
     });
   };
 
+  /** カラーピッカーを開く前に現在のフォント設定をバックアップする */
   const backupTextSetting = () => {
     if (!canvas.value) return;
     const activeTexts = canvas.value
@@ -87,11 +93,17 @@ export const useIieText = (canvas: Ref<fabric.Canvas | undefined>) => {
       new TOUColor(TOUColor.CODE_BLACK);
   };
 
+  /** バックアップした値にフォント設定を戻す（カラーピッカーキャンセル時に呼ぶ） */
   const rollbackTextSetting = () => {
     textSetting.color = textSetting.backup.color;
     textSetting.stroke = textSetting.backup.stroke;
   };
 
+  /**
+   * テキスト内容を変更する。
+   * Fabric.js の Text は text プロパティを直接変更できないため、
+   * 既存オブジェクトを削除して同じプロパティで新規オブジェクトを生成する。
+   */
   const onChangeText = () => {
     if (!canvas.value) return;
     const activeTexts = canvas.value

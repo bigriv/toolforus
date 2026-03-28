@@ -1,6 +1,6 @@
 import { fabric } from "fabric";
 
-export const useIieCanvas = (canvasRef: Ref<HTMLCanvasElement | undefined>) => {
+export const useEditorCanvas = (canvasRef: Ref<HTMLCanvasElement | undefined>) => {
   const toolList = [
     { value: "cursor", icon: "/commons/icons/cursor.svg", label: "選択" },
     { value: "pen", icon: "/commons/icons/pen.svg", label: "ペン" },
@@ -22,9 +22,9 @@ export const useIieCanvas = (canvasRef: Ref<HTMLCanvasElement | undefined>) => {
   const currentCanvasRatio = ref(canvasRatioList[0].value);
   const size = reactive({ width: 600, height: 600 });
 
-  // shallowRef を使用し、アクセスのたびに新しいインスタンスが生成されるバグを修正
   const canvas = shallowRef<fabric.Canvas | undefined>(undefined);
 
+  /** キャンバスを初期化し、デフォルトサイズで Fabric.js インスタンスを生成する */
   const initCanvas = () => {
     if (!canvasRef.value) return;
     canvas.value = new fabric.Canvas(canvasRef.value, {
@@ -33,6 +33,7 @@ export const useIieCanvas = (canvasRef: Ref<HTMLCanvasElement | undefined>) => {
     canvas.value.setWidth(size.width).setHeight(size.height);
   };
 
+  /** 選択されているキャンバス比率に応じてキャンバスサイズを変更する */
   const onChangeCanvasRatio = () => {
     if (!canvas.value) return;
     switch (currentCanvasRatio.value) {
@@ -66,11 +67,13 @@ export const useIieCanvas = (canvasRef: Ref<HTMLCanvasElement | undefined>) => {
     }
   };
 
+  /** キャンバスサイズをそのままキャンバスに反映する */
   const onChangeCanvasSize = () => {
     if (!canvas.value) return;
     canvas.value.setWidth(size.width).setHeight(size.height);
   };
 
+  /** 選択中のツールに応じて Fabric.js の描画モードを切り替える */
   const onChangeTool = () => {
     if (!canvas.value) return;
     canvas.value.isDrawingMode = currentTool.value === "pen";

@@ -1,6 +1,7 @@
 import { fabric } from "fabric";
 
-export const useIieTransform = (canvas: Ref<fabric.Canvas | undefined>) => {
+export const useEditorTransform = (canvas: Ref<fabric.Canvas | undefined>) => {
+  /** キャンバス→パネルの同期中フラグ。watch による逆方向の更新を防ぐ */
   const isUpdatingFromCanvas = ref(false);
 
   const transform = reactive({
@@ -13,6 +14,7 @@ export const useIieTransform = (canvas: Ref<fabric.Canvas | undefined>) => {
     flipY: false,
   });
 
+  /** アクティブオブジェクトの現在値を transform に反映する（選択変更・変形後に呼ぶ） */
   const reflectTransform = () => {
     const obj = canvas.value?.getActiveObject();
     if (!obj) return;
@@ -29,6 +31,7 @@ export const useIieTransform = (canvas: Ref<fabric.Canvas | undefined>) => {
     });
   };
 
+  /** transform の値をアクティブオブジェクトに適用する（パネル入力後に呼ぶ） */
   const applyTransform = () => {
     if (isUpdatingFromCanvas.value) return;
     const obj = canvas.value?.getActiveObject();
@@ -46,6 +49,7 @@ export const useIieTransform = (canvas: Ref<fabric.Canvas | undefined>) => {
     canvas.value?.renderAll();
   };
 
+  /** アクティブオブジェクトを左右反転する */
   const flipHorizontal = () => {
     const obj = canvas.value?.getActiveObject();
     if (!obj) return;
@@ -54,6 +58,7 @@ export const useIieTransform = (canvas: Ref<fabric.Canvas | undefined>) => {
     canvas.value?.renderAll();
   };
 
+  /** アクティブオブジェクトを上下反転する */
   const flipVertical = () => {
     const obj = canvas.value?.getActiveObject();
     if (!obj) return;
@@ -62,6 +67,7 @@ export const useIieTransform = (canvas: Ref<fabric.Canvas | undefined>) => {
     canvas.value?.renderAll();
   };
 
+  // transform の数値変化を監視してキャンバスに即時反映する
   watch(
     () => [transform.x, transform.y, transform.width, transform.height, transform.angle],
     () => {

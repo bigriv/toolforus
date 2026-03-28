@@ -1,7 +1,7 @@
 import { fabric } from "fabric";
 import { TOUColor } from "@/types/common/color/color";
 
-export const useIieShape = (canvas: Ref<fabric.Canvas | undefined>) => {
+export const useShape = (canvas: Ref<fabric.Canvas | undefined>) => {
   const shapeList = [
     { value: "circle", icon: "/commons/icons/circle.svg", label: "円" },
     { value: "triangle", icon: "/commons/icons/triangle.svg", label: "三角" },
@@ -10,6 +10,7 @@ export const useIieShape = (canvas: Ref<fabric.Canvas | undefined>) => {
   const currentShape = ref(shapeList[0].value);
 
   const shapeSetting = reactive({
+    /** カラーピッカーキャンセル時に戻すためのバックアップ値 */
     backup: {
       fill: new TOUColor(TOUColor.CODE_LIGHT_GRAY),
       border: new TOUColor(TOUColor.CODE_BLACK),
@@ -19,6 +20,7 @@ export const useIieShape = (canvas: Ref<fabric.Canvas | undefined>) => {
     borderWidth: 1,
   });
 
+  // 図形の設定が変わるたびにアクティブな図形オブジェクトへ即時反映する
   watch(
     () => shapeSetting,
     () => {
@@ -38,6 +40,7 @@ export const useIieShape = (canvas: Ref<fabric.Canvas | undefined>) => {
     { deep: true }
   );
 
+  /** Ellipse・Rect・Triangle のいずれかであれば true を返す */
   const isShape = (object: fabric.Object) => {
     return (
       object instanceof fabric.Ellipse ||
@@ -46,12 +49,14 @@ export const useIieShape = (canvas: Ref<fabric.Canvas | undefined>) => {
     );
   };
 
+  /** 図形の設定をデフォルト値にリセットする */
   const resetShapeSetting = () => {
     shapeSetting.fill = new TOUColor(TOUColor.CODE_LIGHT_GRAY);
     shapeSetting.border = new TOUColor(TOUColor.CODE_BLACK);
     shapeSetting.borderWidth = 1;
   };
 
+  /** アクティブな図形オブジェクトの現在値を図形の設定に反映する（選択変更後に呼ぶ） */
   const reflectShapeSetting = () => {
     resetShapeSetting();
     if (!canvas.value) return;
@@ -69,6 +74,10 @@ export const useIieShape = (canvas: Ref<fabric.Canvas | undefined>) => {
     shapeSetting.borderWidth = shape.strokeWidth ?? 1;
   };
 
+  /**
+   * ドラッグ操作の start〜end 座標から図形オブジェクトを生成して返す。
+   * 幅または高さが 0 以下の場合は undefined を返す。
+   */
   const generateShape = (
     start: { x: number; y: number },
     end: { x: number; y: number }
@@ -104,6 +113,7 @@ export const useIieShape = (canvas: Ref<fabric.Canvas | undefined>) => {
     return undefined;
   };
 
+  /** カラーピッカーを開く前に現在の図形の設定をバックアップする */
   const backupShapeSetting = () => {
     if (!canvas.value) return;
     const activeShapes = canvas.value
@@ -119,6 +129,7 @@ export const useIieShape = (canvas: Ref<fabric.Canvas | undefined>) => {
       new TOUColor(TOUColor.CODE_BLACK);
   };
 
+  /** バックアップした値に図形の設定を戻す（カラーピッカーキャンセル時に呼ぶ） */
   const rollbackShapeSetting = () => {
     shapeSetting.fill = shapeSetting.backup.fill;
     shapeSetting.border = shapeSetting.backup.border;

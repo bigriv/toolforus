@@ -1,7 +1,8 @@
 import { fabric } from "fabric";
 
-export const useIieFilter = (canvas: Ref<fabric.Canvas | undefined>) => {
+export const useImageFilter = (canvas: Ref<fabric.Canvas | undefined>) => {
   const filter = reactive({
+    /** カラーピッカーキャンセル時に戻すためのバックアップ値 */
     backup: {
       contrast: 0,
       hueRotation: 0,
@@ -18,6 +19,7 @@ export const useIieFilter = (canvas: Ref<fabric.Canvas | undefined>) => {
     opacity: 100,
   });
 
+  // filter の値が変わるたびにアクティブな画像オブジェクトへ即時反映する
   watch(
     () => filter,
     () => {
@@ -41,6 +43,7 @@ export const useIieFilter = (canvas: Ref<fabric.Canvas | undefined>) => {
     { deep: true }
   );
 
+  /** filter の全値をデフォルト（無補正）にリセットする */
   const resetFilter = () => {
     filter.contrast = 0;
     filter.hueRotation = 0;
@@ -50,6 +53,7 @@ export const useIieFilter = (canvas: Ref<fabric.Canvas | undefined>) => {
     filter.opacity = 100;
   };
 
+  /** アクティブな画像オブジェクトの現在値を filter に反映する（選択変更後に呼ぶ） */
   const reflectFilter = () => {
     resetFilter();
     if (!canvas.value) return;
@@ -61,21 +65,22 @@ export const useIieFilter = (canvas: Ref<fabric.Canvas | undefined>) => {
     filter.opacity = (image.opacity ?? 1) * 100;
   };
 
+  /** カラーピッカーを開く前に現在の filter 値をバックアップする */
   const backupFilter = () => {
     if (!canvas.value) return;
     const activeImages = canvas.value
       .getActiveObjects()
       .filter((object) => object instanceof fabric.Image);
     if (activeImages.length !== 1) return;
-    const image = activeImages[0] as fabric.Image;
     filter.backup.contrast = filter.contrast;
     filter.backup.hueRotation = filter.hueRotation;
     filter.backup.saturation = filter.saturation;
     filter.backup.brightness = filter.brightness;
     filter.backup.blur = filter.blur;
-    filter.backup.opacity = (image.opacity ?? 1) * 100;
+    filter.backup.opacity = filter.opacity;
   };
 
+  /** バックアップした値に filter を戻す（カラーピッカーキャンセル時に呼ぶ） */
   const rollbackFilter = () => {
     filter.contrast = filter.backup.contrast;
     filter.hueRotation = filter.backup.hueRotation;

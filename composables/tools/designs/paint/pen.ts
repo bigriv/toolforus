@@ -1,12 +1,13 @@
 import { fabric } from "fabric";
 import { TOUColor } from "@/types/common/color/color";
 
-export const useIiePen = (canvas: Ref<fabric.Canvas | undefined>) => {
+export const usePen = (canvas: Ref<fabric.Canvas | undefined>) => {
   const penSetting = reactive({
     color: new TOUColor(TOUColor.CODE_BLACK),
     size: 1,
   });
 
+  // ペンの設定が変わるたびに Fabric.js のブラシ設定へ即時反映する
   watch(
     () => penSetting,
     () => {

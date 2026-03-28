@@ -1,12 +1,16 @@
 import axios from "axios";
 import { fabric } from "fabric";
 
-export const useIieBackgroundRemoval = (
+export const useBackgroundRemoval = (
   canvas: Ref<fabric.Canvas | undefined>
 ) => {
   const isProcessing = ref(false);
   const errorMessage = ref("");
 
+  /**
+   * 選択中の画像オブジェクトを remove.bg API（Supabase Edge Function 経由）に送信し、
+   * 背景を透過した PNG で置き換える。位置・スケール・角度などのプロパティは維持する。
+   */
   const removeBackground = async () => {
     const config = useRuntimeConfig();
     const supabaseUrl = config.public.supabaseUrl as string;
@@ -26,7 +30,7 @@ export const useIieBackgroundRemoval = (
     const target = activeObjects[0];
     if (!(target instanceof fabric.Image)) return;
 
-    // 元画像の base64 データを取得（フィルター適用前の元素材）
+    // 画像の base64 データを取得
     const element = target.getElement() as HTMLImageElement;
     const base64Match = element.src.match(/^data:[^;]+;base64,(.+)$/);
     if (!base64Match) {
@@ -59,7 +63,7 @@ export const useIieBackgroundRemoval = (
 
       const resultDataUrl = `data:image/png;base64,${resultBase64}`;
 
-      // 元のオブジェクトのプロパティを保持して置き換え
+      // 元画像のレイアウトプロパティを保持して置き換え
       const props = {
         left: target.left,
         top: target.top,

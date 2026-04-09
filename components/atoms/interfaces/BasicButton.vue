@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { TOUColor } from "@/types/common/color/color";
+import { TOUFont } from "~/types/common/css/font";
 
 const props = defineProps({
   label: {
@@ -14,11 +15,19 @@ const props = defineProps({
     type: TOUColor,
     default: new TOUColor(TOUColor.CODE_WHITE),
   },
+  font: {
+    type: TOUFont,
+    default: new TOUFont({
+      size: 0.8,
+      color: new TOUColor(TOUColor.CODE_BLACK),
+    }),
+  },
 });
 
 const emits = defineEmits(["click"]);
 
 const bgColor = computed(() => props.bgColor.getRGBA());
+const fontStyle = computed(() => props.font.getStyle());
 const onClick = () => {
   emits("click");
 };
@@ -27,7 +36,7 @@ const onClick = () => {
 <template>
   <button
     :disabled="props.disabled"
-    :style="{ background: bgColor }"
+    :style="[{ background: bgColor }, fontStyle]"
     @click="onClick"
   >
     {{ props.label }}

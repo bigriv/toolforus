@@ -27,6 +27,7 @@ export default defineNuxtConfig({
   googleFonts: {
     families: {
       "Klee+One": true,
+      "Shippori Antique B1": true,
     },
   },
 });
